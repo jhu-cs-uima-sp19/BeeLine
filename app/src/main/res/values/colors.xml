@@ -3,4 +3,5 @@
     <color name="colorPrimary">#FFDF6D</color>
     <color name="colorPrimaryDark">#56CCF2</color>
     <color name="colorAccent">#D81B60</color>
+    <color name="LandingBckgd">#FFDF6D</color>
 </resources>
