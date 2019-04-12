@@ -1,5 +1,6 @@
 package com.wenwanggarzagao.beeline;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -84,9 +85,12 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
-
+            Intent intent = new Intent(MainActivity.this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivityIfNeeded(intent, 0);
         } else if (id == R.id.nav_find) {
-
+            Intent intent = new Intent(MainActivity.this, FindBeelines.class);
+            startActivity(intent);
         } else if (id == R.id.nav_buzz) {
 
         } else if (id == R.id.nav_settings) {
