@@ -9,10 +9,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".UserProfile"></activity>
         <activity
             android:name=".BeelineDetails"
             android:label="@string/title_activity_beeline_details"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".FindBeelines"
             android:label="@string/title_activity_find_beelines"

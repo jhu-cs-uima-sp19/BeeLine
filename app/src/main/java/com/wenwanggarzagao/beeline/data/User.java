@@ -21,6 +21,10 @@ public class User {
         this.id = id;
     }
 
+    public String getName() {
+        return name;
+    }
+
     @Override
     public int hashCode() {
         return this.id.hashCode();
