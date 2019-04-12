@@ -12,6 +12,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
+import com.wenwanggarzagao.beeline.Landing;
 
 public class DatabaseUtils {
 
@@ -40,7 +41,7 @@ public class DatabaseUtils {
      * @param email Email of the user.
      * @param pass Password of the user.
      */
-    public static void createAccount(final Activity activity, String email, String pass) {
+    public static void createAccount(final Landing activity, String email, String pass) {
         mAuth.createUserWithEmailAndPassword(email, pass)
                 .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -65,7 +66,7 @@ public class DatabaseUtils {
      * @param email Email of the user.
      * @param password Password of the user.
      */
-    public static void signIn(final Activity activity, String email, String password) {
+    public static void signIn(final Landing activity, String email, String password) {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -74,12 +75,12 @@ public class DatabaseUtils {
                             // Sign in success, update UI with the signed-in user's information
                             FirebaseUser user = mAuth.getCurrentUser();
                             loggedin = true;
-                            // TODO udpate UI
+                            // TODO update UI
                         } else {
                             // If sign in fails, display a message to the user.
-                            Toast.makeText(activity, "Invalid email/password combination.",
+                            /*(Toast.makeText(activity, "Invalid email/password combination.",
                                     Toast.LENGTH_SHORT).show();
-                            // TODO update UI
+                            // TODO update UI*/
                         }
                     }
                 });
