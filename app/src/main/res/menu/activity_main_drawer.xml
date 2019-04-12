@@ -7,19 +7,19 @@
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_home_black_24dp"
-            android:title="Home" />
+            android:title="@string/home" />
         <item
             android:id="@+id/nav_find"
             android:icon="@drawable/ic_search_black_24dp"
-            android:title="Find Beelines" />
+            android:title="@string/findBL" />
         <item
             android:id="@+id/nav_buzz"
             android:icon="@drawable/ic_notifications_black_24dp"
-            android:title="Buzz" />
+            android:title="@string/buzz" />
         <item
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_menu_manage"
-            android:title="Settings" />
+            android:title="@string/settings" />
     </group>
 
 </menu>
