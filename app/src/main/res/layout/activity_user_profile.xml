@@ -7,7 +7,7 @@
     tools:context=".UserProfile">
 
     <ImageView
-        android:id="@+id/image_profile"
+        android:id="@+id/uprof_image"
         android:layout_width="141dp"
         android:layout_height="141dp"
         android:layout_marginStart="8dp"
@@ -19,21 +19,20 @@
         app:srcCompat="@mipmap/ic_launcher_round" />
 
     <TextView
-        android:id="@+id/name_profile"
+        android:id="@+id/uprof_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="8dp"
-        android:text="Joe Ansel Esky"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/image_profile" />
+        app:layout_constraintTop_toBottomOf="@+id/uprof_image" />
 
     <TextView
-        android:id="@+id/descrip_profile"
+        android:id="@+id/uprof_descrip"
         android:layout_width="237dp"
         android:layout_height="144dp"
         android:layout_marginStart="8dp"
@@ -41,12 +40,11 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="32dp"
         android:lineSpacingExtra="8sp"
-        android:text="Insert Description Here \n here \n here"
         android:textAlignment="center"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/name_profile" />
+        app:layout_constraintTop_toBottomOf="@+id/uprof_name" />
 
 </android.support.constraint.ConstraintLayout>

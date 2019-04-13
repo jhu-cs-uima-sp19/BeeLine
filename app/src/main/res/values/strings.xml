@@ -17,8 +17,12 @@
     <string name="nav_header_title">Android Studio</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
+
+    <!-- Activity Titles -->
     <string name="title_activity_find_beelines">Find Beelines</string>
     <string name="title_activity_beeline_details">Beeline Details</string>
+    <string name="title_activity_profile">Profile</string>
+
     <string name="large_text">
         "Material is the metaphor.\n\n"
 
