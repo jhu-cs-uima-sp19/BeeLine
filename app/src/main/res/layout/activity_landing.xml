@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:background="@color/LandingBckgd"
     android:theme="@style/AppTheme.NoActionBar"
     tools:context=".Landing">
@@ -41,7 +42,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="8dp"
-        android:background="@color/colorPrimaryDark"
+        android:background="@color/colorSecondaryAccent"
         android:onClick="onClickHandler"
         android:text="@string/login"
         android:textColor="@color/browser_actions_bg_grey"
