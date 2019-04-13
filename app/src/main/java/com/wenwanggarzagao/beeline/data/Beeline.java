@@ -3,6 +3,8 @@ package com.wenwanggarzagao.beeline.data;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 
 /**
  * Represents a Beeline, aka a trip.
@@ -20,10 +22,12 @@ public class Beeline {
         this.from = from;
         this.to = to;
         this.participants = new LinkedList<>();
+        this.id = new Random().nextLong();
     }
 
-    private Location from;
-    private Location to;
+    public Location from;
+    public Location to;
+    public long id;
 
     // linked list of participants. HEAD, aka index 0, is the group leader.
     private List<User> participants;
@@ -54,6 +58,12 @@ public class Beeline {
         }
 
         Location from, to;
+        long id;
+
+        public Builder setId(long id) {
+            this.id = id;
+            return this;
+        }
 
         public Builder setFrom(Location from) {
             this.from = from;
