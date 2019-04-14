@@ -10,9 +10,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".CreateBeeline"
+            android:label="@string/title_activity_create_beeline"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
             android:name=".UserProfile"
             android:label="User Profile"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".BeelineDetails"
             android:label="@string/title_activity_beeline_details"
@@ -26,6 +30,7 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
