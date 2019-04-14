@@ -22,6 +22,10 @@ public class User {
         this.name = data.name;
     }
 
+    public String getBio() {
+        return bio;
+    }
+
     @Override
     public int hashCode() {
         return this.email.hashCode();

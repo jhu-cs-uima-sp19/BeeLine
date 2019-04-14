@@ -4,6 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
+
+import android.view.View;
+import android.support.design.widget.NavigationView;
+
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -24,8 +29,10 @@ public class FindBeelines extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
         FloatingActionButton addTrip = (FloatingActionButton) findViewById(R.id.fab);
         addTrip.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(FindBeelines.this, CreateBeeline.class);
@@ -59,12 +66,14 @@ public class FindBeelines extends AppCompatActivity
         getMenuInflater().inflate(R.menu.main, menu);
         ImageView navProfImgView = (ImageView) findViewById(R.id.nav_profImg);
         navProfImgView.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(FindBeelines.this, UserProfile.class);
                 startActivity(intent);
             }
         });
+
         return true;
     }
 
@@ -103,6 +112,8 @@ public class FindBeelines extends AppCompatActivity
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+
         return false;
     }
+
 }
