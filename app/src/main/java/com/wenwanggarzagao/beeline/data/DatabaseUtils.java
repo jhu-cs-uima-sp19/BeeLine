@@ -32,6 +32,10 @@ public class DatabaseUtils {
     private static boolean loggedin = false;
     public static User me;
 
+    public static boolean isLoggedin() {
+        return loggedin;
+    }
+
     public static void load() {
         System.out.println("Loading database");
         mAuth = FirebaseAuth.getInstance();

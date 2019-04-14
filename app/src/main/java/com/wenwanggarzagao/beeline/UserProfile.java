@@ -33,16 +33,30 @@ public class UserProfile extends AppCompatActivity {
         User me = DatabaseUtils.me;
 
         TextView nameTextView = (TextView) findViewById(R.id.uprof_name);
-        nameTextView.setText("Joe Ansel Esky"); // me.saveData.getName()
+        if (DatabaseUtils.isLoggedin() && me != null && me.name != null) {
+            nameTextView.setText(me.name);
+        }
+        else {
+            System.out.println("name null");
+        }
 
         ImageView userImageView = (ImageView) findViewById(R.id.uprof_image);
-        Uri photoURI = me.fbuser.getPhotoUrl();
-        if (photoURI != null) {
-            userImageView.setImageURI(photoURI);
+        if (DatabaseUtils.isLoggedin() && me != null) {
+            Uri photoURI = me.fbuser.getPhotoUrl();
+            if (photoURI != null) {
+                userImageView.setImageURI(photoURI);
+            }
         }
 
         TextView descripTextView = (TextView) findViewById(R.id.uprof_descrip);
-        descripTextView.setText("Description Here");
+        if (DatabaseUtils.isLoggedin() && me != null && me.saveData != null) {
+            descripTextView.setText(me.saveData.getBio());
+        }
+        else {
+            System.out.println(DatabaseUtils.isLoggedin() + " " + (me != null) + " " + (me.saveData != null));
+            descripTextView.setText("Could not load user data");
+        }
+
     }
 
 }

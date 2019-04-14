@@ -17,13 +17,14 @@ public class User {
         this.fbuser = user;
     }
 
+    public User(String email, FirebaseUser user, SavedUserData data) {
+        this(email, user);
+        this.setSaveData(data);
+    }
+
     public void setSaveData(SavedUserData data) {
         this.saveData = data;
         this.name = data.name;
-    }
-
-    public String getBio() {
-        return "Hi";
     }
 
     @Override
