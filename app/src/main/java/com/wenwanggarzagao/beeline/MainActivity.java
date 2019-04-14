@@ -27,7 +27,7 @@ import com.wenwanggarzagao.beeline.data.Location;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private static final String HARDCODED_USER = "preson@place.com";
+    private static final String HARDCODED_USER = "person@place.com";
     private static final String HARDCODED_PWD = "password123";
 
     Beeline.Builder bee = new Beeline.Builder();
@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity
         mDrawerList.setOnItemClickListener(this);
         */
 
-        DatabaseUtils.signIn(this, HARDCODED_USER, HARDCODED_PWD);
+        DatabaseUtils.signIn(this, HARDCODED_USER, HARDCODED_PWD, false);
     }
 
     @Override
@@ -152,6 +152,7 @@ public class MainActivity extends AppCompatActivity
             System.out.println(DatabaseUtils.me.name + " -- " + DatabaseUtils.me.fbuser.getEmail());
 
         } else if (id == R.id.nav_settings) {
+            DatabaseUtils.signIn(this, HARDCODED_USER, HARDCODED_PWD, false);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
