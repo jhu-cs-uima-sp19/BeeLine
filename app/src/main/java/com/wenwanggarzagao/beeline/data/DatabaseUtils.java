@@ -18,6 +18,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.wenwanggarzagao.beeline.Landing;
 import com.wenwanggarzagao.beeline.io.ResponseHandler;
 
@@ -110,7 +111,10 @@ public class DatabaseUtils {
                     loggedin = true;
                     System.out.println("Successfully logged into " + email);
                     // TODO update UI
+                } else {
+                    createAccount(activity, email, password);
                 }
+                mAuth.removeAuthStateListener(this);
             }
         };
 
@@ -122,34 +126,6 @@ public class DatabaseUtils {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         e.printStackTrace(System.out);
-                    }
-                })
-                .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            me = new User(user.getEmail(), user);
-                            queryUserData(user.getUid(),
-                                    new ResponseHandler<SavedUserData>() {
-                                        @Override
-                                        public void handle(SavedUserData u) {
-                                            me.setSaveData(u);
-                                        }
-                                    }
-                            );
-                            loggedin = true;
-                            System.out.println("Successfully logged into " + email);
-                            // TODO update UI
-                        } else {
-                            System.out.println("Failed to log into " + email + ". Trying account creation.");
-                            createAccount(activity, email, password);
-                            // If sign in fails, display a message to the user.
-                            /*(Toast.makeText(activity, "Invalid email/password combination.",
-                                    Toast.LENGTH_SHORT).show();
-                            // TODO update UI*/
-                        }
                     }
                 });
 
@@ -173,24 +149,17 @@ public class DatabaseUtils {
      * @param consumer What to do after the SavedUserData is fetched.
      */
     public static void queryUserData(String uid, final ResponseHandler<SavedUserData> consumer) {
+        System.out.println("querying user data");
         DatabaseReference table = database.getReference("users").child(uid);
-        table.addChildEventListener(new ChildEventListener() {
+        table.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     SavedUserData result = ds.getValue(SavedUserData.class);
                     consumer.handle(result);
+                    System.out.println("pinging data snapshot");
                 }
             }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) { }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) { }
@@ -217,9 +186,9 @@ public class DatabaseUtils {
         DatabaseReference table = database.getReference("beelines").child("zip_" + zip);
         Query myTopPostsQuery = table.orderByKey();
 
-        table.addChildEventListener(new ChildEventListener() {
+        table.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 List<Beeline> result = new ArrayList<>();
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     Beeline beeline = ds.getValue(Beeline.class);
@@ -227,15 +196,6 @@ public class DatabaseUtils {
                 }
                 consumer.handle(result);
             }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) { }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) { }

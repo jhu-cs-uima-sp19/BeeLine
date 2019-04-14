@@ -21,7 +21,7 @@ public class User {
         this.saveData = data;
         this.name = data.name;
     }
-
+    
     public String getBio() {
         return "Hi";
     }

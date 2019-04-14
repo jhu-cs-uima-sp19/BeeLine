@@ -27,29 +27,31 @@ public class BeelineAdaptor extends ArrayAdapter<Beeline> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        /*
-        LinearLayout jobView;
-        JobItem jb = getItem(position);
+
+        LinearLayout beeView;
+        Beeline b = getItem(position);
+
 
         if (convertView == null) {
-            jobView = new LinearLayout(getContext());
+            beeView = new LinearLayout(getContext());
             String inflater = Context.LAYOUT_INFLATER_SERVICE;
             LayoutInflater vi = (LayoutInflater) getContext().getSystemService(inflater);
-            vi.inflate(resource, jobView, true);
+            vi.inflate(resource, beeView, true);
         } else {
-            jobView = (LinearLayout) convertView;
+            beeView = (LinearLayout) convertView;
         }
 
-        TextView addrView = (TextView) jobView.findViewById(R.id.address_text);
-        TextView dateView = (TextView) jobView.findViewById(R.id.date_text);
-        TextView paidView = (TextView) jobView.findViewById(R.id.paid_view);
 
-        addrView.setText(jb.getWhere());
-        dateView.setText(jb.getWhen());
-        paidView.setText(jb.getPaid()==1 ? "PAID" : "unpaid");
-        */
+        TextView fromView = (TextView) beeView.findViewById(R.id.origin);
+        TextView toView = (TextView) beeView.findViewById(R.id.destination);
 
-        return convertView;
+        //TODO Get Origin and Destination from Beeline
+        //fromView.setText(b);
+        //toView.setText(b);
+
+
+
+        return beeView;
     }
 
 
