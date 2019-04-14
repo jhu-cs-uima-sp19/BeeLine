@@ -1,43 +1,40 @@
 package com.wenwanggarzagao.beeline.data;
 
-import java.util.UUID;
+import com.google.firebase.auth.FirebaseUser;
 
 /**
  * Represents a user account.
  */
 public class User {
 
-    private String name;
-    private String username;
-    private UUID id;
+    public String name;
+    public String email;
+    public FirebaseUser fbuser;
+    public SavedUserData saveData;
 
-    public static User newUser(String name, String username) {
-        return new User(UUID.randomUUID(), name, username);
+    public User(String email, FirebaseUser user) {
+        this.email = email;
+        this.fbuser = user;
     }
 
-    public User(UUID id, String name, String username) {
-        this.name = name;
-        this.username = username;
-        this.id = id;
+    public void setSaveData(SavedUserData data) {
+        this.saveData = data;
+        this.name = data.name;
     }
 
-    public String getName() {
-        return name;
+    public String getBio() {
+        return bio;
     }
 
     @Override
     public int hashCode() {
-        return this.id.hashCode();
+        return this.email.hashCode();
     }
 
     @Override
     public boolean equals(Object other) {
-        if (other instanceof UUID) {
-            return other.equals(this.id);
-        }
-
         if (other instanceof User) {
-            return this.id.equals(((User) other).id);
+            return this.email.equals(((User) other).email);
         }
 
         return false;

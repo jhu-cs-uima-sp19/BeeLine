@@ -1,10 +1,8 @@
 package com.wenwanggarzagao.beeline.data;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 
 /**
  * Represents a Beeline, aka a trip.
