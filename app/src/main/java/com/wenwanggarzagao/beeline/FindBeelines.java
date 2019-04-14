@@ -1,6 +1,8 @@
 package com.wenwanggarzagao.beeline;
 
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -17,10 +19,30 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
+
+import com.wenwanggarzagao.beeline.data.Beeline;
+import com.wenwanggarzagao.beeline.data.Location;
+
+import java.util.ArrayList;
 
 public class FindBeelines extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+
+
+    //bee.setToFrom(origin, destination);
+
+    private ArrayList<Beeline.Builder> beelines;
+    private ArrayAdapter<Beeline.Builder> beelineArrayAdapter;
+    Beeline.Builder bee = new Beeline.Builder();
+    private ListView beeList;
+    private Context context; // For adaptor
+    private Cursor curse; // Database Cursor
+
+    static final int REQUEST_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,16 +58,16 @@ public class FindBeelines extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(FindBeelines.this, CreateBeeline.class);
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_CODE);
             }
         });
 
-        Intent intent = getIntent();
-        String date = intent.getStringExtra("date");
-        String time = intent.getStringExtra("time");
-        String info = intent.getStringExtra("info");
-        String start = intent.getStringExtra("start");
-        String destination = intent.getStringExtra("destination");
+
+
+
+
+        //Location origin = new Location("9E33", "Baltimore", "MD", (short) 21218);
+        //Location destination = new Location("Fells","Baltimore", "MD", (short) 21231);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -55,7 +77,37 @@ public class FindBeelines extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        beeList = (ListView) findViewById(R.id.beeline_list);
+
+        // create ArrayList of courses from database
+        beelines = new ArrayList<Beeline.Builder>();
+
+        // make array adapter to bind arraylist to listview with new custom item layout
+        beelineArrayAdapter = new BeelineAdaptor(this, R.layout.beeline_layout, beelines);
+        beeList.setAdapter(beelineArrayAdapter);
+
+        registerForContextMenu(beeList);
+
+        updateArray();
     }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
+            Intent launcher = getIntent();
+            String date = launcher.getStringExtra("date");
+            String time = launcher.getStringExtra("time");
+            String info = launcher.getStringExtra("info");
+            String start = launcher.getStringExtra("start");
+            String destination = launcher.getStringExtra("destination");
+
+        }
+    }
+
+    public void updateArray() {
+        beelines.add(bee);
+    }
+
 
     @Override
     public void onBackPressed() {

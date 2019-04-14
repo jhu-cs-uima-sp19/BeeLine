@@ -66,7 +66,6 @@ public class MainActivity extends AppCompatActivity
 
         ////////////////////////////////////////
         /* Our Additions (Beeline) etc. */
-        DatabaseUtils.signIn(this, HARDCODED_USER, HARDCODED_PWD);
 
         beeList = (ListView) findViewById(R.id.beeline_list);
 

@@ -5,12 +5,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,8 +28,10 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -39,6 +44,8 @@ public class CreateBeeline extends AppCompatActivity {
     private static EditText addl_info;
     private static EditText meeting_time;
     private static EditText meeting_date;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -62,6 +69,7 @@ public class CreateBeeline extends AppCompatActivity {
 
 
 
+
         add_btn = findViewById(R.id.add_btn);
         add_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,17 +77,22 @@ public class CreateBeeline extends AppCompatActivity {
                 try {
                     String meet_time = meeting_time.getText().toString();
                     String meet_date = meeting_date.getText().toString();
+                    String start = start_loc.getText().toString();
+                    String destination = end_loc.getText().toString();
 
                     checkDate(meet_date);
                     checkTime(meet_time);
+                    //geoLocate(start_loc);
+                    //geoLocate(end_loc);
 
                     Intent intent = new Intent(CreateBeeline.this, FindBeelines.class);
                     intent.putExtra("time", meet_time);
                     intent.putExtra("date", meet_date);
-                    intent.putExtra("info", addl_info.toString());
-                    intent.putExtra("start", start_loc.toString());
-                    intent.putExtra("destination", end_loc.toString());
-                    startActivity(intent);
+                    intent.putExtra("info", addl_info.getText().toString());
+                    intent.putExtra("start", start);
+                    intent.putExtra("destination", destination);
+                    setResult(RESULT_OK, intent);
+                    finish();
                 } catch (IOException e) {
                     Context context = getApplicationContext();
                     CharSequence text = e.getMessage();
@@ -152,9 +165,53 @@ public class CreateBeeline extends AppCompatActivity {
             }
         });
 
+        /*start_loc.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if(actionId == EditorInfo.IME_ACTION_SEARCH
+                        || actionId == EditorInfo.IME_ACTION_DONE
+                        || event.getAction() == KeyEvent.ACTION_DOWN
+                        || event.getAction() == KeyEvent.KEYCODE_ENTER) {
+                    geoLocate(start_loc);
+                }
+                return false;
+            }
+        });
+
+        end_loc.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if(actionId == EditorInfo.IME_ACTION_SEARCH
+                        || actionId == EditorInfo.IME_ACTION_DONE
+                        || event.getAction() == KeyEvent.ACTION_DOWN
+                        || event.getAction() == KeyEvent.KEYCODE_ENTER) {
+                    geoLocate(end_loc);
+                }
+                return false;
+            }
+        });*/
+
+
 
     }
 
+    /* private void geoLocate(EditText loc) {
+        String searchString = loc.getText().toString();
+        System.out.println(searchString);
+        Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
+        List<Address> list = null;
+        try {
+            list = geocoder.getFromLocationName(searchString, 1);
+            System.out.println(list);
+        } catch (IOException e) {
+            Log.w("OCR", "unable to geoLocate. IOException:" + e.getMessage());
+        }
+        if (list.size() > 0) {
+            Address address = list.get(0);
+            Log.w("OCR", "Geolocation: " + address.toString());
+        }
+
+    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -170,7 +227,6 @@ public class CreateBeeline extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
 
 
 
