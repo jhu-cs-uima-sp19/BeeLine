@@ -122,4 +122,6 @@
     <string name="addl_info_txt">Any other info people should know?</string>
     <string name="addl_info_sub">Enter additional info people should know (e.g. items to bring, additional charges, your contact info)</string>
     <string name="btn_add_beeline">Add Beeline</string>
+    <string name="date_format">MM/DD/YYYY</string>
+    <string name="time_format">HH:MM</string>
 </resources>

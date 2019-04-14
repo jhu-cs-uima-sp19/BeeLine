@@ -53,6 +53,7 @@
         android:layout_marginStart="220dp"
         android:layout_marginTop="13dp"
         android:ems="10"
+        android:hint="@string/time_format"
         android:inputType="time"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/meeting_date_txt" />
@@ -115,6 +116,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="13dp"
         android:ems="10"
+        android:hint="@string/date_format"
         android:inputType="date"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/meeting_date_txt" />

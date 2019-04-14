@@ -35,6 +35,7 @@ public class CreateBeeline extends AppCompatActivity {
     private static Button add_btn;
     private Toolbar toolbar;
     private static EditText meeting_time;
+    private static EditText meeting_date;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -44,7 +45,7 @@ public class CreateBeeline extends AppCompatActivity {
 
         SharedPreferences mainPrefs = getSharedPreferences("MainActivityPrefs", 0);
         meeting_time = (EditText) findViewById(R.id.meeting_time);
-
+        meeting_date = (EditText) findViewById(R.id.meeting_date);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -92,6 +93,35 @@ public class CreateBeeline extends AppCompatActivity {
             }
         });
 
+        meeting_date.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
+                    String meet_date = meeting_date.getText().toString();
+
+                    try {
+                        checkDate(meet_date);
+                    } catch (IOException e) {
+                        Toast toast = Toast.makeText(getApplicationContext(), "Invalid date format entered", Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
+                }
+                return false;
+            }
+        });
+
+        meeting_date.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    // Hide keyboard after button press
+                    InputMethodManager imm = (InputMethodManager)
+                            getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(meeting_date.getWindowToken(), 0);
+                }
+
+            }
+        });
+
 
     }
 
@@ -118,9 +148,9 @@ public class CreateBeeline extends AppCompatActivity {
         Pattern pattern;
         Matcher m;
 
-        final String timePattern = "([01]?[0-9]|2[0-3]):[0-5][0-9]";
+        final String TIME_PATTERN = "([01]?[0-9]|2[0-3]):[0-5][0-9]";
 
-        pattern = Pattern.compile(timePattern);
+        pattern = Pattern.compile(TIME_PATTERN);
 
         m = pattern.matcher(time);
 
@@ -136,7 +166,49 @@ public class CreateBeeline extends AppCompatActivity {
         }
     }
 
+    private void checkDate(String date) throws IOException {
+        Pattern pattern;
+        Matcher m;
 
+        final String DATE_PATTERN = "(0?[1-9]|1[012])/(0?[1-9]|[12][0-9]|3[01])/((19|20)\\d\\d)";
+        pattern = Pattern.compile(DATE_PATTERN);
 
+        m = pattern.matcher(date);
 
+        if (!m.matches()) {
+            throw new IOException("Invalid date format");
+        } else {
+            m.reset();
+
+            if (m.find()) {
+
+                String month = m.group(1);
+                String day = m.group(2);
+                int year = Integer.parseInt(m.group(3));
+                boolean val_date = true;
+
+                if (day.equals("31") &&
+                        (month.equals("4") || month.equals("6") || month.equals("9") ||
+                                month.equals("11") || month.equals("04") || month.equals("06") ||
+                                month.equals("09"))) {
+                    val_date = false; // only 1,3,5,7,8,10,12 has 31 days
+                } else if (month.equals("2") || month.equals("02")) {
+                    //leap year
+                    if (year % 4 == 0) {
+                        if (day.equals("30") || day.equals("31")) {
+                            val_date = false;
+                        }
+                    } else {
+                        if (day.equals("29") || day.equals("30") || day.equals("31")) {
+                            val_date = false;
+                        }
+                    }
+                }
+                if (!val_date) {
+                    throw new IOException("Invalid date");
+                }
+            }
+
+        }
+    }
 }
