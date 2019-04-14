@@ -13,27 +13,10 @@ public class Location {
         this.zip = zip;
     }
 
-    private String address;
-    private String city;
-
-    public String getAddress() {
-        return address;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public short getZip() {
-        return zip;
-    }
-
-    private String state;
-    private short zip;
+    public String address;
+    public String city;
+    public String state;
+    public short zip;
 
 
     @Override
