@@ -4,9 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -15,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -23,8 +21,13 @@ import com.wenwanggarzagao.beeline.data.Beeline;
 
 import java.util.ArrayList;
 
+import com.wenwanggarzagao.beeline.data.DatabaseUtils;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private static final String HARDCODED_USER = "preson@place.com";
+    private static final String HARDCODED_PWD = "password123";
 
     //Beeline bee = new Beeline();
     private ArrayList<Beeline> beelines;
@@ -36,8 +39,6 @@ public class MainActivity extends AppCompatActivity
 
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        DatabaseUtils.signIn(this, HARDCODED_USER, HARDCODED_PWD);
         ////////////////////////////////////////
         /* Our Additions (Beeline) etc. */
 
@@ -139,6 +141,7 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(MainActivity.this, FindBeelines.class);
             startActivity(intent);
         } else if (id == R.id.nav_buzz) {
+            System.out.println(DatabaseUtils.me.name + " -- " + DatabaseUtils.me.fbuser.getEmail());
 
         } else if (id == R.id.nav_settings) {
         }
