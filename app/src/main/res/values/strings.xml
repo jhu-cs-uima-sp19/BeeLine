@@ -112,7 +112,14 @@
         "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
         "when a user tries to pick up one of cards.\n\n"
     </string>
-    <string name="title_activity_create_beeline">CreateBeeline</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="title_activity_create_beeline">Make a beeline</string>
+    <string name="start_loc_txt">Start location</string>
+    <string name="start_loc_sub">Enter meeting location here</string>
+    <string name="meeting_date_txt">Meeting date</string>
+    <string name="meeting_time_txt">Meeting time</string>
+    <string name="end_loc_txt">End location</string>
+    <string name = "end_loc_sub">Enter destination here</string>
+    <string name="addl_info_txt">Any other info people should know?</string>
+    <string name="addl_info_sub">Enter additional info people should know (e.g. items to bring, additional charges, your contact info)</string>
 
 </resources>
