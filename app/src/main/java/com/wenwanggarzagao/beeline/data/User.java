@@ -2,8 +2,6 @@ package com.wenwanggarzagao.beeline.data;
 
 import com.google.firebase.auth.FirebaseUser;
 
-import java.util.UUID;
-
 /**
  * Represents a user account.
  */
@@ -12,14 +10,16 @@ public class User {
     public String name;
     public String email;
     public FirebaseUser fbuser;
+    public SavedUserData saveData;
 
     public User(String email, FirebaseUser user) {
         this.email = email;
         this.fbuser = user;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setSaveData(SavedUserData data) {
+        this.saveData = data;
+        this.name = data.name;
     }
 
     @Override
