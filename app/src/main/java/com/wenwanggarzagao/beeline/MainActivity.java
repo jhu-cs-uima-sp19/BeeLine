@@ -29,14 +29,15 @@ public class MainActivity extends AppCompatActivity
     private static final String HARDCODED_USER = "preson@place.com";
     private static final String HARDCODED_PWD = "password123";
 
-    //Beeline bee = new Beeline();
+    Beeline.Builder bee = new Beeline.Builder();
     private ArrayList<Beeline> beelines;
     private ArrayAdapter<Beeline> beelineArrayAdapter;
 
     private ListView beeList;
-    private Context context;
-    private Cursor curse;
+    private Context context; // For adaptor
+    private Cursor curse; // Database Cursor
 
+    // Unused as of now
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
 
@@ -59,6 +60,7 @@ public class MainActivity extends AppCompatActivity
 
         ////////////////////////////////////////
         /* Our Additions (Beeline) etc. */
+        DatabaseUtils.signIn(this, HARDCODED_USER, HARDCODED_PWD);
 
         beeList = (ListView) findViewById(R.id.beeline_list);
 
@@ -72,6 +74,7 @@ public class MainActivity extends AppCompatActivity
         registerForContextMenu(beeList);
 
         updateArray();
+
         /*
         navItems = getResources().getStringArray(R.array.nav_pane_array);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
