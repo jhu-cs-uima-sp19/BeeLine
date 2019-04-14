@@ -1,9 +1,7 @@
 package com.wenwanggarzagao.beeline.data;
 
-import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -17,20 +15,18 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
-import com.google.gson.Gson;
 import com.wenwanggarzagao.beeline.Landing;
 import com.wenwanggarzagao.beeline.io.ResponseHandler;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 public class DatabaseUtils {
 
     private static FirebaseAuth mAuth;
     private static FirebaseDatabase database;
     private static boolean loggedin = false;
+    public static User me;
 
     public static void load() {
         mAuth = FirebaseAuth.getInstance();
@@ -81,8 +77,7 @@ public class DatabaseUtils {
      * @param password Password of the user.
      */
     public static void signIn(final Landing activity, final String email, final String password) {
-        for (int i = 0; i < 20; i++)
-            System.out.println("Attempting sign-in to " + email + i);
+        System.out.println("Attempting sign-in to " + email + i);
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -90,13 +85,20 @@ public class DatabaseUtils {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             FirebaseUser user = mAuth.getCurrentUser();
+                            me = new User(user.getEmail(), user);
+                            queryUserData(user.getUid(),
+                                    new ResponseHandler<SavedUserData>() {
+                                        @Override
+                                        public void handle(SavedUserData u) {
+                                            me.setName(u.name);
+                                        }
+                                    }
+                            );
                             loggedin = true;
-                            for (int i = 0; i < 20; i++)
-                                System.out.println("Successfully logged into " + email + i);
+                            System.out.println("Successfully logged into " + email + i);
                             // TODO update UI
                         } else {
-                            for (int i = 0; i < 20; i++)
-                                System.out.println("Failed to log into " + email + ". Trying account creation." + i);
+                            System.out.println("Failed to log into " + email + ". Trying account creation." + i);
                             createAccount(activity, email, password);
                             // If sign in fails, display a message to the user.
                             /*(Toast.makeText(activity, "Invalid email/password combination.",
@@ -106,6 +108,35 @@ public class DatabaseUtils {
                     }
                 });
 
+    }
+
+    public static void pushUserData(SavedUserData data) {
+        database.getReference("users").child(data.email).setValue(data);
+    }
+
+    public static void queryUserData(String uid, final ResponseHandler<SavedUserData> consumer) {
+        DatabaseReference table = database.getReference("users").child(uid);
+        table.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    SavedUserData result = ds.getValue(SavedUserData.class);
+                    consumer.handle(result);
+                }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) { }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) { }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
+        });
     }
 
     public static void pushBeeline(Beeline bline) {
