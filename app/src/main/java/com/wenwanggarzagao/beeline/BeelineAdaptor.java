@@ -12,13 +12,13 @@ import com.wenwanggarzagao.beeline.data.Beeline;
 
 import java.util.ArrayList;
 
-public class BeelineAdaptor extends ArrayAdapter<Beeline> {
+public class BeelineAdaptor extends ArrayAdapter<Beeline.Builder> {
 
     int resource;
     String from;
     String to;
 
-    public BeelineAdaptor(Context ctx, int res, ArrayList<Beeline> bees) {
+    public BeelineAdaptor(Context ctx, int res, ArrayList<Beeline.Builder> bees) {
         super(ctx, res, bees);
         resource = res;
 
@@ -29,7 +29,7 @@ public class BeelineAdaptor extends ArrayAdapter<Beeline> {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         LinearLayout beeView;
-        Beeline b = getItem(position);
+        Beeline.Builder b = getItem(position);
 
 
         if (convertView == null) {
@@ -46,8 +46,8 @@ public class BeelineAdaptor extends ArrayAdapter<Beeline> {
         TextView toView = (TextView) beeView.findViewById(R.id.destination);
 
         //TODO Get Origin and Destination from Beeline
-        //fromView.setText(b);
-        //toView.setText(b);
+        fromView.setText("Wolman");
+        toView.setText("Druid Hills");
 
 
 

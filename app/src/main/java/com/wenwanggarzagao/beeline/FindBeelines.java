@@ -40,6 +40,13 @@ public class FindBeelines extends AppCompatActivity
             }
         });
 
+        Intent intent = getIntent();
+        String date = intent.getStringExtra("date");
+        String time = intent.getStringExtra("time");
+        String info = intent.getStringExtra("info");
+        String start = intent.getStringExtra("start");
+        String destination = intent.getStringExtra("destination");
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
