@@ -57,7 +57,6 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        DatabaseUtils.signIn(this, HARDCODED_USER, HARDCODED_PWD);
         ////////////////////////////////////////
         /* Our Additions (Beeline) etc. */
 
@@ -85,6 +84,7 @@ public class MainActivity extends AppCompatActivity
         mDrawerList.setOnItemClickListener(this);
         */
 
+        DatabaseUtils.signIn(this, HARDCODED_USER, HARDCODED_PWD);
     }
 
     @Override
