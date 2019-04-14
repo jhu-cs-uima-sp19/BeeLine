@@ -59,13 +59,13 @@ public class FindBeelines extends AppCompatActivity
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         ImageView navProfImgView = (ImageView) findViewById(R.id.nav_profImg);
-        /*navProfImgView.setOnClickListener(new View.OnClickListener() {
+        navProfImgView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(FindBeelines.this, UserProfile.class);
                 startActivity(intent);
             }
-        });*/
+        });
         return true;
     }
 
