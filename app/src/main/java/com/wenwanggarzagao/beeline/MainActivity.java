@@ -22,6 +22,7 @@ import com.wenwanggarzagao.beeline.data.Beeline;
 import java.util.ArrayList;
 
 import com.wenwanggarzagao.beeline.data.DatabaseUtils;
+import com.wenwanggarzagao.beeline.data.Location;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -30,8 +31,13 @@ public class MainActivity extends AppCompatActivity
     private static final String HARDCODED_PWD = "password123";
 
     Beeline.Builder bee = new Beeline.Builder();
-    private ArrayList<Beeline> beelines;
-    private ArrayAdapter<Beeline> beelineArrayAdapter;
+    Location origin = new Location("9E33", "Baltimore", "MD", (short) 21218);
+    Location destination = new Location("Fells","Baltimore", "MD", (short) 21231);
+
+    //bee.setToFrom(origin, destination);
+
+    private ArrayList<Beeline.Builder> beelines;
+    private ArrayAdapter<Beeline.Builder> beelineArrayAdapter;
 
     private ListView beeList;
     private Context context; // For adaptor
@@ -65,7 +71,7 @@ public class MainActivity extends AppCompatActivity
         beeList = (ListView) findViewById(R.id.beeline_list);
 
         // create ArrayList of courses from database
-        beelines = new ArrayList<Beeline>();
+        beelines = new ArrayList<Beeline.Builder>();
 
         // make array adapter to bind arraylist to listview with new custom item layout
         beelineArrayAdapter = new BeelineAdaptor(this, R.layout.beeline_layout, beelines);
@@ -156,6 +162,6 @@ public class MainActivity extends AppCompatActivity
 
     /** Update the beelines listing */
     public void updateArray() {
-
+        beelines.add(bee);
     }
 }
