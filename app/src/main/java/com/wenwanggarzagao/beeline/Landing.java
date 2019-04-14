@@ -1,8 +1,8 @@
 package com.wenwanggarzagao.beeline;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
@@ -18,7 +18,6 @@ public class Landing extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         DatabaseUtils.load();
-        DatabaseUtils.signIn(this, HARDCODED_USER, HARDCODED_PWD);
 
         setContentView(R.layout.activity_landing);
         if (this.getSupportActionBar() != null) {
