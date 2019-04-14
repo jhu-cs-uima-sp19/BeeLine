@@ -195,7 +195,7 @@ public class DatabaseUtils {
      * @param zip Zip code.
      * @param consumer The thing that happens after fetching the data.
      */
-    public static void queryBeelinesNear(short zip, final ResponseHandler<List<Beeline>> consumer) {
+    public static void queryBeelinesNear(int zip, final ResponseHandler<List<Beeline>> consumer) {
         List<Beeline> list = new ArrayList<>();
         DatabaseReference table = database.getReference("beelines").child("zip_" + zip);
         Query myTopPostsQuery = table.orderByKey();
@@ -213,6 +213,17 @@ public class DatabaseUtils {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) { }
+        });
+    }
+
+    public static void printBeelines(int zip) {
+        queryBeelinesNear(zip, new ResponseHandler<List<Beeline>>() {
+            @Override
+            public void handle(List<Beeline> beelines) {
+                for (Beeline bl : beelines) {
+                    System.out.println(bl.toString());
+                }
+            }
         });
     }
 
