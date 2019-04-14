@@ -34,6 +34,9 @@ import java.util.regex.Pattern;
 public class CreateBeeline extends AppCompatActivity {
     private static Button add_btn;
     private Toolbar toolbar;
+    private static EditText start_loc;
+    private static EditText end_loc;
+    private static EditText addl_info;
     private static EditText meeting_time;
     private static EditText meeting_date;
 
@@ -43,9 +46,12 @@ public class CreateBeeline extends AppCompatActivity {
         setContentView(R.layout.activity_create_beeline);
 
 
-        SharedPreferences mainPrefs = getSharedPreferences("MainActivityPrefs", 0);
         meeting_time = (EditText) findViewById(R.id.meeting_time);
         meeting_date = (EditText) findViewById(R.id.meeting_date);
+        start_loc = (EditText) findViewById(R.id.start_loc);
+        end_loc = (EditText) findViewById(R.id.end_loc);
+        addl_info = (EditText) findViewById(R.id.addl_info);
+
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -55,12 +61,35 @@ public class CreateBeeline extends AppCompatActivity {
         }
 
 
+
         add_btn = findViewById(R.id.add_btn);
         add_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(CreateBeeline.this, FindBeelines.class);
-                startActivity(intent);
+                try {
+                    String meet_time = meeting_time.getText().toString();
+                    String meet_date = meeting_date.getText().toString();
+
+                    checkDate(meet_date);
+                    checkTime(meet_time);
+
+                    Intent intent = new Intent(CreateBeeline.this, FindBeelines.class);
+                    intent.putExtra("time", meet_time);
+                    intent.putExtra("date", meet_date);
+                    intent.putExtra("info", addl_info.toString());
+                    intent.putExtra("start", start_loc.toString());
+                    intent.putExtra("destination", end_loc.toString());
+                    startActivity(intent);
+                } catch (IOException e) {
+                    Context context = getApplicationContext();
+                    CharSequence text = e.getMessage();
+                    int duration = Toast.LENGTH_LONG;
+
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
+                }
+
+
             }
         });
 
@@ -71,6 +100,7 @@ public class CreateBeeline extends AppCompatActivity {
 
                     try {
                         checkTime(meet_time);
+
                     } catch (IOException e) {
                         Toast toast = Toast.makeText(getApplicationContext(), "Invalid time format entered", Toast.LENGTH_SHORT);
                         toast.show();
