@@ -52,7 +52,7 @@ public class Beeline {
     /**
      * Builder for a Beeline, in case we have more complex options later.
      */
-    private static class Builder {
+    public static class Builder {
         Builder() {
 
         }
