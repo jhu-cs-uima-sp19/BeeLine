@@ -113,5 +113,6 @@
         "when a user tries to pick up one of cards.\n\n"
     </string>
     <string name="title_activity_create_beeline">CreateBeeline</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
 
 </resources>
