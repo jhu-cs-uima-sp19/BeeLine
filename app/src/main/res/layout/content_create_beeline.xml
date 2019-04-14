@@ -25,7 +25,7 @@
         android:id="@+id/start_loc4"
         android:layout_width="389dp"
         android:layout_height="56dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="228dp"
         android:ems="10"
         android:hint="@string/end_loc_sub"
@@ -112,7 +112,7 @@
         android:id="@+id/meeting_date"
         android:layout_width="168dp"
         android:layout_height="53dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="13dp"
         android:ems="10"
         android:inputType="date"
@@ -132,15 +132,19 @@
         app:layout_constraintTop_toBottomOf="@+id/addl_info_txt" />
 
     <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/add_btn"
+        android:layout_width="122dp"
+        android:layout_height="46dp"
         android:layout_marginTop="50dp"
         android:layout_marginBottom="81dp"
-        android:text="Add Beeline"
-        android:textStyle="bold"
+        android:background="@color/colorSecondaryAccent"
+        android:text="@string/btn_add_beeline"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/addl_info" />
+        app:layout_constraintTop_toBottomOf="@+id/addl_info"
+        app:layout_constraintVertical_bias="0.0" />
+
+
 </android.support.constraint.ConstraintLayout>

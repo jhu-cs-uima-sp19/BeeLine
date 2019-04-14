@@ -121,5 +121,5 @@
     <string name = "end_loc_sub">Enter destination here</string>
     <string name="addl_info_txt">Any other info people should know?</string>
     <string name="addl_info_sub">Enter additional info people should know (e.g. items to bring, additional charges, your contact info)</string>
-
+    <string name="btn_add_beeline">Add Beeline</string>
 </resources>
