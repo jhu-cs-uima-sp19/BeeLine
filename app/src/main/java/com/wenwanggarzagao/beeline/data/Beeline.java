@@ -1,5 +1,6 @@
 package com.wenwanggarzagao.beeline.data;
 
+import com.wenwanggarzagao.beeline.data.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -16,13 +17,15 @@ public class Beeline {
 
     // private on purpose... would get complicated to handle w/o builder if
     // we end up making tons of different options
-    private Beeline(Location from, Location to) {
+    private Beeline(Location from, Location to, Date meet_date) {
         this.from = from;
         this.to = to;
+        this.meet_date = meet_date;
         this.participants = new LinkedList<>();
         this.id = new Random().nextLong();
     }
 
+    public Date meet_date;
     public Location from;
     public Location to;
     public long id;
@@ -44,7 +47,8 @@ public class Beeline {
     }
 
     public User getLeader() {
-        return this.participants.get(0);
+        //return this.participants.get(0);
+        return null;
     }
 
     /**
@@ -54,7 +58,7 @@ public class Beeline {
         public Builder() {
 
         }
-
+        Date meet_date;
         Location from, to;
         long id;
 
@@ -79,16 +83,21 @@ public class Beeline {
             return this;
         }
 
+        public Builder setDate(com.wenwanggarzagao.beeline.data.Date meet_date) {
+            this.meet_date = meet_date;
+            return this;
+
+        }
         boolean valid() {
             return from != null && to != null;
         }
 
-        Beeline build() {
+        public Beeline build() {
             if (!this.valid()) {
                 throw new IllegalStateException("Tried to build Beeline before all fields were filled.");
             }
 
-            Beeline beeline = new Beeline(from, to);
+            Beeline beeline = new Beeline(from, to, meet_date);
             beeline.loadUsers();
             return beeline;
         }

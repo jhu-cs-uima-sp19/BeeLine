@@ -22,15 +22,19 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.wenwanggarzagao.beeline.data.Beeline;
+import com.wenwanggarzagao.beeline.data.DatabaseUtils;
+import com.wenwanggarzagao.beeline.data.Location;
+import com.wenwanggarzagao.beeline.data.Date;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -44,6 +48,8 @@ public class CreateBeeline extends AppCompatActivity {
     private static EditText addl_info;
     private static EditText meeting_time;
     private static EditText meeting_date;
+    private ListView beeList;
+    Beeline.Builder bee = new Beeline.Builder();
 
 
 
@@ -67,7 +73,7 @@ public class CreateBeeline extends AppCompatActivity {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
 
-
+        beeList = (ListView) findViewById(R.id.beeline_list);
 
 
         add_btn = findViewById(R.id.add_btn);
@@ -78,19 +84,26 @@ public class CreateBeeline extends AppCompatActivity {
                     String meet_time = meeting_time.getText().toString();
                     String meet_date = meeting_date.getText().toString();
                     String start = start_loc.getText().toString();
-                    String destination = end_loc.getText().toString();
+                    String end = end_loc.getText().toString();
 
                     checkDate(meet_date);
                     checkTime(meet_time);
                     //geoLocate(start_loc);
                     //geoLocate(end_loc);
 
+                    Location origin = new Location(start, "Baltimore", "MD", (short) 21218);
+                    Location destination = new Location(end,"Baltimore", "MD", (short) 21231);
+
+
                     Intent intent = new Intent(CreateBeeline.this, FindBeelines.class);
-                    intent.putExtra("time", meet_time);
+                    /*intent.putExtra("time", meet_time);
                     intent.putExtra("date", meet_date);
                     intent.putExtra("info", addl_info.getText().toString());
                     intent.putExtra("start", start);
-                    intent.putExtra("destination", destination);
+                    intent.putExtra("destination", destination);*/
+
+                    Beeline new_bline = Beeline.builder().setDate(new Date(meet_date)).setFromTo(origin, destination).build();
+                    DatabaseUtils.pushBeeline(new_bline);
                     setResult(RESULT_OK, intent);
                     finish();
                 } catch (IOException e) {
