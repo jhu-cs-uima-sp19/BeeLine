@@ -56,10 +56,14 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        ////////////////////////////////////////
         /* Our Additions (Beeline) etc. */
+
         beeList = (ListView) findViewById(R.id.beeline_list);
+
         // create ArrayList of courses from database
         beelines = new ArrayList<Beeline>();
+
         // make array adapter to bind arraylist to listview with new custom item layout
         beelineArrayAdapter = new BeelineAdaptor(this, R.layout.beeline_layout, beelines);
         beeList.setAdapter(beelineArrayAdapter);
