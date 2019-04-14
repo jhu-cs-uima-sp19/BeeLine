@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
     android:orientation="horizontal">
@@ -16,7 +17,7 @@
             android:layout_height="wrap_content"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:text="9E33"
+            android:text="Home"
             android:textSize="18dip"></TextView>
 
         <TextView
@@ -26,17 +27,15 @@
             android:gravity="left"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:text="Fells Point"
+            android:text="Destination"
             android:textSize="12dip"></TextView>
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/status"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="25"
-        android:paddingRight="10dp"
-        android:text="Admin"
-        android:textSize="18dip"></TextView>
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        app:srcCompat="@drawable/queen_bee" />
 
 </LinearLayout>

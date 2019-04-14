@@ -46,8 +46,8 @@ public class BeelineAdaptor extends ArrayAdapter<Beeline.Builder> {
         TextView toView = (TextView) beeView.findViewById(R.id.destination);
 
         //TODO Get Origin and Destination from Beeline
-        //fromView.setText(b);
-        //toView.setText(b);
+        fromView.setText("Wolman");
+        toView.setText("Druid Hills");
 
 
 
