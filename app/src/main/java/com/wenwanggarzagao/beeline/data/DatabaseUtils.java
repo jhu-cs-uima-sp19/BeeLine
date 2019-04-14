@@ -11,6 +11,8 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -33,8 +35,10 @@ public class DatabaseUtils {
     public static User me;
 
     public static void load() {
+
         System.out.println("Loading database");
         mAuth = FirebaseAuth.getInstance();
+        mAuth.signOut();
         database = FirebaseDatabase.getInstance();
     }
 
@@ -55,32 +59,35 @@ public class DatabaseUtils {
      * @param pass Password of the user.
      */
     public static void createAccount(final Activity activity, final String email, final String pass) {
-        mAuth.createUserWithEmailAndPassword(email, pass)
-                .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            Log.d("thing", "signInWithEmail:success");
-                            System.out.println("Added new user " + email);
-                            // TODO update UI
-                            // set up account
-                            SavedUserData sud = new SavedUserData();
-                            sud.name = user.getDisplayName();
-                            sud.email = user.getEmail();
-                            sud.userId = user.getUid();
-                            me = new User(user.getEmail(), user);
-                            me.setSaveData(sud);
-                            pushUserData(sud);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Toast.makeText(activity, "That email is already in use.",
-                                    Toast.LENGTH_SHORT).show();
-                            // TODO update UI
-                        }
-                    }
-                });
+        System.out.println("Attempting to create new account for: " + email);
+        mAuth.createUserWithEmailAndPassword(email, pass).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                System.out.println("create user task failed");
+
+                e.printStackTrace(System.out);
+            }
+        }).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                System.out.println("task completed");
+                if (!task.isSuccessful()) {
+                    System.out.println("create user failed");
+                    return;
+                }
+
+                System.out.println("create user succeeded");
+                FirebaseUser user = task.getResult().getUser();
+
+                me = new User(user.getEmail(), user);
+                SavedUserData sud = new SavedUserData();
+                sud.name = user.getDisplayName();
+                sud.email = user.getEmail();
+                sud.userId = user.getUid();
+                me.setSaveData(sud);
+                pushUserData(sud);
+            }
+        });
     }
 
     /**
@@ -89,16 +96,32 @@ public class DatabaseUtils {
      * @param email Email of the user.
      * @param password Password of the user.
      */
-    public static void signIn(final Activity activity, final String email, final String password) {
+    public static void signIn(final Activity activity, final String email, final String password, final boolean wasCreated) {
         System.out.println("Attempting sign-in to " + email);
-        FirebaseAuth.AuthStateListener mAuthListener;
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
+        mAuth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                System.out.println("mauthstate changed");
-                if(user != null){
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (!task.isSuccessful()) {
+                    System.out.println("log in task failed.");
+                    if (task.getException() instanceof FirebaseAuthInvalidUserException) {
+                        System.out.println("user null! creating account for " + email);
+
+                        try {
+                            Thread.sleep(1000l);
+                        } catch (InterruptedException e) {
+
+                        }
+                        createAccount(activity, email, password);
+                    } else if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
+                        System.out.println("user put invalid credentials! " + email);
+                    }
+                    return;
+                }
+                FirebaseUser user = task.getResult().getUser();
+                if (user != null){
                     System.out.println("user is not null! querying data...");
+                    System.out.println("setting 'me'");
                     me = new User(user.getEmail(), user);
                     queryUserData(user.getUid(),
                             new ResponseHandler<SavedUserData>() {
@@ -112,28 +135,17 @@ public class DatabaseUtils {
                     System.out.println("Successfully logged into " + email);
                     // TODO update UI
                 } else {
+                    System.out.println("user null! creating account for " + email);
                     createAccount(activity, email, password);
                 }
-                mAuth.removeAuthStateListener(this);
             }
-        };
-
-
-        mAuth.addAuthStateListener(mAuthListener);
-
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnFailureListener(activity, new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        e.printStackTrace(System.out);
-                    }
-                });
+        });
 
     }
 
     public static void pushUserData(SavedUserData data) {
         System.out.println("Trying to push data");
-        database.getReference("users").child(data.email).setValue(data);
+        database.getReference("users").child(data.userId).setValue(data);
         queryUserData(me.fbuser.getUid(), new ResponseHandler<SavedUserData>() {
             @Override
             public void handle(SavedUserData savedUserData) {
@@ -154,10 +166,12 @@ public class DatabaseUtils {
         table.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                System.out.println("ondatachange called!");
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    System.out.println("pinging data snapshot");
                     SavedUserData result = ds.getValue(SavedUserData.class);
                     consumer.handle(result);
-                    System.out.println("pinging data snapshot");
+                    System.out.println("pinged data snapshot");
                 }
             }
 

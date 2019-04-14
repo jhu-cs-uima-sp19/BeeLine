@@ -11,9 +11,6 @@ import com.wenwanggarzagao.beeline.data.DatabaseUtils;
 public class Landing extends AppCompatActivity {
 
     Button login;
-    private static final String HARDCODED_USER = "preson@place.com";
-    private static final String HARDCODED_PWD = "password123";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
