@@ -15,6 +15,10 @@ import java.util.Random;
  */
 public class Beeline {
 
+    public Beeline() {
+
+    }
+
     // call this when you want to make a new beeline
     public static Builder builder() {
         return new Builder();

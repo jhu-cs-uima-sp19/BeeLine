@@ -5,6 +5,10 @@ package com.wenwanggarzagao.beeline.data;
  */
 public class Date {
 
+    public Date() {
+
+    }
+
     public Date(int month, int day, int year) {
         this.month = month;
         this.day = day;
