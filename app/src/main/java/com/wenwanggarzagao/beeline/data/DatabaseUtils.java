@@ -117,7 +117,7 @@ public class DatabaseUtils {
                     System.out.println("log in task failed.");
                     if (task.getException() instanceof FirebaseAuthInvalidUserException) {
                         System.out.println("user null! creating account for " + email);
-                        createAccount(activity, "Bob", email, password);
+                        createAccount(activity, "Joe Ansel Enski", email, password);
                     } else if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
                         System.out.println("user put invalid credentials! " + email);
                     }
