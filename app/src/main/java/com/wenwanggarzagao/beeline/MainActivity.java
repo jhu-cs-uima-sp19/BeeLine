@@ -167,6 +167,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_find) {
             Intent intent = new Intent(MainActivity.this, FindBeelines.class);
             startActivity(intent);
+            finish();
         } else if (id == R.id.nav_buzz) {
             System.out.println(DatabaseUtils.me.getUsername() + " -- " + DatabaseUtils.me.fbuser.getEmail());
 

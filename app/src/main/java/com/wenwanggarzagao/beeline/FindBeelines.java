@@ -182,6 +182,7 @@ public class FindBeelines extends AppCompatActivity
         if (id == R.id.nav_home) {
             Intent intent = new Intent(FindBeelines.this, MainActivity.class);
             startActivity(intent);
+            finish();
         } else if (id == R.id.nav_find) {
             Intent intent = new Intent(FindBeelines.this, FindBeelines.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
