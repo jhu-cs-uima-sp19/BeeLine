@@ -8,7 +8,7 @@ Beeline is a service that seeks to create ridesharing groups to lower the cost o
 
 ## First Sprint Objectives:
 - [x] Create **Account Activity** (Sprint 1 version) 
-  -Accounts should have: Name and Bio
+  - Accounts should have: Name and Bio
 
 - [x] Create **Create Beeline Activity** that allows a user to enter trip details to create a trip. Fields for input include:
   - Trip destination
