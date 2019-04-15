@@ -97,7 +97,16 @@ public class MainActivity extends AppCompatActivity
         mDrawerList.setOnItemClickListener(this);
         */
 
-        DatabaseUtils.signIn(this, HARDCODED_USER, HARDCODED_PWD, false);
+        if (!DatabaseUtils.isLoggedin()) {
+            DatabaseUtils.signIn(this, HARDCODED_USER, HARDCODED_PWD, false, new Runnable() {
+                @Override
+                public void run() {
+                    // create ArrayList of courses from database
+                    updateArray();
+                }
+            });
+        }
+
     }
 
     /*@Override
@@ -159,10 +168,8 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(MainActivity.this, FindBeelines.class);
             startActivity(intent);
         } else if (id == R.id.nav_buzz) {
-            System.out.println(DatabaseUtils.me.getUsername() + " -- " + DatabaseUtils.me.fbuser.getEmail());
 
         } else if (id == R.id.nav_settings) {
-            DatabaseUtils.signIn(this, HARDCODED_USER, HARDCODED_PWD, false);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
