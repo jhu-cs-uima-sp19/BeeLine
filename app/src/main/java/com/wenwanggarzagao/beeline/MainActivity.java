@@ -74,6 +74,15 @@ public class MainActivity extends AppCompatActivity
 
         beeList = (ListView) findViewById(R.id.beeline_list);
 
+        //TODO: change interest image
+//        final ImageView interestImg = findViewById(R.id.interest_icon);
+//        interestImg.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                interestImg.setImageResource(R.drawable.gray_flowers);
+//            }
+//        });
+
         // create ArrayList of courses from database
         beelines = new ArrayList<Beeline>();
 
