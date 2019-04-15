@@ -26,8 +26,13 @@ import com.wenwanggarzagao.beeline.io.Discriminator;
 import com.wenwanggarzagao.beeline.io.ResponseHandler;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class DatabaseUtils {
 
@@ -44,7 +49,6 @@ public class DatabaseUtils {
 
         System.out.println("Loading database");
         mAuth = FirebaseAuth.getInstance();
-        mAuth.signOut();
         database = FirebaseDatabase.getInstance();
     }
 
@@ -107,7 +111,7 @@ public class DatabaseUtils {
      * @param email Email of the user.
      * @param password Password of the user.
      */
-    public static void signIn(final Activity activity, final String email, final String password, final boolean wasCreated) {
+    public static void signIn(final Activity activity, final String email, final String password, final boolean wasCreated, final Runnable... after) {
         System.out.println("Attempting sign-in to " + email);
         mAuth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -117,7 +121,7 @@ public class DatabaseUtils {
                     System.out.println("log in task failed.");
                     if (task.getException() instanceof FirebaseAuthInvalidUserException) {
                         System.out.println("user null! creating account for " + email);
-                        createAccount(activity, "Joe Ansel Enski", email, password);
+                        createAccount(activity, "Joe Ansel Ensky", email, password);
                     } else if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
                         System.out.println("user put invalid credentials! " + email);
                     }
@@ -133,6 +137,9 @@ public class DatabaseUtils {
                                 @Override
                                 public void handle(SavedUserData u) {
                                     me.setSaveData(u);
+                                    for (Runnable r : after) {
+                                        r.run();
+                                    }
                                 }
                             }
                     );
@@ -141,7 +148,7 @@ public class DatabaseUtils {
                     // TODO update UI
                 } else {
                     System.out.println("user null! creating account for " + email);
-                    createAccount(activity, "Joe Ansel Enski", email, password);
+                    createAccount(activity, "Joe Ansel Ensky", email, password);
                 }
             }
         });
@@ -225,6 +232,9 @@ public class DatabaseUtils {
 
     public static void queryBeelinesNear(int zip, final ResponseHandler<List<Beeline>> consumer, final Discriminator<Beeline> discrim) {
         List<Beeline> list = new ArrayList<>();
+        if (database == null)
+            database = FirebaseDatabase.getInstance();
+
         DatabaseReference table = database.getReference("beelines").child("zip_" + zip);
         System.out.print("querying zip " + zip);
 
@@ -250,9 +260,30 @@ public class DatabaseUtils {
     }
 
     public static void queryMyBeelines(final ResponseHandler<List<Beeline>> consumer) {
-        for (Map.Entry<Integer, List<Long>> mytrips : me.saveData.myBeelines.entrySet()) {
+        if (me.saveData.myBeelines == null)
+            return;
 
+        // concurrency needed for multiple queries
+        final Map<Beeline, Boolean> set = new ConcurrentHashMap<>();
+
+        for (final Map.Entry<String, List<Long>> entry : me.saveData.myBeelines.entrySet()) {
+            final Set<Long> targets = new HashSet<>(entry.getValue()); // for faster lookups
+
+            queryBeelinesNear(Integer.parseInt(entry.getKey()), new ResponseHandler<List<Beeline>>() {
+                @Override
+                public void handle(List<Beeline> beelines) {
+                    for (Beeline b : beelines)
+                        set.put(b, true);
+                }
+            }, new Discriminator<Beeline>() {
+                @Override
+                public boolean acceptable(Beeline beeline) {
+                    return targets.contains(beeline.id);
+                }
+            });
         }
+
+        consumer.handle(new ArrayList<>(set.keySet()));
     }
 
     /**
