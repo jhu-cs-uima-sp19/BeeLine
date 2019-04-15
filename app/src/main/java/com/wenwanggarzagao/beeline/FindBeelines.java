@@ -60,8 +60,6 @@ public class FindBeelines extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
-
         FloatingActionButton addTrip = (FloatingActionButton) findViewById(R.id.fab);
         addTrip.setOnClickListener(new View.OnClickListener() {
 
@@ -71,9 +69,6 @@ public class FindBeelines extends AppCompatActivity
                 startActivityForResult(intent, REQUEST_CODE);
             }
         });
-
-
-
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -85,6 +80,15 @@ public class FindBeelines extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         beeList = (ListView) findViewById(R.id.beeline_list);
+
+        //TODO: change interest image
+//        final ImageView interestImg = findViewById(R.id.interest_icon);
+//        interestImg.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                interestImg.setImageResource(R.drawable.gray_flowers);
+//            }
+//        });
 
         // create ArrayList of courses from database
         updateArray();
@@ -108,8 +112,10 @@ public class FindBeelines extends AppCompatActivity
 
             @Override
             public void handle(List<Beeline> bls) {
+
                 beelines = new ArrayList<Beeline>();
                 System.out.println("got returned list of size " + bls.size());
+
                 for (Beeline bl: bls) {
                     System.out.println(bl.toString());
                     beelines.add(bl);
@@ -176,6 +182,7 @@ public class FindBeelines extends AppCompatActivity
         if (id == R.id.nav_home) {
             Intent intent = new Intent(FindBeelines.this, MainActivity.class);
             startActivity(intent);
+            finish();
         } else if (id == R.id.nav_find) {
             Intent intent = new Intent(FindBeelines.this, FindBeelines.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
