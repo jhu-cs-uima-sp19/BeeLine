@@ -1,6 +1,11 @@
 package com.wenwanggarzagao.beeline.data;
 
+import android.support.annotation.Nullable;
+
+import com.google.firebase.database.Exclude;
 import com.wenwanggarzagao.beeline.data.Date;
+
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -17,13 +22,15 @@ public class Beeline {
 
     // private on purpose... would get complicated to handle w/o builder if
     // we end up making tons of different options
-    private Beeline(Location from, Location to, Date meet_date, Time meet_time) {
+    private Beeline(User user, Location from, Location to, Date meet_date, Time meet_time) {
         this.from = from;
         this.to = to;
         this.meet_date = meet_date;
         this.meet_time = meet_time;
-        this.participants = new LinkedList<>();
+        this.participants = new ArrayList<>();
+        this.participantIds = new ArrayList<>();
         this.id = new Random().nextLong();
+        this.join(user);
     }
 
     public Date meet_date;
@@ -31,26 +38,49 @@ public class Beeline {
     public Location from;
     public Location to;
     public long id;
+    public List<String> participantIds;
 
-    // linked list of participants. HEAD, aka index 0, is the group leader.
+    // list of participants. index 0, is the group leader.
     private List<User> participants;
 
-    public void loadUsers() {
-        // TODO load users from a db
+    public boolean isLeader(User user) {
+        return participants.size() > 0 && participants.get(0).equals(user);
     }
 
+    /**
+     * Add a user to a Beeline. Also updates the user to include this Beeline.
+     * @param user The user.
+     */
     public void join(User user) {
+        if (user == null)
+            return;
 
+        participantIds.add(user.getId());
+        participants.remove(user);
+        user.saveData.addBeeline(this);
     }
 
+    /**
+     * Leaves Beeline. Removes from Beeline data structures AND user data structures.
+     * @param user The user.
+     */
     public void leave(User user) {
+        if (user == null)
+            return;
 
+        participantIds.remove(user.getId());
+        participants.remove(user);
+        user.saveData.removeBeeline(this);
+
+        if (participants.isEmpty()) {
+            DatabaseUtils.removeBeeline(this);
+        }
         // check if users is now empty
     }
 
-    public User getLeader() {
-        //return this.participants.get(0);
-        return null;
+    public @Nullable
+    User getLeader() {
+        return this.participants.size() > 0 ? this.participants.get(0) : null;
     }
 
     /**
@@ -106,8 +136,7 @@ public class Beeline {
                 throw new IllegalStateException("Tried to build Beeline before all fields were filled.");
             }
 
-            Beeline beeline = new Beeline(from, to, meet_date, meet_time);
-            beeline.loadUsers();
+            Beeline beeline = new Beeline(DatabaseUtils.me, from, to, meet_date, meet_time);;
             return beeline;
         }
     }

@@ -27,6 +27,10 @@ public class User {
         return saveData.username;
     }
 
+    public String getId() {
+        return fbuser.getUid();
+    }
+
     public String getEmail() {
         return fbuser.getEmail();
     }

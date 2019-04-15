@@ -22,6 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.wenwanggarzagao.beeline.Landing;
+import com.wenwanggarzagao.beeline.io.Discriminator;
 import com.wenwanggarzagao.beeline.io.ResponseHandler;
 
 import java.util.ArrayList;
@@ -88,7 +89,7 @@ public class DatabaseUtils {
                 sud.username = username;
                 sud.email = user.getEmail();
                 sud.userId = user.getUid();
-                sud.bio = "";
+                sud.bio = "Sample bio text.";
                 me.setSaveData(sud);
                 pushUserData(sud);
             }
@@ -111,12 +112,6 @@ public class DatabaseUtils {
                     System.out.println("log in task failed.");
                     if (task.getException() instanceof FirebaseAuthInvalidUserException) {
                         System.out.println("user null! creating account for " + email);
-
-                        try {
-                            Thread.sleep(1000l);
-                        } catch (InterruptedException e) {
-
-                        }
                         createAccount(activity, "Bob", email, password);
                     } else if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
                         System.out.println("user put invalid credentials! " + email);
@@ -192,8 +187,54 @@ public class DatabaseUtils {
      */
     public static void pushBeeline(Beeline bline) {
         DatabaseReference table = database.getReference("beelines");
-        DatabaseReference value = table.child("zip_" + bline.to.zip).push();
+        DatabaseReference value = table.child("zip_" + bline.to.zip).child("beeline_" + bline.id);
         value.setValue(bline);
+    }
+
+    /**
+     * Removes a Beeline from database and user.
+     * @param zip Zip code.
+     * @param id Beeline ID.
+     * @param runnables Things to do after completion.
+     */
+    public static void removeBeeline(int zip, long id, Runnable... runnables) {
+        database.getReference("beelines").child("zip_" + zip).child("beeline_" + id).removeValue();
+        for (Runnable r : runnables) {
+            r.run();
+        }
+    }
+
+    /**
+     * Removes a Beeline from database and user.
+     * @param bline Beeline to remove.
+     * @param runnables Things to do after completion.
+     */
+    public static void removeBeeline(Beeline bline, Runnable... runnables) {
+        removeBeeline(bline.to.zip, bline.id, runnables);
+    }
+
+    public static void queryBeelinesNear(int zip, final ResponseHandler<List<Beeline>> consumer, final Discriminator<Beeline> discrim) {
+        List<Beeline> list = new ArrayList<>();
+        DatabaseReference table = database.getReference("beelines").child("zip_" + zip);
+
+        table.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                List<Beeline> result = new ArrayList<>();
+                // get all beelines in zip
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    System.out.println("got a beeline of key " + ds.getKey());
+                    Beeline beeline = ds.getValue(Beeline.class);
+                    // filter beelines by discriminator
+                    if (discrim == null || discrim.acceptable(beeline))
+                        result.add(beeline);
+                }
+                consumer.handle(result);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
+        });
     }
 
     /**
@@ -202,24 +243,7 @@ public class DatabaseUtils {
      * @param consumer The thing that happens after fetching the data.
      */
     public static void queryBeelinesNear(int zip, final ResponseHandler<List<Beeline>> consumer) {
-        List<Beeline> list = new ArrayList<>();
-        DatabaseReference table = database.getReference("beelines").child("zip_" + zip);
-        Query myTopPostsQuery = table.orderByKey();
-
-        table.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                List<Beeline> result = new ArrayList<>();
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    Beeline beeline = ds.getValue(Beeline.class);
-                    result.add(beeline);
-                }
-                consumer.handle(result);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) { }
-        });
+        queryBeelinesNear(zip, consumer, null);
     }
 
     public static void printBeelines(int zip) {
