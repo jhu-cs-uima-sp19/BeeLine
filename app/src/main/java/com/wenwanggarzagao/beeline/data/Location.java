@@ -5,6 +5,10 @@ package com.wenwanggarzagao.beeline.data;
  */
 public class Location {
 
+    public Location() {
+
+    }
+
     // TODO what makes sense as args to Location?
     public Location(String address, String city, String state, int zip) {
         this.address = address;

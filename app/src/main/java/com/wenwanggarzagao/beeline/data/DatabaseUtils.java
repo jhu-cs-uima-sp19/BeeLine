@@ -170,6 +170,11 @@ public class DatabaseUtils {
             @Override
             public void onDataChange(@NonNull DataSnapshot ds) {
                 System.out.println("ondatachange called!");
+                if (!ds.exists()) {
+                    System.out.println("but data was null......");
+                    return;
+                }
+
                 System.out.println("pinging data snapshot: [" + ds.getValue().toString() + "]");
                 SavedUserData result = ds.getValue(SavedUserData.class);
                 consumer.handle(result);
@@ -216,10 +221,12 @@ public class DatabaseUtils {
     public static void queryBeelinesNear(int zip, final ResponseHandler<List<Beeline>> consumer, final Discriminator<Beeline> discrim) {
         List<Beeline> list = new ArrayList<>();
         DatabaseReference table = database.getReference("beelines").child("zip_" + zip);
+        System.out.print("querying zip " + zip);
 
         table.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                System.out.print("data changed - getting children of " + dataSnapshot.getKey());
                 List<Beeline> result = new ArrayList<>();
                 // get all beelines in zip
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {

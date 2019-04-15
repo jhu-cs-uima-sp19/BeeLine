@@ -5,6 +5,10 @@ package com.wenwanggarzagao.beeline.data;
  */
 public class Time {
 
+    public Time() {
+
+    }
+
     public Time(int hour, int min) {
         this.hour = hour;
         this.min = min;
