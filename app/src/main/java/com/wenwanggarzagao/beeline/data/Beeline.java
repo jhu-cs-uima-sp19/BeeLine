@@ -98,6 +98,12 @@ public class Beeline {
         Time meet_time;
         Location from, to;
         long id;
+        User user;
+
+        public Builder setOwner(User user) {
+            this.user = user;
+            return this;
+        }
 
         public Builder setId(long id) {
             this.id = id;
@@ -140,7 +146,7 @@ public class Beeline {
                 throw new IllegalStateException("Tried to build Beeline before all fields were filled.");
             }
 
-            Beeline beeline = new Beeline(DatabaseUtils.me, from, to, meet_date, meet_time);;
+            Beeline beeline = new Beeline(user, from, to, meet_date, meet_time);
             return beeline;
         }
     }
