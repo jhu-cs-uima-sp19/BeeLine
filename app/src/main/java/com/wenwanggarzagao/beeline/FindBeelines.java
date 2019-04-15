@@ -24,9 +24,14 @@ import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.wenwanggarzagao.beeline.data.Beeline;
+import com.wenwanggarzagao.beeline.data.DatabaseUtils;
+import com.wenwanggarzagao.beeline.data.Date;
 import com.wenwanggarzagao.beeline.data.Location;
+import com.wenwanggarzagao.beeline.data.Time;
+import com.wenwanggarzagao.beeline.io.ResponseHandler;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class FindBeelines extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -44,12 +49,21 @@ public class FindBeelines extends AppCompatActivity
 
     static final int REQUEST_CODE = 1;
 
+    //TODO: hardcoded
+    int zip = 21218; //hardcoded user location
+    Location origin = new Location("9E33", "Baltimore", "MD", (short) 21218);
+    Location destination = new Location("Fells Point","Baltimore", "MD", (short) 21231);
+    Date birthday = new Date("12/31/2019");
+    Time weird_hour = new Time("12:31");
+    Beeline bee = Beeline.builder().setFromTo(origin, destination).setDate(birthday).setTime(weird_hour).build();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_beelines);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
 
 
         FloatingActionButton addTrip = (FloatingActionButton) findViewById(R.id.fab);
@@ -65,10 +79,6 @@ public class FindBeelines extends AppCompatActivity
 
 
 
-
-        //Location origin = new Location("9E33", "Baltimore", "MD", (short) 21218);
-        //Location destination = new Location("Fells","Baltimore", "MD", (short) 21231);
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -82,6 +92,40 @@ public class FindBeelines extends AppCompatActivity
 
         // create ArrayList of courses from database
         beelines = new ArrayList<Beeline>();
+        beelines.add(bee);
+
+
+
+        updateArray();
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
+            /*Intent launcher = getIntent();
+            String date = launcher.getStringExtra("date");
+            String time = launcher.getStringExtra("time");
+            String info = launcher.getStringExtra("info");
+            String start = launcher.getStringExtra("start");
+            String destination = launcher.getStringExtra("destination");
+            */
+            updateArray();
+        }
+    }
+
+    public void updateArray() {
+        DatabaseUtils.queryBeelinesNear(zip, new ResponseHandler<List<Beeline>>() {
+
+            @Override
+            public void handle(List<Beeline> bls) {
+                beelines = new ArrayList<Beeline>();
+                System.out.println("Update pls");
+                for (Beeline bl: bls) {
+                    System.out.println(bl.toString());
+                    beelines.add(bl);
+                }
+            }
+        });
+
 
         // make array adapter to bind arraylist to listview with new custom item layout
         beelineArrayAdapter = new BeelineAdaptor(this, R.layout.beeline_layout, beelines);
@@ -89,25 +133,7 @@ public class FindBeelines extends AppCompatActivity
 
         registerForContextMenu(beeList);
 
-        //updateArray();
     }
-
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
-            Intent launcher = getIntent();
-            String date = launcher.getStringExtra("date");
-            String time = launcher.getStringExtra("time");
-            String info = launcher.getStringExtra("info");
-            String start = launcher.getStringExtra("start");
-            String destination = launcher.getStringExtra("destination");
-
-
-        }
-    }
-
-    /*public void updateArray() {
-        beelines.add(bee.build());
-    }*/
 
 
     @Override

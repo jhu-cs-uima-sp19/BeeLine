@@ -20,11 +20,13 @@ import android.widget.ListView;
 import com.wenwanggarzagao.beeline.data.Beeline;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.wenwanggarzagao.beeline.data.DatabaseUtils;
 import com.wenwanggarzagao.beeline.data.Date;
 import com.wenwanggarzagao.beeline.data.Location;
 import com.wenwanggarzagao.beeline.data.Time;
+import com.wenwanggarzagao.beeline.io.ResponseHandler;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -97,6 +99,11 @@ public class MainActivity extends AppCompatActivity
 
         DatabaseUtils.signIn(this, HARDCODED_USER, HARDCODED_PWD, false);
     }
+
+    /*@Override
+    protected void onResume() {
+        super.onResume();
+    }*/
 
     @Override
     public void onBackPressed() {
