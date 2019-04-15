@@ -36,10 +36,6 @@ import java.util.List;
 public class FindBeelines extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-
-
-    //bee.setToFrom(origin, destination);
-
     private ArrayList<Beeline> beelines;
     private ArrayAdapter<Beeline> beelineArrayAdapter;
 

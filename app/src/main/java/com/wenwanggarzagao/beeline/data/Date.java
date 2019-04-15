@@ -29,7 +29,7 @@ public class Date {
 
     @Override
     public String toString() {
-        return month + " / " + day + " / " + year;
+        return month + "/" + day + "/" + year;
     }
 
 }

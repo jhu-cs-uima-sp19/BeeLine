@@ -26,7 +26,7 @@ public class Time {
 
     @Override
     public String toString() {
-        return hour + " : " + min;
+        return hour + ":" + min;
     }
 
 }
