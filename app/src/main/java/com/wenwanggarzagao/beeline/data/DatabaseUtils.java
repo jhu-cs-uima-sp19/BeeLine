@@ -62,7 +62,7 @@ public class DatabaseUtils {
      * @param email Email of the user.
      * @param pass Password of the user.
      */
-    public static void createAccount(final Activity activity, final String email, final String pass) {
+    public static void createAccount(final Activity activity, final String username, final String email, final String pass) {
         System.out.println("Attempting to create new account for: " + email);
         mAuth.createUserWithEmailAndPassword(email, pass).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -83,11 +83,12 @@ public class DatabaseUtils {
                 System.out.println("create user succeeded");
                 FirebaseUser user = task.getResult().getUser();
 
-                me = new User(user.getEmail(), user);
+                me = new User(user);
                 SavedUserData sud = new SavedUserData();
-                sud.name = user.getDisplayName();
+                sud.username = username;
                 sud.email = user.getEmail();
                 sud.userId = user.getUid();
+                sud.bio = "";
                 me.setSaveData(sud);
                 pushUserData(sud);
             }
@@ -116,7 +117,7 @@ public class DatabaseUtils {
                         } catch (InterruptedException e) {
 
                         }
-                        createAccount(activity, email, password);
+                        createAccount(activity, "Bob", email, password);
                     } else if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
                         System.out.println("user put invalid credentials! " + email);
                     }
@@ -126,7 +127,7 @@ public class DatabaseUtils {
                 if (user != null){
                     System.out.println("user is not null! querying data...");
                     System.out.println("setting 'me'");
-                    me = new User(user.getEmail(), user);
+                    me = new User(user);
                     queryUserData(user.getUid(),
                             new ResponseHandler<SavedUserData>() {
                                 @Override
@@ -140,7 +141,7 @@ public class DatabaseUtils {
                     // TODO update UI
                 } else {
                     System.out.println("user null! creating account for " + email);
-                    createAccount(activity, email, password);
+                    createAccount(activity, "Bob", email, password);
                 }
             }
         });
@@ -149,12 +150,16 @@ public class DatabaseUtils {
 
     public static void pushUserData(SavedUserData data) {
         System.out.println("Trying to push data");
-        database.getReference("users").child(data.userId).setValue(data);
-        queryUserData(me.fbuser.getUid(), new ResponseHandler<SavedUserData>() {
+        database.getReference("users").child(data.userId).setValue(data).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
-            public void handle(SavedUserData savedUserData) {
-                System.out.println("Pushed data successfully!");
-                System.out.println(savedUserData.name + " " + savedUserData.email + " " + savedUserData.userId);
+            public void onComplete(@NonNull Task<Void> task) {
+                queryUserData(me.fbuser.getUid(), new ResponseHandler<SavedUserData>() {
+                    @Override
+                    public void handle(SavedUserData savedUserData) {
+                        System.out.println("Pushed data successfully!");
+                        System.out.println(savedUserData.username + " " + savedUserData.email + " " + savedUserData.userId);
+                    }
+                });
             }
         });
     }
@@ -166,17 +171,14 @@ public class DatabaseUtils {
      */
     public static void queryUserData(String uid, final ResponseHandler<SavedUserData> consumer) {
         System.out.println("querying user data");
-        DatabaseReference table = database.getReference("users").child(uid);
-        table.addValueEventListener(new ValueEventListener() {
+        database.getReference("users").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot ds) {
                 System.out.println("ondatachange called!");
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    System.out.println("pinging data snapshot");
-                    SavedUserData result = ds.getValue(SavedUserData.class);
-                    consumer.handle(result);
-                    System.out.println("pinged data snapshot");
-                }
+                System.out.println("pinging data snapshot: [" + ds.getValue().toString() + "]");
+                SavedUserData result = ds.getValue(SavedUserData.class);
+                consumer.handle(result);
+                System.out.println("pinged data snapshot");
             }
 
             @Override

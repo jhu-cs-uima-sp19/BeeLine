@@ -2,14 +2,16 @@ package com.wenwanggarzagao.beeline.data;
 
 public class SavedUserData {
 
-    public String email;
+    public SavedUserData() {
+
+    }
 
     public String getEmail() {
         return email;
     }
 
     public String getName() {
-        return name;
+        return username;
     }
 
     public String getUserId() {
@@ -20,7 +22,8 @@ public class SavedUserData {
         return bio;
     }
 
-    public String name;
+    public String email;
+    public String username;
     public String userId;
     public String bio;
 
