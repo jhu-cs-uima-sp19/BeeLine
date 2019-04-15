@@ -141,7 +141,7 @@ public class DatabaseUtils {
                     // TODO update UI
                 } else {
                     System.out.println("user null! creating account for " + email);
-                    createAccount(activity, "Bob", email, password);
+                    createAccount(activity, "Joe Ansel Enski", email, password);
                 }
             }
         });

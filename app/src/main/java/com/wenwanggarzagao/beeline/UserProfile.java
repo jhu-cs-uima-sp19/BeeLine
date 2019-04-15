@@ -53,7 +53,7 @@ public class UserProfile extends AppCompatActivity {
             descripTextView.setText(me.saveData.bio);
         }
         else {
-//            System.out.println(DatabaseUtils.isLoggedin() + " " + (me != null) + " " + (me.saveData != null));
+           //System.out.println(DatabaseUtils.isLoggedin() + " " + (me != null) + " " + (me.saveData != null));
             descripTextView.setText("Could not load user data");
         }
 
