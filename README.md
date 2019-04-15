@@ -1,5 +1,8 @@
 # BeeLine
+![Log-In Page](https://user-images.githubusercontent.com/28008631/56102168-1002d700-5ef9-11e9-8831-8c88059d85d4.png)
+
 Made by: Isaiah, Nick, Nancy, Bronte (Team B)
+
 
 Beeline is a service that seeks to create ridesharing groups to lower the cost of going from point A to point B(ee). The most recent iteration of our Android application enables users to view their user profile and planned trips, in addition to finding and creating new trips.
 
