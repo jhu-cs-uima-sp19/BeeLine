@@ -27,6 +27,7 @@ import com.wenwanggarzagao.beeline.io.ResponseHandler;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class DatabaseUtils {
 
@@ -53,6 +54,10 @@ public class DatabaseUtils {
         }
 
         return mAuth.getCurrentUser();
+    }
+
+    public static void saveUser() {
+        pushUserData(me.saveData);
     }
 
     // TODO change Activity to name of login screen
@@ -242,6 +247,12 @@ public class DatabaseUtils {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
+    }
+
+    public static void queryMyBeelines(final ResponseHandler<List<Beeline>> consumer) {
+        for (Map.Entry<Integer, List<Long>> mytrips : me.saveData.myBeelines.entrySet()) {
+
+        }
     }
 
     /**

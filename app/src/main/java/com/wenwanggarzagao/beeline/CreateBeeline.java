@@ -104,7 +104,7 @@ public class CreateBeeline extends AppCompatActivity {
                     intent.putExtra("start", start);
                     intent.putExtra("destination", destination);*/
 
-                    Beeline new_bline = Beeline.builder().setDate(new Date(meet_date)).setFromTo(origin, destination).setTime(new Time(meet_time)).build();
+                    Beeline new_bline = Beeline.builder().setDate(new Date(meet_date)).setFromTo(origin, destination).setTime(new Time(meet_time)).setOwner(DatabaseUtils.me).build();
                     DatabaseUtils.pushBeeline(new_bline);
                     setResult(RESULT_OK, intent);
                     finish();

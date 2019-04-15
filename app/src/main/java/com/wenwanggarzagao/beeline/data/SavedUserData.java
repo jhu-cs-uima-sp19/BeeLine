@@ -22,6 +22,7 @@ public class SavedUserData {
         if (list == null)
             myBeelines.put(b.to.zip, list = new ArrayList<>());
         list.add(b.id);
+        DatabaseUtils.saveUser();
     }
 
     public void removeBeeline(Beeline b) {
@@ -34,6 +35,7 @@ public class SavedUserData {
         list.remove(b.id);
         if (list.isEmpty())
             myBeelines.remove(b.to.zip);
+        DatabaseUtils.saveUser();
     }
 
 }
