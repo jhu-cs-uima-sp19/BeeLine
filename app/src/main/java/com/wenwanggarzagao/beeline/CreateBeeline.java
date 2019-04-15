@@ -90,6 +90,8 @@ public class CreateBeeline extends AppCompatActivity {
 
                     checkDate(meet_date);
                     checkTime(meet_time);
+                    boolean loc_bool = checkLocation(start);
+                    boolean loc_bool_2 = checkLocation(end);
                     //geoLocate(start_loc);
                     //geoLocate(end_loc);
 
@@ -104,10 +106,15 @@ public class CreateBeeline extends AppCompatActivity {
                     intent.putExtra("start", start);
                     intent.putExtra("destination", destination);*/
 
-                    Beeline new_bline = Beeline.builder().setDate(new Date(meet_date)).setFromTo(origin, destination).setTime(new Time(meet_time)).setOwner(DatabaseUtils.me).build();
-                    DatabaseUtils.pushBeeline(new_bline);
-                    setResult(RESULT_OK, intent);
-                    finish();
+                    if (loc_bool && loc_bool_2) {
+                        Beeline new_bline = Beeline.builder().setDate(new Date(meet_date)).setFromTo(origin, destination).setTime(new Time(meet_time)).build();
+                        DatabaseUtils.pushBeeline(new_bline);
+                        setResult(RESULT_OK, intent);
+                        finish();
+                    } else {
+                        Toast toast = Toast.makeText(getApplicationContext(), "Location cannot be empty", Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
                 } catch (IOException e) {
                     Context context = getApplicationContext();
                     CharSequence text = e.getMessage();
@@ -180,6 +187,8 @@ public class CreateBeeline extends AppCompatActivity {
             }
         });
 
+
+
         /*start_loc.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -187,7 +196,15 @@ public class CreateBeeline extends AppCompatActivity {
                         || actionId == EditorInfo.IME_ACTION_DONE
                         || event.getAction() == KeyEvent.ACTION_DOWN
                         || event.getAction() == KeyEvent.KEYCODE_ENTER) {
-                    geoLocate(start_loc);
+                    //geoLocate(end_loc);
+                    String start = start_loc.getText().toString();
+
+                    try {
+                        checkLocation(start);
+                    } catch (RuntimeException e){
+                        Toast toast = Toast.makeText(getApplicationContext(), "Location cannot be empty", Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
                 }
                 return false;
             }
@@ -200,7 +217,15 @@ public class CreateBeeline extends AppCompatActivity {
                         || actionId == EditorInfo.IME_ACTION_DONE
                         || event.getAction() == KeyEvent.ACTION_DOWN
                         || event.getAction() == KeyEvent.KEYCODE_ENTER) {
-                    geoLocate(end_loc);
+                    //geoLocate(end_loc);
+                    String end = end_loc.getText().toString();
+
+                    try {
+                        checkLocation(end);
+                    } catch (RuntimeException e){
+                        Toast toast = Toast.makeText(getApplicationContext(), "Location cannot be empty", Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
                 }
                 return false;
             }
@@ -209,6 +234,7 @@ public class CreateBeeline extends AppCompatActivity {
 
 
     }
+
 
     /* private void geoLocate(EditText loc) {
         String searchString = loc.getText().toString();
@@ -244,6 +270,15 @@ public class CreateBeeline extends AppCompatActivity {
     }
 
 
+    private boolean checkLocation(String loc) {
+        if (loc.isEmpty()) {
+            Toast toast = Toast.makeText(getApplicationContext(), "Location cannot be empty", Toast.LENGTH_SHORT);
+            toast.show();
+            // throw new RuntimeException("Location cannot be empty");
+            return false;
+        }
+        return true;
+    }
 
     private void checkTime(String time) throws IOException{
         Pattern pattern;

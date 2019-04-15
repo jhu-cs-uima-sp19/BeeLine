@@ -112,8 +112,10 @@ public class FindBeelines extends AppCompatActivity
 
             @Override
             public void handle(List<Beeline> bls) {
+
                 beelines = new ArrayList<Beeline>();
                 System.out.println("got returned list of size " + bls.size());
+
                 for (Beeline bl: bls) {
                     System.out.println(bl.toString());
                     beelines.add(bl);
