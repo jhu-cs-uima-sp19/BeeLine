@@ -56,7 +56,7 @@ public class BeelineAdaptor extends ArrayAdapter<Beeline> {
         String locationsTxt = from + " > " + to;
         locView.setText(locationsTxt);
 
-        String meetTxt = meet_date.toString() + " " + meet_time.toString();
+        String meetTxt = meet_date.toString() + " | " + meet_time.toString();
         TextView dateView = (TextView) beeView.findViewById(R.id.date_time_info);
         dateView.setText(meetTxt);
 
