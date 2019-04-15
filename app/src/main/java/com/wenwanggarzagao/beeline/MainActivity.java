@@ -22,7 +22,9 @@ import com.wenwanggarzagao.beeline.data.Beeline;
 import java.util.ArrayList;
 
 import com.wenwanggarzagao.beeline.data.DatabaseUtils;
+import com.wenwanggarzagao.beeline.data.Date;
 import com.wenwanggarzagao.beeline.data.Location;
+import com.wenwanggarzagao.beeline.data.Time;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -30,14 +32,15 @@ public class MainActivity extends AppCompatActivity
     private static final String HARDCODED_USER = "person@place.com";
     private static final String HARDCODED_PWD = "password123";
 
-    Beeline.Builder bee = new Beeline.Builder();
+    // TODO: no more hard coded stuff :(
     Location origin = new Location("9E33", "Baltimore", "MD", (short) 21218);
-    Location destination = new Location("Fells","Baltimore", "MD", (short) 21231);
+    Location destination = new Location("Fells Point","Baltimore", "MD", (short) 21231);
+    Date birthday = new Date("12/31/2019");
+    Time weird_hour = new Time("12:31");
+    Beeline bee = Beeline.builder().setFromTo(origin, destination).setDate(birthday).setTime(weird_hour).build();
 
-    //bee.setToFrom(origin, destination);
-
-    private ArrayList<Beeline.Builder> beelines;
-    private ArrayAdapter<Beeline.Builder> beelineArrayAdapter;
+    private ArrayList<Beeline> beelines;
+    private ArrayAdapter<Beeline> beelineArrayAdapter;
 
     private ListView beeList;
     private Context context; // For adaptor
@@ -70,7 +73,7 @@ public class MainActivity extends AppCompatActivity
         beeList = (ListView) findViewById(R.id.beeline_list);
 
         // create ArrayList of courses from database
-        beelines = new ArrayList<Beeline.Builder>();
+        beelines = new ArrayList<Beeline>();
 
         // make array adapter to bind arraylist to listview with new custom item layout
         beelineArrayAdapter = new BeelineAdaptor(this, R.layout.beeline_layout, beelines);

@@ -17,15 +17,17 @@ public class Beeline {
 
     // private on purpose... would get complicated to handle w/o builder if
     // we end up making tons of different options
-    private Beeline(Location from, Location to, Date meet_date) {
+    private Beeline(Location from, Location to, Date meet_date, Time meet_time) {
         this.from = from;
         this.to = to;
         this.meet_date = meet_date;
+        this.meet_time = meet_time;
         this.participants = new LinkedList<>();
         this.id = new Random().nextLong();
     }
 
     public Date meet_date;
+    public Time meet_time;
     public Location from;
     public Location to;
     public long id;
@@ -59,6 +61,7 @@ public class Beeline {
 
         }
         Date meet_date;
+        Time meet_time;
         Location from, to;
         long id;
 
@@ -88,6 +91,12 @@ public class Beeline {
             return this;
 
         }
+
+        public Builder setTime(com.wenwanggarzagao.beeline.data.Time meet_time) {
+            this.meet_time = meet_time;
+            return this;
+
+        }
         boolean valid() {
             return from != null && to != null;
         }
@@ -97,7 +106,7 @@ public class Beeline {
                 throw new IllegalStateException("Tried to build Beeline before all fields were filled.");
             }
 
-            Beeline beeline = new Beeline(from, to, meet_date);
+            Beeline beeline = new Beeline(from, to, meet_date, meet_time);
             beeline.loadUsers();
             return beeline;
         }

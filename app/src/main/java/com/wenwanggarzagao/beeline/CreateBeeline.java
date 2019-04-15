@@ -91,8 +91,8 @@ public class CreateBeeline extends AppCompatActivity {
                     //geoLocate(start_loc);
                     //geoLocate(end_loc);
 
-                    Location origin = new Location(start, "Baltimore", "MD", (short) 21218);
-                    Location destination = new Location(end,"Baltimore", "MD", (short) 21231);
+                    Location origin = new Location(start, "Baltimore", "MD", (int) 21218);
+                    Location destination = new Location(end,"Baltimore", "MD", (int) 21231);
 
 
                     Intent intent = new Intent(CreateBeeline.this, FindBeelines.class);

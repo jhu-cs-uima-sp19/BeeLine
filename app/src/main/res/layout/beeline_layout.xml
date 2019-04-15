@@ -16,6 +16,7 @@
             android:id="@+id/origin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
             android:layout_marginBottom="8dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
@@ -23,7 +24,8 @@
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/date_time_info"
-            app:layout_constraintStart_toStartOf="parent"></TextView>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"></TextView>
 
         <ImageView
             android:id="@+id/interest_icon"
@@ -41,8 +43,8 @@
             android:id="@+id/date_time_info"
             android:layout_width="wrap_content"
             android:layout_height="22dp"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
             android:fontFamily="sans-serif-medium"
             android:text="MM/DD/YYYY 12:00 pm"
             app:layout_constraintStart_toStartOf="parent"

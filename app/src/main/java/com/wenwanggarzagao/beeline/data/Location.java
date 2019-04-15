@@ -21,7 +21,7 @@ public class Location {
 
     @Override
     public String toString() {
-        return address + " | " + city + ", " + state + " | " + zip;
+        return address;
     }
 
 }

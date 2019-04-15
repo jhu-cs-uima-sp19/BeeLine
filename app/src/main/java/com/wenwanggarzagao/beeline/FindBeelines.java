@@ -35,9 +35,9 @@ public class FindBeelines extends AppCompatActivity
 
     //bee.setToFrom(origin, destination);
 
-    private ArrayList<Beeline.Builder> beelines;
-    private ArrayAdapter<Beeline.Builder> beelineArrayAdapter;
-    Beeline.Builder bee = new Beeline.Builder();
+    private ArrayList<Beeline> beelines;
+    private ArrayAdapter<Beeline> beelineArrayAdapter;
+
     private ListView beeList;
     private Context context; // For adaptor
     private Cursor curse; // Database Cursor
@@ -81,7 +81,7 @@ public class FindBeelines extends AppCompatActivity
         beeList = (ListView) findViewById(R.id.beeline_list);
 
         // create ArrayList of courses from database
-        beelines = new ArrayList<Beeline.Builder>();
+        beelines = new ArrayList<Beeline>();
 
         // make array adapter to bind arraylist to listview with new custom item layout
         beelineArrayAdapter = new BeelineAdaptor(this, R.layout.beeline_layout, beelines);
@@ -89,7 +89,7 @@ public class FindBeelines extends AppCompatActivity
 
         registerForContextMenu(beeList);
 
-        updateArray();
+        //updateArray();
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -101,12 +101,13 @@ public class FindBeelines extends AppCompatActivity
             String start = launcher.getStringExtra("start");
             String destination = launcher.getStringExtra("destination");
 
+
         }
     }
 
-    public void updateArray() {
-        beelines.add(bee);
-    }
+    /*public void updateArray() {
+        beelines.add(bee.build());
+    }*/
 
 
     @Override
