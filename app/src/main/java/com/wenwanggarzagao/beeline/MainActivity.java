@@ -152,7 +152,7 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(MainActivity.this, FindBeelines.class);
             startActivity(intent);
         } else if (id == R.id.nav_buzz) {
-            System.out.println(DatabaseUtils.me.name + " -- " + DatabaseUtils.me.fbuser.getEmail());
+            System.out.println(DatabaseUtils.me.getUsername() + " -- " + DatabaseUtils.me.fbuser.getEmail());
 
         } else if (id == R.id.nav_settings) {
             DatabaseUtils.signIn(this, HARDCODED_USER, HARDCODED_PWD, false);

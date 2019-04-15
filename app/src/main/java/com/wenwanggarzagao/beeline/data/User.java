@@ -7,35 +7,39 @@ import com.google.firebase.auth.FirebaseUser;
  */
 public class User {
 
-    public String name;
-    public String email;
     public FirebaseUser fbuser;
     public SavedUserData saveData;
 
-    public User(String email, FirebaseUser user) {
-        this.email = email;
+    public User(FirebaseUser user) {
         this.fbuser = user;
     }
 
-    public User(String email, FirebaseUser user, SavedUserData data) {
-        this(email, user);
+    public User(FirebaseUser user, SavedUserData data) {
+        this(user);
         this.setSaveData(data);
     }
 
     public void setSaveData(SavedUserData data) {
         this.saveData = data;
-        this.name = data.name;
+    }
+
+    public String getUsername() {
+        return saveData.username;
+    }
+
+    public String getEmail() {
+        return fbuser.getEmail();
     }
 
     @Override
     public int hashCode() {
-        return this.email.hashCode();
+        return this.getEmail().hashCode();
     }
 
     @Override
     public boolean equals(Object other) {
         if (other instanceof User) {
-            return this.email.equals(((User) other).email);
+            return this.getEmail().equals(((User) other).getEmail());
         }
 
         return false;

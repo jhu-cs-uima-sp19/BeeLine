@@ -33,8 +33,8 @@ public class UserProfile extends AppCompatActivity {
         User me = DatabaseUtils.me;
 
         TextView nameTextView = (TextView) findViewById(R.id.uprof_name);
-        if (DatabaseUtils.isLoggedin() && me != null && me.name != null) {
-            nameTextView.setText(me.name);
+        if (DatabaseUtils.isLoggedin() && me != null && me.getUsername() != null) {
+            nameTextView.setText(me.getUsername());
         }
         else {
             System.out.println("name null");
