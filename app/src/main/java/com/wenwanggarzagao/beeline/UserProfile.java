@@ -50,7 +50,7 @@ public class UserProfile extends AppCompatActivity {
 
         TextView descripTextView = (TextView) findViewById(R.id.uprof_descrip);
         if (DatabaseUtils.isLoggedin() && me != null && me.saveData != null) {
-            descripTextView.setText(me.saveData.getBio());
+            descripTextView.setText(me.saveData.bio);
         }
         else {
             System.out.println(DatabaseUtils.isLoggedin() + " " + (me != null) + " " + (me.saveData != null));
