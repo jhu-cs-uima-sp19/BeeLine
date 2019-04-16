@@ -5,6 +5,7 @@
 /build
 /captures
 .externalNativeBuild
+google-services.json
 
 *.class
 *.ctxt
