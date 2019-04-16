@@ -269,7 +269,6 @@ public class CreateBeeline extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
     private boolean checkLocation(String loc) {
         if (loc.isEmpty()) {
             Toast toast = Toast.makeText(getApplicationContext(), "Location cannot be empty", Toast.LENGTH_SHORT);
