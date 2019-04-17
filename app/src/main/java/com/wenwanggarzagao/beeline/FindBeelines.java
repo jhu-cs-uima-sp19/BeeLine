@@ -19,6 +19,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -48,7 +49,7 @@ public class FindBeelines extends AppCompatActivity
 
     int zip = 21218;
 
-    /*     //TODO: hardcoded
+    /*     TODO: hardcoded
     int zip = 21231; //hardcoded user location
     Location origin = new Location("9E33", "Baltimore", "MD", (short) 21218);
     Location destination = new Location("Fells Point","Baltimore", "MD", (short) 21231);
@@ -73,6 +74,7 @@ public class FindBeelines extends AppCompatActivity
             }
         });
 
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -83,6 +85,19 @@ public class FindBeelines extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         beeList = (ListView) findViewById(R.id.beeline_list);
+
+        beeList.setClickable(true);
+        beeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Object o = beeList.getItemAtPosition(position);
+                Intent intent = new Intent(FindBeelines.this, BeelineDetails.class);
+                //based on item add info to intent
+                //intent.putExtra();
+                startActivity(intent);
+            }
+        });
 
         //TODO: change interest image
 //        final ImageView interestImg = findViewById(R.id.interest_icon);
