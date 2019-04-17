@@ -56,7 +56,7 @@ public class CreateBeeline extends AppCompatActivity {
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_beeline);
 
@@ -70,7 +70,7 @@ public class CreateBeeline extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        if (getSupportActionBar() != null){
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
@@ -90,13 +90,10 @@ public class CreateBeeline extends AppCompatActivity {
 
                     checkDate(meet_date);
                     checkTime(meet_time);
-                    boolean loc_bool = checkLocation(start);
-                    boolean loc_bool_2 = checkLocation(end);
+                    Address origin_address = checkLocation(start_loc);
+                    Address dest_address = checkLocation(end_loc);
                     //geoLocate(start_loc);
                     //geoLocate(end_loc);
-
-                    Location origin = new Location(start, "Baltimore", "MD", (int) 21218);
-                    Location destination = new Location(end,"Baltimore", "MD", (int) 21231);
 
 
                     Intent intent = new Intent(CreateBeeline.this, FindBeelines.class);
@@ -106,7 +103,9 @@ public class CreateBeeline extends AppCompatActivity {
                     intent.putExtra("start", start);
                     intent.putExtra("destination", destination);*/
 
-                    if (loc_bool && loc_bool_2) {
+                    if (!start.isEmpty() && !end.isEmpty()) {
+                        Location origin = new Location(start, origin_address.getLocality(), origin_address.getAdminArea(), Integer.parseInt(origin_address.getPostalCode()));
+                        Location destination = new Location(end, dest_address.getLocality(), dest_address.getAdminArea(), Integer.parseInt(dest_address.getPostalCode()));
                         Beeline new_bline = Beeline.builder().setDate(new Date(meet_date)).setFromTo(origin, destination).setTime(new Time(meet_time)).build();
                         DatabaseUtils.pushBeeline(new_bline);
                         setResult(RESULT_OK, intent);
@@ -186,73 +185,7 @@ public class CreateBeeline extends AppCompatActivity {
 
             }
         });
-
-
-
-        /*start_loc.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if(actionId == EditorInfo.IME_ACTION_SEARCH
-                        || actionId == EditorInfo.IME_ACTION_DONE
-                        || event.getAction() == KeyEvent.ACTION_DOWN
-                        || event.getAction() == KeyEvent.KEYCODE_ENTER) {
-                    //geoLocate(end_loc);
-                    String start = start_loc.getText().toString();
-
-                    try {
-                        checkLocation(start);
-                    } catch (RuntimeException e){
-                        Toast toast = Toast.makeText(getApplicationContext(), "Location cannot be empty", Toast.LENGTH_SHORT);
-                        toast.show();
-                    }
-                }
-                return false;
-            }
-        });
-
-        end_loc.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if(actionId == EditorInfo.IME_ACTION_SEARCH
-                        || actionId == EditorInfo.IME_ACTION_DONE
-                        || event.getAction() == KeyEvent.ACTION_DOWN
-                        || event.getAction() == KeyEvent.KEYCODE_ENTER) {
-                    //geoLocate(end_loc);
-                    String end = end_loc.getText().toString();
-
-                    try {
-                        checkLocation(end);
-                    } catch (RuntimeException e){
-                        Toast toast = Toast.makeText(getApplicationContext(), "Location cannot be empty", Toast.LENGTH_SHORT);
-                        toast.show();
-                    }
-                }
-                return false;
-            }
-        });*/
-
-
-
     }
-
-
-    /* private void geoLocate(EditText loc) {
-        String searchString = loc.getText().toString();
-        System.out.println(searchString);
-        Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
-        List<Address> list = null;
-        try {
-            list = geocoder.getFromLocationName(searchString, 1);
-            System.out.println(list);
-        } catch (IOException e) {
-            Log.w("OCR", "unable to geoLocate. IOException:" + e.getMessage());
-        }
-        if (list.size() > 0) {
-            Address address = list.get(0);
-            Log.w("OCR", "Geolocation: " + address.toString());
-        }
-
-    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -269,14 +202,32 @@ public class CreateBeeline extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private boolean checkLocation(String loc) {
+    private Address checkLocation(EditText ed_loc) {
+        String loc = ed_loc.getText().toString();
         if (loc.isEmpty()) {
             Toast toast = Toast.makeText(getApplicationContext(), "Location cannot be empty", Toast.LENGTH_SHORT);
             toast.show();
             // throw new RuntimeException("Location cannot be empty");
-            return false;
+            return null;
+        } else {
+            Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
+            List<Address> list = null;
+            try {
+                list = geocoder.getFromLocationName(loc, 1);
+
+            } catch (IOException e) {
+                Log.w("OCR", "unable to geoLocate. IOException:" + e.getMessage());
+            } try {
+                if (list.size() > 0) {
+                    Address address = list.get(0);
+                    Log.w("OCR", "Geolocation: " + address.toString());
+                    return address;
+                }
+            } catch (NullPointerException e){
+                return null;
+            }
         }
-        return true;
+        return null;
     }
 
     private void checkTime(String time) throws IOException{

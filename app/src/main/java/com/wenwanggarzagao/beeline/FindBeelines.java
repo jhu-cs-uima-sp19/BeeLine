@@ -43,16 +43,19 @@ public class FindBeelines extends AppCompatActivity
     private Context context; // For adaptor
     private Cursor curse; // Database Cursor
 
+
     static final int REQUEST_CODE = 1;
 
-    //TODO: hardcoded
+    int zip = 21218;
+
+    /*     //TODO: hardcoded
     int zip = 21231; //hardcoded user location
     Location origin = new Location("9E33", "Baltimore", "MD", (short) 21218);
     Location destination = new Location("Fells Point","Baltimore", "MD", (short) 21231);
     Date birthday = new Date("12/31/2019");
     Time weird_hour = new Time("12:31");
     Beeline bee = Beeline.builder().setFromTo(origin, destination).setDate(birthday).setTime(weird_hour).build();
-
+*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
