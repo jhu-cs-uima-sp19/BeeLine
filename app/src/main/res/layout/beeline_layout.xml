@@ -20,12 +20,11 @@
             android:layout_marginBottom="8dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:text="Home > Destination"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/date_time_info"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"></TextView>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/interest_icon"

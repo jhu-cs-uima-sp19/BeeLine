@@ -27,6 +27,7 @@
         android:layout_marginStart="33dp"
         android:layout_marginTop="14dp"
         android:text="@string/date_time_format"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/origin_dest_txt" />
 
@@ -39,5 +40,18 @@
         android:text="Additional details here."
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/date_time_txt" />
+
+    <ToggleButton
+        android:id="@+id/join_leave_toggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="72dp"
+        android:background="@color/colorSecondaryAccent"
+        android:textOff="JOIN"
+        android:textOn="LEAVE"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
