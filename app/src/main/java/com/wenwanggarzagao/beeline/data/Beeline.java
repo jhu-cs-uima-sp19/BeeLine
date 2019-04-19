@@ -1,5 +1,7 @@
 package com.wenwanggarzagao.beeline.data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 
 import com.google.firebase.database.Exclude;

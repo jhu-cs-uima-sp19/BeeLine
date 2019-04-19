@@ -175,4 +175,7 @@
         "when a user tries to pick up one of cards.\n\n"
     </string>
 
+    <string name="origin_destination_txt">Origin > Destination</string>
+    <string name="date_time_format">MM/DD/YYYY HH:MM</string>
+
 </resources>

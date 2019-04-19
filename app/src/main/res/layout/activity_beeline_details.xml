@@ -21,5 +21,6 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <include layout="@layout/content_beeline_details" />
 
 </android.support.design.widget.CoordinatorLayout>
