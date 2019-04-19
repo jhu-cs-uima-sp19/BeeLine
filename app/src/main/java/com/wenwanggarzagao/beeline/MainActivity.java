@@ -25,6 +25,7 @@ import java.util.List;
 import com.wenwanggarzagao.beeline.data.DatabaseUtils;
 import com.wenwanggarzagao.beeline.data.Date;
 import com.wenwanggarzagao.beeline.data.Location;
+import com.wenwanggarzagao.beeline.data.SettingsActivity;
 import com.wenwanggarzagao.beeline.data.Time;
 import com.wenwanggarzagao.beeline.io.ResponseHandler;
 
@@ -180,6 +181,9 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_buzz) {
 
         } else if (id == R.id.nav_settings) {
+            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+            startActivity(intent);
+            finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

@@ -1,0 +1,24 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- A 'parent' preference, which enables/disables child preferences (below)
+         when checked/unchecked. -->
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="@string/pref_title_notifications"
+        android:summary="@string/pref_summary_notifications"
+        android:title="@string/pref_title_notifications" />
+
+    <!-- Allows the user to choose a ringtone in the 'notification' category. -->
+    <!-- NOTE: This preference will be enabled only when the checkbox above is checked. -->
+    <!-- NOTE: RingtonePreference's summary should be set to its value by the activity code. -->
+
+    <!-- NOTE: This preference will be enabled only when the checkbox above is checked. -->
+    <MultiSelectListPreference
+        android:defaultValue="@array/pref_list_alertTime"
+        android:entries="@array/pref_list_alertTime"
+        android:entryValues="@array/pref_list_alertTime"
+        android:key="@string/pref_title_alertTime"
+        android:summary="@string/pref_summary_alertTime"
+        android:title="@string/pref_title_alertTime" />
+
+</PreferenceScreen>
