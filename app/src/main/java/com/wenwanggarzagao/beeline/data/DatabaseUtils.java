@@ -37,7 +37,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class DatabaseUtils {
 
     private static FirebaseAuth mAuth;
-    private static FirebaseDatabase database;
+    public static FirebaseDatabase database;
     private static boolean loggedin = false;
     public static User me;
 
@@ -208,6 +208,12 @@ public class DatabaseUtils {
         value.setValue(bline);
     }
 
+    public static void pushNotification(Notification notif) {
+        DatabaseReference table = database.getReference("notifications");
+        DatabaseReference value = table.child("user_" + me.getId()).child(notif.id + "");
+        value.setValue(notif);
+    }
+
     /**
      * Removes a Beeline from database and user.
      * @param zip Zip code.
@@ -303,6 +309,30 @@ public class DatabaseUtils {
                     System.out.println(bl.toString());
                 }
             }
+        });
+    }
+
+    public static void queryNotifications(final ResponseHandler<ArrayList<Notification>> consumer) {
+        DatabaseReference table = database.getReference("notifications").child("user_" + me.getId());
+        System.out.print("querying notifs for user " + me.getId());
+
+        table.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ArrayList<Notification> result = new ArrayList<>();
+                System.out.print("data changed - getting children of " + dataSnapshot.getKey());
+
+                // get all beelines in zip
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    System.out.println("got a beeline of key " + ds.getKey());
+                    Notification notif = ds.getValue(Notification.class);
+                    result.add(notif);
+                }
+                consumer.handle(result);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
     }
 
