@@ -18,16 +18,15 @@ import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.wenwanggarzagao.beeline.data.Beeline;
+import com.wenwanggarzagao.beeline.SettingsActivity;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import com.wenwanggarzagao.beeline.data.DatabaseUtils;
 import com.wenwanggarzagao.beeline.data.Date;
 import com.wenwanggarzagao.beeline.data.Location;
-import com.wenwanggarzagao.beeline.data.SettingsActivity;
 import com.wenwanggarzagao.beeline.data.Time;
-import com.wenwanggarzagao.beeline.io.ResponseHandler;
+
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -151,9 +150,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
