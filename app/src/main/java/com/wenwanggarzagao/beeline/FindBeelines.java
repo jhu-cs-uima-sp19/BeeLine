@@ -34,6 +34,8 @@ import com.wenwanggarzagao.beeline.io.ResponseHandler;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.System.in;
+
 public class FindBeelines extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -75,6 +77,8 @@ public class FindBeelines extends AppCompatActivity
         });
 
 
+
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -87,14 +91,14 @@ public class FindBeelines extends AppCompatActivity
         beeList = (ListView) findViewById(R.id.beeline_list);
 
         beeList.setClickable(true);
-        beeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
+        beeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {Bundle bundle = new Bundle();
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Object o = beeList.getItemAtPosition(position);
+                DatabaseUtils.bl = (Beeline) beeList.getItemAtPosition(position);
+
                 Intent intent = new Intent(FindBeelines.this, BeelineDetails.class);
                 //based on item add info to intent
-                //intent.putExtra();
+
                 startActivity(intent);
             }
         });
