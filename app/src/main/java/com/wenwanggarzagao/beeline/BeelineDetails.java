@@ -1,5 +1,6 @@
 package com.wenwanggarzagao.beeline;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -7,19 +8,28 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+//import com.firebase.ui.auth.data.model.User;
 import com.wenwanggarzagao.beeline.data.Beeline;
 import com.wenwanggarzagao.beeline.data.DatabaseUtils;
+import com.wenwanggarzagao.beeline.data.User;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BeelineDetails extends AppCompatActivity {
 
-
+    private ListView participantListView;
     private TextView locName;
     private TextView dateTime;
     private ToggleButton join_leave_btn;
+    private ArrayAdapter<Beeline> ParticipantsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +66,32 @@ public class BeelineDetails extends AppCompatActivity {
                 }
             }
         });
+
+        participantListView = findViewById(R.id.participant_list);
+        participantListView.setClickable(true);
+        participantListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {Bundle bundle = new Bundle();
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // DatabaseUtils.bl = (Beeline) beeList.getItemAtPosition(position);
+
+                // Intent intent = new Intent(BeelineDetails.this, BeelineDetails.class);
+                //based on item add info to intent
+
+                // startActivity(intent);
+            }
+        });
+
+        List<User> participantList= new ArrayList<User>();
+
+        for (int i = 0; i < selectedBeeline.participants.size(); i++) {
+            User u = selectedBeeline.participants.get(i);
+            participantList.add(u);
+        }
+
+        ParticipantsAdaptor participantsAdaptor = new ParticipantsAdaptor(BeelineDetails.this, R.layout.participant_layout, participantList);
+        participantListView.setAdapter(participantsAdaptor);
+
+        registerForContextMenu(participantListView);
 
     }
 

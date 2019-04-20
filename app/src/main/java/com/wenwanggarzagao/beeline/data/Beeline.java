@@ -50,7 +50,7 @@ public class Beeline {
     public List<String> participantIds;
 
     // list of participants. index 0, is the group leader.
-    private List<User> participants;
+    public List<User> participants;
 
     public boolean isLeader(User user) {
         return participants.size() > 0 && participants.get(0).equals(user);
