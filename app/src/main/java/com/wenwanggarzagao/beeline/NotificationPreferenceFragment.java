@@ -1,6 +1,5 @@
 package com.wenwanggarzagao.beeline;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.view.MenuItem;
@@ -9,7 +8,8 @@ public class NotificationPreferenceFragment extends PreferenceFragmentCompat {
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-        setPreferencesFromResource(R.xml.pref_notification, rootKey);
+        setPreferencesFromResource(R.xml.pref_settings, rootKey);
+
     }
 
     @Override
@@ -21,7 +21,6 @@ public class NotificationPreferenceFragment extends PreferenceFragmentCompat {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
         return super.onOptionsItemSelected(item);
     }
 }
