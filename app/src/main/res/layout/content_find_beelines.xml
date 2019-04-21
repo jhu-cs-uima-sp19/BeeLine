@@ -6,8 +6,8 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".FindBeelines"
-    tools:showIn="@layout/app_bar_find_beelines"
-    >
+    tools:showIn="@layout/app_bar_find_beelines" >
+
     <ListView
         android:id="@+id/beeline_list"
         android:layout_width="0dp"
