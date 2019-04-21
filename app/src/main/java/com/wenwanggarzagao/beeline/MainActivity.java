@@ -22,11 +22,13 @@ import com.wenwanggarzagao.beeline.data.Beeline;
 import com.wenwanggarzagao.beeline.SettingsActivity;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.wenwanggarzagao.beeline.data.DatabaseUtils;
 import com.wenwanggarzagao.beeline.data.Date;
 import com.wenwanggarzagao.beeline.data.Location;
 import com.wenwanggarzagao.beeline.data.Time;
+import com.wenwanggarzagao.beeline.io.ResponseHandler;
 
 
 public class MainActivity extends AppCompatActivity
@@ -36,8 +38,10 @@ public class MainActivity extends AppCompatActivity
     private static final String HARDCODED_PWD = "password123";
 
     // TODO: no more hard coded stuff :(
+    int zip = 21231;
     Location origin = new Location("9E33", "Baltimore", "MD", (short) 21218);
     Location destination = new Location("Fells Point","Baltimore", "MD", (short) 21231);
+
     Date birthday = new Date("12/31/2019");
     Time weird_hour = new Time("12:31");
     Beeline bee = Beeline.builder().setFromTo(origin, destination).setDate(birthday).setTime(weird_hour).build();
@@ -80,8 +84,9 @@ public class MainActivity extends AppCompatActivity
 
         // create ArrayList of courses from database
         beelines = new ArrayList<Beeline>();
+        updateArray();
 
-        // make array adapter to bind arraylist to listview with new custom item layout
+
         beelineArrayAdapter = new BeelineAdaptor(this, R.layout.beeline_layout, beelines);
         beeList.setAdapter(beelineArrayAdapter);
 
@@ -102,7 +107,7 @@ public class MainActivity extends AppCompatActivity
         });
 
 
-        updateArray();
+
 
 
 
@@ -201,7 +206,27 @@ public class MainActivity extends AppCompatActivity
 
     /** Update the beelines listing */
     public void updateArray() {
-        beelines.add(bee);
+        DatabaseUtils.queryBeelinesNear(zip, new ResponseHandler<List<Beeline>>() {
+
+            @Override
+            public void handle(List<Beeline> bls) {
+
+                beelines = new ArrayList<Beeline>();
+                System.out.println("got returned list of size " + bls.size());
+
+                for (Beeline bl: bls) {
+                    System.out.println(bl.toString());
+                    beelines.add(bl);
+                }
+
+                // make array adapter to bind arraylist to listview with new custom item layout
+                beelineArrayAdapter = new BeelineAdaptor(MainActivity.this, R.layout.beeline_layout, beelines);
+                beeList.setAdapter(beelineArrayAdapter);
+
+                registerForContextMenu(beeList);
+            }
+        });
+        //beelines.add(bee);
     }
 
     /** Update interest flower */
