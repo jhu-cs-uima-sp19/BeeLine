@@ -29,7 +29,7 @@ public class Landing extends AppCompatActivity {
     }
 
     public void onClickHandler(View view) {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
         finish();
     }
