@@ -18,6 +18,9 @@
             android:name=".LoginActivity"
             android:label="@string/title_activity_login"></activity>
         <activity
+            android:name=".SignUpActivity"
+            android:label="@string/title_activity_signup"></activity>
+        <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
             android:screenOrientation="portrait"

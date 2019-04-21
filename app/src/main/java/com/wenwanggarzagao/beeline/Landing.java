@@ -5,12 +5,14 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.wenwanggarzagao.beeline.data.DatabaseUtils;
 
 public class Landing extends AppCompatActivity {
 
     Button login;
+    TextView signup;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,15 +24,23 @@ public class Landing extends AppCompatActivity {
         }
 
         login = findViewById(R.id.button_login);
-    }
-
-    public void setUser() {
-
-    }
-
-    public void onClickHandler(View view) {
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
-        finish();
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getBaseContext(), LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+        signup = findViewById(R.id.text_signup);
+        signup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                signup.setTextColor(getResources().getColor(R.color.colorAccent));
+                Intent intent = new Intent(getBaseContext(), SignUpActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 }

@@ -1,6 +1,15 @@
 <resources>
     <string name="app_name">BeeLine</string>
 
+    <!-- Activity Titles -->
+    <string name="title_activity_create_beeline">Make a beeline</string>
+    <string name="title_activity_find_beelines">Find Beelines</string>
+    <string name="title_activity_beeline_details">Beeline Details</string>
+    <string name="title_activity_profile">Profile</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_login">Log in</string>
+    <string name="title_activity_signup">Sign up</string>
+
     <!-- Landing Page-->
     <string name="app_name_lower">beeline</string>
     <string name="login">Log In</string>
@@ -17,13 +26,6 @@
     <string name="nav_header_title">Android Studio</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
-
-    <!-- Activity Titles -->
-    <string name="title_activity_create_beeline">Make a beeline</string>
-    <string name="title_activity_find_beelines">Find Beelines</string>
-    <string name="title_activity_beeline_details">Beeline Details</string>
-    <string name="title_activity_profile">Profile</string>
-    <string name="title_activity_settings">Settings</string>
 
     <!-- Create Beeline -->
     <string name="start_loc_txt">Start location</string>
@@ -66,12 +68,14 @@
 
     <string name="origin_destination_txt">Origin > Destination</string>
     <string name="date_time_format">MM/DD/YYYY HH:MM</string>
-    <string name="title_activity_login">Sign in</string>
-    <!-- Strings related to login -->
+
+    <!-- Log in/Sign up -->
+    <string name="prompt_name">Name</string>
     <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password (optional)</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Log in</string>
+    <string name="action_sign_up">Sign up</string>
+    <string name="action_sign_in_short">Log in</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
