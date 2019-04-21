@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -75,13 +76,7 @@ public class MainActivity extends AppCompatActivity
         beeList = (ListView) findViewById(R.id.beeline_list);
 
         //TODO: change interest image
-//        final ImageView interestImg = findViewById(R.id.interest_icon);
-//        interestImg.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                interestImg.setImageResource(R.drawable.gray_flowers);
-//            }
-//        });
+        //updateInterest();
 
         // create ArrayList of courses from database
         beelines = new ArrayList<Beeline>();
@@ -90,9 +85,26 @@ public class MainActivity extends AppCompatActivity
         beelineArrayAdapter = new BeelineAdaptor(this, R.layout.beeline_layout, beelines);
         beeList.setAdapter(beelineArrayAdapter);
 
+
         registerForContextMenu(beeList);
 
+        beeList.setClickable(true);
+        beeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {Bundle bundle = new Bundle();
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                DatabaseUtils.bl = (Beeline) beeList.getItemAtPosition(position);
+
+                Intent intent = new Intent(MainActivity.this, BeelineDetails.class);
+                //based on item add info to intent
+
+                startActivity(intent);
+            }
+        });
+
+
         updateArray();
+
+
 
         /*
         navItems = getResources().getStringArray(R.array.nav_pane_array);
@@ -191,4 +203,17 @@ public class MainActivity extends AppCompatActivity
     public void updateArray() {
         beelines.add(bee);
     }
+
+    /** Update interest flower */
+    public void updateInterest() {
+        final ImageView interestImg = findViewById(R.id.interest_icon);
+
+        interestImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                interestImg.setImageResource(R.drawable.target_flowers);
+            }
+        });
+    }
+
 }
