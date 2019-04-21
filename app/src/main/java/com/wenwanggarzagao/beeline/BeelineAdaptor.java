@@ -26,6 +26,7 @@ public class BeelineAdaptor extends ArrayAdapter<Beeline> {
 
     }
 
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 

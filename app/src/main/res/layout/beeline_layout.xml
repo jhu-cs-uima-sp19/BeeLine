@@ -20,12 +20,11 @@
             android:layout_marginBottom="8dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:text="Home > Destination"
-            android:textSize="24sp"
+            android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/date_time_info"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"></TextView>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/interest_icon"
@@ -41,8 +40,8 @@
 
         <TextView
             android:id="@+id/date_time_info"
-            android:layout_width="wrap_content"
-            android:layout_height="22dp"
+            android:layout_width="219dp"
+            android:layout_height="23dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:fontFamily="sans-serif-medium"

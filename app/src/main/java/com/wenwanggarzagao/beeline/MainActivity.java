@@ -13,11 +13,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.wenwanggarzagao.beeline.data.Beeline;
+import com.wenwanggarzagao.beeline.SettingsActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +30,7 @@ import com.wenwanggarzagao.beeline.data.Location;
 import com.wenwanggarzagao.beeline.data.Time;
 import com.wenwanggarzagao.beeline.io.ResponseHandler;
 
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -35,8 +38,10 @@ public class MainActivity extends AppCompatActivity
     private static final String HARDCODED_PWD = "password123";
 
     // TODO: no more hard coded stuff :(
+    int zip = 21231;
     Location origin = new Location("9E33", "Baltimore", "MD", (short) 21218);
     Location destination = new Location("Fells Point","Baltimore", "MD", (short) 21231);
+
     Date birthday = new Date("12/31/2019");
     Time weird_hour = new Time("12:31");
     Beeline bee = Beeline.builder().setFromTo(origin, destination).setDate(birthday).setTime(weird_hour).build();
@@ -75,24 +80,36 @@ public class MainActivity extends AppCompatActivity
         beeList = (ListView) findViewById(R.id.beeline_list);
 
         //TODO: change interest image
-//        final ImageView interestImg = findViewById(R.id.interest_icon);
-//        interestImg.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                interestImg.setImageResource(R.drawable.gray_flowers);
-//            }
-//        });
+        //updateInterest();
 
         // create ArrayList of courses from database
         beelines = new ArrayList<Beeline>();
+        updateArray();
 
-        // make array adapter to bind arraylist to listview with new custom item layout
+
         beelineArrayAdapter = new BeelineAdaptor(this, R.layout.beeline_layout, beelines);
         beeList.setAdapter(beelineArrayAdapter);
 
+
         registerForContextMenu(beeList);
 
-        updateArray();
+        beeList.setClickable(true);
+        beeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {Bundle bundle = new Bundle();
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                DatabaseUtils.bl = (Beeline) beeList.getItemAtPosition(position);
+
+                Intent intent = new Intent(MainActivity.this, BeelineDetails.class);
+                //based on item add info to intent
+
+                startActivity(intent);
+            }
+        });
+
+
+
+
+
 
         /*
         navItems = getResources().getStringArray(R.array.nav_pane_array);
@@ -150,9 +167,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
@@ -182,6 +196,9 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
             finish();
         } else if (id == R.id.nav_settings) {
+            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+            startActivity(intent);
+            finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -191,6 +208,39 @@ public class MainActivity extends AppCompatActivity
 
     /** Update the beelines listing */
     public void updateArray() {
-        beelines.add(bee);
+        DatabaseUtils.queryBeelinesNear(zip, new ResponseHandler<List<Beeline>>() {
+
+            @Override
+            public void handle(List<Beeline> bls) {
+
+                beelines = new ArrayList<Beeline>();
+                System.out.println("got returned list of size " + bls.size());
+
+                for (Beeline bl: bls) {
+                    System.out.println(bl.toString());
+                    beelines.add(bl);
+                }
+
+                // make array adapter to bind arraylist to listview with new custom item layout
+                beelineArrayAdapter = new BeelineAdaptor(MainActivity.this, R.layout.beeline_layout, beelines);
+                beeList.setAdapter(beelineArrayAdapter);
+
+                registerForContextMenu(beeList);
+            }
+        });
+        //beelines.add(bee);
     }
+
+    /** Update interest flower */
+    public void updateInterest() {
+        final ImageView interestImg = findViewById(R.id.interest_icon);
+
+        interestImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                interestImg.setImageResource(R.drawable.target_flowers);
+            }
+        });
+    }
+
 }

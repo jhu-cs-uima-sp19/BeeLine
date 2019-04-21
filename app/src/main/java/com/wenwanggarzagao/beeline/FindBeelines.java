@@ -19,6 +19,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -33,6 +34,8 @@ import com.wenwanggarzagao.beeline.io.ResponseHandler;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.System.in;
+
 public class FindBeelines extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -43,16 +46,19 @@ public class FindBeelines extends AppCompatActivity
     private Context context; // For adaptor
     private Cursor curse; // Database Cursor
 
+
     static final int REQUEST_CODE = 1;
 
-    //TODO: hardcoded
+    int zip = 21218;
+
+    /*     TODO: hardcoded
     int zip = 21231; //hardcoded user location
     Location origin = new Location("9E33", "Baltimore", "MD", (short) 21218);
     Location destination = new Location("Fells Point","Baltimore", "MD", (short) 21231);
     Date birthday = new Date("12/31/2019");
     Time weird_hour = new Time("12:31");
     Beeline bee = Beeline.builder().setFromTo(origin, destination).setDate(birthday).setTime(weird_hour).build();
-
+*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +76,9 @@ public class FindBeelines extends AppCompatActivity
             }
         });
 
+
+
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -80,6 +89,19 @@ public class FindBeelines extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         beeList = (ListView) findViewById(R.id.beeline_list);
+
+        beeList.setClickable(true);
+        beeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {Bundle bundle = new Bundle();
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                DatabaseUtils.bl = (Beeline) beeList.getItemAtPosition(position);
+
+                Intent intent = new Intent(FindBeelines.this, BeelineDetails.class);
+                //based on item add info to intent
+
+                startActivity(intent);
+            }
+        });
 
         //TODO: change interest image
 //        final ImageView interestImg = findViewById(R.id.interest_icon);
@@ -190,6 +212,9 @@ public class FindBeelines extends AppCompatActivity
         } else if (id == R.id.nav_buzz) {
 
         } else if (id == R.id.nav_settings) {
+            Intent intent = new Intent(FindBeelines.this, SettingsActivity.class);
+            startActivity(intent);
+            finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

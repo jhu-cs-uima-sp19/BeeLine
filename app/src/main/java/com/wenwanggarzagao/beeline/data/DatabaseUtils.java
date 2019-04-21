@@ -40,6 +40,7 @@ public class DatabaseUtils {
     public static FirebaseDatabase database;
     private static boolean loggedin = false;
     public static User me;
+    public static Beeline bl;
 
     public static boolean isLoggedin() {
         return loggedin;

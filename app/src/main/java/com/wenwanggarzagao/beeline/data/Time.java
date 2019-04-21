@@ -20,13 +20,23 @@ public class Time {
         this.min = Integer.parseInt(ra[1]);
     }
 
+    public String convertMinToString(int min) {
+        String minMod = "";
+        if (this.min == 0) {
+            minMod = "00";
+        } else {
+            minMod = Integer.toString(this.min);
+        }
+        return minMod;
+    }
+
     public int hour;
     public int min;
 
 
     @Override
     public String toString() {
-        return hour + ":" + min;
+        return hour + ":" + convertMinToString(min);
     }
 
 }

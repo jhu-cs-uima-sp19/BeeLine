@@ -1,6 +1,9 @@
 package com.wenwanggarzagao.beeline.data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
+import android.widget.Toast;
 
 import com.google.firebase.database.Exclude;
 import com.wenwanggarzagao.beeline.data.Date;
@@ -9,6 +12,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+
+import static com.firebase.ui.auth.AuthUI.getApplicationContext;
 
 /**
  * Represents a Beeline, aka a trip.
@@ -45,7 +50,7 @@ public class Beeline {
     public List<String> participantIds;
 
     // list of participants. index 0, is the group leader.
-    private List<User> participants;
+    public List<User> participants;
 
     public boolean isLeader(User user) {
         return participants.size() > 0 && participants.get(0).equals(user);
@@ -56,13 +61,20 @@ public class Beeline {
      * @param user The user.
      */
     public void join(User user) {
-        if (user == null)
+        if (participantIds == null) {
+            participantIds = new ArrayList<>();
+        }
+        if (participants == null) {
+            participants = new ArrayList<>();
+        }
+        if (user == null) {
             return;
-
-        participantIds.add(user.getId());
-        participants.remove(user);
-        user.saveData.addBeeline(this);
+        }
+            participantIds.add(user.getId());
+            participants.remove(user);
+            user.saveData.addBeeline(this);
     }
+
 
     /**
      * Leaves Beeline. Removes from Beeline data structures AND user data structures.
