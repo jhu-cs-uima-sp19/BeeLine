@@ -81,7 +81,7 @@ public class BeelineDetails extends AppCompatActivity {
             }
         });
 
-        List<User> participantList= new ArrayList<User>();
+        /*List<User> participantList= new ArrayList<User>();
 
         for (int i = 0; i < selectedBeeline.participants.size(); i++) {
             User u = selectedBeeline.participants.get(i);
@@ -91,7 +91,7 @@ public class BeelineDetails extends AppCompatActivity {
         ParticipantsAdaptor participantsAdaptor = new ParticipantsAdaptor(BeelineDetails.this, R.layout.participant_layout, participantList);
         participantListView.setAdapter(participantsAdaptor);
 
-        registerForContextMenu(participantListView);
+        registerForContextMenu(participantListView);*/
 
     }
 

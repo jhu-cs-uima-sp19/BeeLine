@@ -75,6 +75,7 @@ public class Beeline {
             user.saveData.addBeeline(this);
     }
 
+
     /**
      * Leaves Beeline. Removes from Beeline data structures AND user data structures.
      * @param user The user.
