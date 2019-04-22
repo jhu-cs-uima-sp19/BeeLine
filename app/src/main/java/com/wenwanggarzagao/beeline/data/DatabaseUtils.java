@@ -118,7 +118,7 @@ public class DatabaseUtils {
      * @param email Email of the user.
      * @param password Password of the user.
      */
-    public static void signIn(final Activity activity, final String email, final String password, final boolean wasCreated, final Runnable... after) {
+    public static void signIn(final Activity activity, final String email, final String password, final boolean wasCreated, final ResponseHandler<Boolean> after) {
         System.out.println("Attempting sign-in to " + email);
         mAuth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -135,6 +135,7 @@ public class DatabaseUtils {
                         Toast.makeText(activity.getApplicationContext(), "Invalid credentials.", Toast.LENGTH_SHORT);
                         System.out.println("user put invalid credentials! " + email);
                     }
+                    after.handle(false);
                     return;
                 }
                 FirebaseUser user = task.getResult().getUser();
@@ -147,9 +148,7 @@ public class DatabaseUtils {
                                 @Override
                                 public void handle(SavedUserData u) {
                                     me.setSaveData(u);
-                                    for (Runnable r : after) {
-                                        r.run();
-                                    }
+                                    after.handle(true);
                                 }
                             }
                     );

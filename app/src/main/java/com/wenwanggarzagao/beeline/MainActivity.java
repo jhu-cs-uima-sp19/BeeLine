@@ -125,14 +125,8 @@ public class MainActivity extends AppCompatActivity
         mDrawerList.setOnItemClickListener(this);
         */
 
-        if (!DatabaseUtils.isLoggedin()) {
-            DatabaseUtils.signIn(this, HARDCODED_USER, HARDCODED_PWD, false, new Runnable() {
-                @Override
-                public void run() {
-                    // create ArrayList of courses from database
-                    updateArray();
-                }
-            });
+        if (DatabaseUtils.isLoggedin()) {
+            updateArray();
         }
 
     }
