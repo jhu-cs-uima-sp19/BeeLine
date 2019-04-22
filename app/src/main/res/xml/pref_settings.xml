@@ -1,0 +1,27 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:key="pref_notifs">
+
+    <PreferenceCategory
+        app:key="notifications_category"
+        app:title="Notifications">
+
+        <SwitchPreference
+            android:id="@+id/prefs_switch_notifs"
+            android:defaultValue="true"
+            android:key="prefs_switch_notifs"
+            android:summary="@string/pref_summary_notifications"
+            android:title="@string/pref_title_notifications" />
+
+        <MultiSelectListPreference
+            android:id="@+id/prefs_multilist_alertTimes"
+            android:key="prefs_multilist_alertTimes"
+            android:dependency="prefs_switch_notifs"
+            android:entries="@array/pref_list_alertTime"
+            android:entryValues="@array/pref_list_alertTime"
+            android:summary="@string/pref_summary_alertTime"
+            android:title="@string/pref_title_alertTime" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

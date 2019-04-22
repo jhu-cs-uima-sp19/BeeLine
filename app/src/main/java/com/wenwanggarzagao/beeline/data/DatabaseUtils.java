@@ -37,7 +37,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class DatabaseUtils {
 
     private static FirebaseAuth mAuth;
-    private static FirebaseDatabase database;
+    public static FirebaseDatabase database;
     private static boolean loggedin = false;
     public static User me;
     public static Beeline bl;
@@ -73,7 +73,7 @@ public class DatabaseUtils {
      * @param email Email of the user.
      * @param pass Password of the user.
      */
-    public static void createAccount(final Activity activity, final String username, final String email, final String pass) {
+    public static void createAccount(final Activity activity, final String username, final String email, final String pass, final ResponseHandler<Boolean> consumer) {
         System.out.println("Attempting to create new account for: " + email);
         mAuth.createUserWithEmailAndPassword(email, pass).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -88,6 +88,9 @@ public class DatabaseUtils {
                 System.out.println("task completed");
                 if (!task.isSuccessful()) {
                     System.out.println("create user failed");
+                    if (consumer != null) {
+                        consumer.handle(false);
+                    }
                     return;
                 }
 
@@ -102,6 +105,9 @@ public class DatabaseUtils {
                 sud.bio = "Sample bio text.";
                 me.setSaveData(sud);
                 pushUserData(sud);
+                if (consumer != null) {
+                    consumer.handle(true);
+                }
             }
         });
     }
@@ -122,8 +128,11 @@ public class DatabaseUtils {
                     System.out.println("log in task failed.");
                     if (task.getException() instanceof FirebaseAuthInvalidUserException) {
                         System.out.println("user null! creating account for " + email);
-                        createAccount(activity, "Joe Ansel Ensky", email, password);
+                        // no such user
+                        Toast.makeText(activity.getApplicationContext(), "That email is not registered.", Toast.LENGTH_SHORT);
                     } else if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
+                        // invalid credentials
+                        Toast.makeText(activity.getApplicationContext(), "Invalid credentials.", Toast.LENGTH_SHORT);
                         System.out.println("user put invalid credentials! " + email);
                     }
                     return;
@@ -149,7 +158,7 @@ public class DatabaseUtils {
                     // TODO update UI
                 } else {
                     System.out.println("user null! creating account for " + email);
-                    createAccount(activity, "Joe Ansel Ensky", email, password);
+                    //createAccount(activity, "Joe Ansel Ensky", email, password);
                 }
             }
         });
@@ -209,6 +218,12 @@ public class DatabaseUtils {
         value.setValue(bline);
     }
 
+    public static void pushNotification(Notification notif) {
+        DatabaseReference table = database.getReference("notifications");
+        DatabaseReference value = table.child("user_" + me.getId()).child(notif.id + "");
+        value.setValue(notif);
+    }
+
     /**
      * Removes a Beeline from database and user.
      * @param zip Zip code.
@@ -266,6 +281,7 @@ public class DatabaseUtils {
 
         // concurrency needed for multiple queries
         final Map<Beeline, Boolean> set = new ConcurrentHashMap<>();
+        final int count = me.saveData.myBeelines.size();
 
         for (final Map.Entry<String, List<Long>> entry : me.saveData.myBeelines.entrySet()) {
             final Set<Long> targets = new HashSet<>(entry.getValue()); // for faster lookups
@@ -273,8 +289,13 @@ public class DatabaseUtils {
             queryBeelinesNear(Integer.parseInt(entry.getKey()), new ResponseHandler<List<Beeline>>() {
                 @Override
                 public void handle(List<Beeline> beelines) {
-                    for (Beeline b : beelines)
+                    for (Beeline b : beelines) {
                         set.put(b, true);
+                        if (set.size() >= count) {
+                            consumer.handle(new ArrayList<>(set.keySet()));
+                            break;
+                        }
+                    }
                 }
             }, new Discriminator<Beeline>() {
                 @Override
@@ -283,8 +304,6 @@ public class DatabaseUtils {
                 }
             });
         }
-
-        consumer.handle(new ArrayList<>(set.keySet()));
     }
 
     /**
@@ -304,6 +323,30 @@ public class DatabaseUtils {
                     System.out.println(bl.toString());
                 }
             }
+        });
+    }
+
+    public static void queryNotifications(final ResponseHandler<ArrayList<Notification>> consumer) {
+        DatabaseReference table = database.getReference("notifications").child("user_" + me.getId());
+        System.out.print("querying notifs for user " + me.getId());
+
+        table.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ArrayList<Notification> result = new ArrayList<>();
+                System.out.print("data changed - getting children of " + dataSnapshot.getKey());
+
+                // get all beelines in zip
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    System.out.println("got a beeline of key " + ds.getKey());
+                    Notification notif = ds.getValue(Notification.class);
+                    result.add(notif);
+                }
+                consumer.handle(result);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
     }
 

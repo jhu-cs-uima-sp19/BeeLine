@@ -2,6 +2,7 @@ package com.wenwanggarzagao.beeline.data;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -32,7 +33,13 @@ public class SavedUserData {
         List<Long> list = myBeelines.get("" + b.to.zip);
         if (list == null)
             return;
-        list.remove(b.id);
+
+        for (Iterator<Long> it = list.iterator(); it.hasNext();) {
+            if (it.next() == b.id) {
+                it.remove();
+            }
+        }
+
         if (list.isEmpty())
             myBeelines.remove("" + b.to.zip);
         DatabaseUtils.saveUser();
