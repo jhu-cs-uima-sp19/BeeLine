@@ -10,7 +10,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.wenwanggarzagao.beeline.data.DatabaseUtils;
+import com.wenwanggarzagao.beeline.data.SavedUserData;
 import com.wenwanggarzagao.beeline.data.User;
+import com.wenwanggarzagao.beeline.io.ResponseHandler;
 
 public class UserProfile extends AppCompatActivity {
 
@@ -30,33 +32,44 @@ public class UserProfile extends AppCompatActivity {
             }
         });
 
-        User me = DatabaseUtils.me;
-
-        TextView nameTextView = (TextView) findViewById(R.id.uprof_name);
-        if (DatabaseUtils.isLoggedin() && me != null && me.getUsername() != null) {
-            nameTextView.setText(me.getUsername());
-        }
-        else {
-            System.out.println("name null");
-        }
-
-        ImageView userImageView = (ImageView) findViewById(R.id.uprof_image);
-        if (DatabaseUtils.isLoggedin() && me != null) {
-            Uri photoURI = me.fbuser.getPhotoUrl();
-            if (photoURI != null) {
-                userImageView.setImageURI(photoURI);
+        if (savedInstanceState != null) {
+            String userUID = savedInstanceState.getString("userUID", null);
+            if (userUID != null) {
+                DatabaseUtils.queryUserData(userUID, new ResponseHandler<SavedUserData>() {
+                    @Override
+                    public void handle(SavedUserData savedUserData) {
+                        //TODO: FINISH THIS
+                    }
+                });
             }
-        }
+        } else {
+            User me = DatabaseUtils.me;
 
-        TextView descripTextView = (TextView) findViewById(R.id.uprof_descrip);
-        if (DatabaseUtils.isLoggedin() && me != null && me.saveData != null) {
-            descripTextView.setText(me.saveData.bio);
-        }
-        else {
-           //System.out.println(DatabaseUtils.isLoggedin() + " " + (me != null) + " " + (me.saveData != null));
-            descripTextView.setText("Could not load user data");
-        }
+            TextView nameTextView = (TextView) findViewById(R.id.uprof_name);
+            if (DatabaseUtils.isLoggedin() && me != null && me.getUsername() != null) {
+                nameTextView.setText(me.getUsername());
+            } else {
+                System.out.println("name null");
+            }
 
+            ImageView userImageView = (ImageView) findViewById(R.id.uprof_image);
+            if (DatabaseUtils.isLoggedin() && me != null) {
+                Uri photoURI = me.fbuser.getPhotoUrl();
+                if (photoURI != null) {
+                    userImageView.setImageURI(photoURI);
+                }
+            }
+
+            TextView descripTextView = (TextView) findViewById(R.id.uprof_descrip);
+            if (DatabaseUtils.isLoggedin() && me != null && me.saveData != null) {
+                descripTextView.setText(me.saveData.bio);
+            } else {
+                //System.out.println(DatabaseUtils.isLoggedin() + " " + (me != null) + " " + (me.saveData != null));
+                descripTextView.setText("Could not load user data");
+            }
+
+        }
     }
+
 
 }
