@@ -263,9 +263,12 @@ public class DatabaseUtils {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     System.out.println("got a beeline of key " + ds.getKey());
                     Beeline beeline = ds.getValue(Beeline.class);
+
                     // filter beelines by discriminator
-                    if (discrim == null || discrim.acceptable(beeline))
+                    if (discrim == null || discrim.acceptable(beeline)) {
                         result.add(beeline);
+                        beeline.load();
+                    }
                 }
                 consumer.handle(result);
             }
@@ -276,7 +279,7 @@ public class DatabaseUtils {
     }
 
     public static void queryMyBeelines(final ResponseHandler<List<Beeline>> consumer) {
-        if (me.saveData.myBeelines == null)
+        if (me == null || me.saveData == null || me.saveData.myBeelines == null)
             return;
 
         // concurrency needed for multiple queries

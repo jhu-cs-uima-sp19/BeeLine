@@ -33,6 +33,7 @@ public class BeelineDetails extends AppCompatActivity {
     private TextView dateTime;
     private ToggleButton join_leave_btn;
     private ArrayAdapter<Beeline> ParticipantsAdapter;
+    private boolean hasJoined;
     final Beeline selectedBeeline = DatabaseUtils.bl;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,18 +70,25 @@ public class BeelineDetails extends AppCompatActivity {
         // });
 
 
-        searchBeelines();
+        hasJoined = searchBeelines();
+        join_leave_btn.setChecked(hasJoined);
         join_leave_btn.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                if (join_leave_btn.isChecked()) {
+                if (!join_leave_btn.isChecked()) {
                     //join_leave_btn.setText("LEAVE");
+                    System.out.println("currently joined, trying to leave");
                     selectedBeeline.leave(DatabaseUtils.me);
+                    hasJoined = false;
+
                 } else {
                     //join_leave_btn.setText("JOIN");
+                    System.out.println("currently not joined, trying to join");
                     selectedBeeline.join(DatabaseUtils.me);
+                    hasJoined = true;
                 }
+                join_leave_btn.setChecked(hasJoined);
             }
         });
 
@@ -128,27 +136,26 @@ public class BeelineDetails extends AppCompatActivity {
         super.onRestoreInstanceState(savedInstanceState);
     }*/
 
-    public void searchBeelines() {
+    public boolean searchBeelines() {
+
         // System.out.println(DatabaseUtils.me.saveData.myBeelines.size());
         System.out.println("Selected beeline id: " + selectedBeeline.id);
         try {
             for (Map.Entry<String, List<Long>> entry : DatabaseUtils.me.saveData.myBeelines.entrySet()) {
 
-                System.out.println("going into loop");
                 System.out.println(entry.getValue());
                 if (entry.getValue().contains(selectedBeeline.id)) {
-                    System.out.println("hi");
-                    join_leave_btn.setChecked(true);
-                    System.out.println("checked and leaving");
-                    return;
+                    System.out.println("FOUND; LEAVE");
+                    return true;
                 }
             }
         } catch (NullPointerException e) {
             System.err.println("No entry set");
         }
 
-        System.out.println("checked and no match");
-        join_leave_btn.setChecked(false);
+        System.out.println("DIDN'T FIND; JOIN");
+        return false;
+
     }
 
 

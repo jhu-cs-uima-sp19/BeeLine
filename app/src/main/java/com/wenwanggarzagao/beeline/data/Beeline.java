@@ -7,10 +7,13 @@ import android.widget.Toast;
 
 import com.google.firebase.database.Exclude;
 import com.wenwanggarzagao.beeline.data.Date;
+import com.wenwanggarzagao.beeline.io.ResponseHandler;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import static com.firebase.ui.auth.AuthUI.getApplicationContext;
@@ -20,8 +23,10 @@ import static com.firebase.ui.auth.AuthUI.getApplicationContext;
  */
 public class Beeline {
 
-    public Beeline() {
+    private static Map<String, SavedUserData> userCache = new HashMap<>();
 
+    public Beeline() {
+        this.participantIds = new ArrayList<>();
     }
 
     // call this when you want to make a new beeline
@@ -51,10 +56,30 @@ public class Beeline {
 
     // list of participants. index 0, is the group leader.
     @Exclude
-    public List<User> participants;
+    public List<SavedUserData> participants;
 
     public boolean isLeader(User user) {
         return participants.size() > 0 && participants.get(0).equals(user);
+    }
+
+    public void load() {
+        if (participants == null) {
+            participants = new ArrayList<>();
+            for (String id : participantIds) {
+                SavedUserData sud = userCache.get(id);
+                if (sud != null) {
+                    participants.add(sud);
+                    continue;
+                }
+
+                DatabaseUtils.queryUserData(id, new ResponseHandler<SavedUserData>() {
+                    @Override
+                    public void handle(SavedUserData savedUserData) {
+                        participants.add(savedUserData);
+                    }
+                });
+            }
+        }
     }
 
     /**
@@ -72,7 +97,7 @@ public class Beeline {
             return;
         }
             participantIds.add(user.getId());
-            participants.add(user);
+            participants.add(user.saveData);
             user.saveData.addBeeline(this);
     }
 
@@ -96,7 +121,7 @@ public class Beeline {
     }
 
     public @Nullable
-    User getLeader() {
+    SavedUserData getLeader() {
         return this.participants.size() > 0 ? this.participants.get(0) : null;
     }
 

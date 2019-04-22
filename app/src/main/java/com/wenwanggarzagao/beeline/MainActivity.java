@@ -38,13 +38,13 @@ public class MainActivity extends AppCompatActivity
     private static final String HARDCODED_PWD = "password123";
 
     // TODO: no more hard coded stuff :(
-    int zip = 21231;
-    Location origin = new Location("9E33", "Baltimore", "MD", (short) 21218);
+    int zip = 21218;
+    /*Location origin = new Location("9E33", "Baltimore", "MD", (short) 21218);
     Location destination = new Location("Fells Point","Baltimore", "MD", (short) 21231);
 
     Date birthday = new Date("12/31/2019");
     Time weird_hour = new Time("12:31");
-    Beeline bee = Beeline.builder().setFromTo(origin, destination).setDate(birthday).setTime(weird_hour).build();
+    Beeline bee = Beeline.builder().setFromTo(origin, destination).setDate(birthday).setTime(weird_hour).build();*/
 
     //Beeline bee;
 
@@ -210,7 +210,7 @@ public class MainActivity extends AppCompatActivity
 
     /** Update the beelines listing */
     public void updateArray() {
-        DatabaseUtils.queryBeelinesNear(zip, new ResponseHandler<List<Beeline>>() {
+        DatabaseUtils.queryMyBeelines(new ResponseHandler<List<Beeline>>() {
 
             @Override
             public void handle(List<Beeline> bls) {

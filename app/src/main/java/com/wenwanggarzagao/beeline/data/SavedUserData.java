@@ -19,18 +19,21 @@ public class SavedUserData {
         if (myBeelines == null)
             myBeelines = new HashMap<>();
 
-        List<Long> list = myBeelines.get("" + b.to.zip);
+        List<Long> list = myBeelines.get("" + b.from.zip);
         if (list == null)
-            myBeelines.put("" + b.to.zip, list = new ArrayList<>());
-        list.add(b.id);
-        DatabaseUtils.saveUser();
+            myBeelines.put("" + b.from.zip, list = new ArrayList<>());
+
+        if (!list.contains(b.id)) {
+            list.add(b.id);
+            DatabaseUtils.saveUser();
+        }
     }
 
     public void removeBeeline(Beeline b) {
         if (myBeelines == null)
             return;
 
-        List<Long> list = myBeelines.get("" + b.to.zip);
+        List<Long> list = myBeelines.get("" + b.from.zip);
         if (list == null)
             return;
 
@@ -41,7 +44,7 @@ public class SavedUserData {
         }
 
         if (list.isEmpty())
-            myBeelines.remove("" + b.to.zip);
+            myBeelines.remove("" + b.from.zip);
         DatabaseUtils.saveUser();
     }
 
