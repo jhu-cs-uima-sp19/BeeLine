@@ -50,6 +50,7 @@ public class Beeline {
     public List<String> participantIds;
 
     // list of participants. index 0, is the group leader.
+    @Exclude
     public List<User> participants;
 
     public boolean isLeader(User user) {
@@ -71,7 +72,7 @@ public class Beeline {
             return;
         }
             participantIds.add(user.getId());
-            participants.remove(user);
+            participants.add(user);
             user.saveData.addBeeline(this);
     }
 

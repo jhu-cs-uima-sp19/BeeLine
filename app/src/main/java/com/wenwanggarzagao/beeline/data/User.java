@@ -10,6 +10,10 @@ public class User {
     public FirebaseUser fbuser;
     public SavedUserData saveData;
 
+    public User() {
+
+    }
+
     public User(FirebaseUser user) {
         this.fbuser = user;
     }

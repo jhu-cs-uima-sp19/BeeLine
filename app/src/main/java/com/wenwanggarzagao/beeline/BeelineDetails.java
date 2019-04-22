@@ -24,6 +24,7 @@ import com.wenwanggarzagao.beeline.io.ResponseHandler;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class BeelineDetails extends AppCompatActivity {
 
@@ -32,7 +33,7 @@ public class BeelineDetails extends AppCompatActivity {
     private TextView dateTime;
     private ToggleButton join_leave_btn;
     private ArrayAdapter<Beeline> ParticipantsAdapter;
-
+    final Beeline selectedBeeline = DatabaseUtils.bl;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +46,7 @@ public class BeelineDetails extends AppCompatActivity {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
 
-        final Beeline selectedBeeline = DatabaseUtils.bl;
+
         locName = findViewById(R.id.origin_dest_txt);
 
         String locationsTxt = selectedBeeline.from + " > " + selectedBeeline.to;
@@ -63,23 +64,22 @@ public class BeelineDetails extends AppCompatActivity {
 
            // @Override
            //public void handle(boolean joinedBeeline) {
-        for (int i = 0; i < DatabaseUtils.me.saveData.myBeelines.size(); i++) {
-            System.out.println(selectedBeeline.id);
-            if (DatabaseUtils.me.saveData.myBeelines.containsValue(selectedBeeline.id)) {
-                System.out.println("beeline found");
-                join_leave_btn.setChecked(true);
-            }
-        }
+
 
         // });
 
+
+        searchBeelines();
         join_leave_btn.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
                 if (join_leave_btn.isChecked()) {
-                    selectedBeeline.join(DatabaseUtils.me);
-                } else {
+                    //join_leave_btn.setText("LEAVE");
                     selectedBeeline.leave(DatabaseUtils.me);
+                } else {
+                    //join_leave_btn.setText("JOIN");
+                    selectedBeeline.join(DatabaseUtils.me);
                 }
             }
         });
@@ -113,6 +113,46 @@ public class BeelineDetails extends AppCompatActivity {
     }
 
 
+    /*@Override
+    protected void onResume() {
+        super.onResume();
+        updateViews();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+    }
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+    }*/
+
+    public void searchBeelines() {
+        // System.out.println(DatabaseUtils.me.saveData.myBeelines.size());
+        System.out.println("Selected beeline id: " + selectedBeeline.id);
+        try {
+            for (Map.Entry<String, List<Long>> entry : DatabaseUtils.me.saveData.myBeelines.entrySet()) {
+
+                System.out.println("going into loop");
+                System.out.println(entry.getValue());
+                if (entry.getValue().contains(selectedBeeline.id)) {
+                    System.out.println("hi");
+                    join_leave_btn.setChecked(true);
+                    System.out.println("checked and leaving");
+                    return;
+                }
+            }
+        } catch (NullPointerException e) {
+            System.err.println("No entry set");
+        }
+
+        System.out.println("checked and no match");
+        join_leave_btn.setChecked(false);
+    }
+
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -127,4 +167,6 @@ public class BeelineDetails extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
 }

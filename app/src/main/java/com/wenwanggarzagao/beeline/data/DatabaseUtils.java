@@ -214,7 +214,7 @@ public class DatabaseUtils {
      */
     public static void pushBeeline(Beeline bline) {
         DatabaseReference table = database.getReference("beelines");
-        DatabaseReference value = table.child("zip_" + bline.to.zip).child("beeline_" + bline.id);
+        DatabaseReference value = table.child("zip_" + bline.from.zip).child("beeline_" + bline.id);
         value.setValue(bline);
     }
 

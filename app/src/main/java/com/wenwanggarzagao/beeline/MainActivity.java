@@ -46,6 +46,8 @@ public class MainActivity extends AppCompatActivity
     Time weird_hour = new Time("12:31");
     Beeline bee = Beeline.builder().setFromTo(origin, destination).setDate(birthday).setTime(weird_hour).build();
 
+    //Beeline bee;
+
     private ArrayList<Beeline> beelines;
     private ArrayAdapter<Beeline> beelineArrayAdapter;
 
