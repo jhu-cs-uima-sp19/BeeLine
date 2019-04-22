@@ -28,6 +28,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.wenwanggarzagao.beeline.data.DatabaseUtils;
+import com.wenwanggarzagao.beeline.io.ResponseHandler;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,11 +45,6 @@ public class SignUpActivity extends AppCompatActivity {
     /** Id to identity READ_CONTACTS permission request. */
     private static final int REQUEST_READ_CONTACTS = 0;
 
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{ "foo@example.com:hello", "bar@example.com:world" };
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -147,10 +145,12 @@ public class SignUpActivity extends AppCompatActivity {
         // Reset errors.
         mEmailView.setError(null);
         mPasswordView.setError(null);
+        mNameView.setError(null);
 
         // Store values at the time of the login attempt.
         String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
+        String username = mNameView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
@@ -181,8 +181,20 @@ public class SignUpActivity extends AppCompatActivity {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
+            DatabaseUtils.createAccount(SignUpActivity.this, username, email, password, new ResponseHandler<Boolean>() {
+                @Override
+                public void handle(Boolean success) {
+                    showProgress(false);
+                    if (success) {
+                        Intent intent = new Intent(getBaseContext(), MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        mPasswordView.setError(getString(R.string.error_incorrect_password));
+                        mPasswordView.requestFocus();
+                    }
+                }
+            });
         }
     }
 
@@ -292,12 +304,14 @@ public class SignUpActivity extends AppCompatActivity {
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
+        private final String mUsername;
         private final String mEmail;
         private final String mPassword;
 
-        UserLoginTask(String email, String password) {
+        UserLoginTask(String username, String email, String password) {
             mEmail = email;
             mPassword = password;
+            mUsername = username;
         }
 
         @Override
