@@ -73,7 +73,7 @@ public class DatabaseUtils {
      * @param email Email of the user.
      * @param pass Password of the user.
      */
-    public static void createAccount(final Activity activity, final String username, final String email, final String pass) {
+    public static void createAccount(final Activity activity, final String username, final String email, final String pass, final ResponseHandler<Boolean> consumer) {
         System.out.println("Attempting to create new account for: " + email);
         mAuth.createUserWithEmailAndPassword(email, pass).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -88,6 +88,9 @@ public class DatabaseUtils {
                 System.out.println("task completed");
                 if (!task.isSuccessful()) {
                     System.out.println("create user failed");
+                    if (consumer != null) {
+                        consumer.handle(false);
+                    }
                     return;
                 }
 
@@ -102,6 +105,9 @@ public class DatabaseUtils {
                 sud.bio = "Sample bio text.";
                 me.setSaveData(sud);
                 pushUserData(sud);
+                if (consumer != null) {
+                    consumer.handle(true);
+                }
             }
         });
     }
@@ -122,8 +128,11 @@ public class DatabaseUtils {
                     System.out.println("log in task failed.");
                     if (task.getException() instanceof FirebaseAuthInvalidUserException) {
                         System.out.println("user null! creating account for " + email);
-                        createAccount(activity, "Joe Ansel Ensky", email, password);
+                        // no such user
+                        Toast.makeText(activity.getApplicationContext(), "That email is not registered.", Toast.LENGTH_SHORT);
                     } else if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
+                        // invalid credentials
+                        Toast.makeText(activity.getApplicationContext(), "Invalid credentials.", Toast.LENGTH_SHORT);
                         System.out.println("user put invalid credentials! " + email);
                     }
                     return;
@@ -149,7 +158,7 @@ public class DatabaseUtils {
                     // TODO update UI
                 } else {
                     System.out.println("user null! creating account for " + email);
-                    createAccount(activity, "Joe Ansel Ensky", email, password);
+                    //createAccount(activity, "Joe Ansel Ensky", email, password);
                 }
             }
         });
@@ -205,7 +214,7 @@ public class DatabaseUtils {
      */
     public static void pushBeeline(Beeline bline) {
         DatabaseReference table = database.getReference("beelines");
-        DatabaseReference value = table.child("zip_" + bline.to.zip).child("beeline_" + bline.id);
+        DatabaseReference value = table.child("zip_" + bline.from.zip).child("beeline_" + bline.id);
         value.setValue(bline);
     }
 
@@ -254,9 +263,12 @@ public class DatabaseUtils {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     System.out.println("got a beeline of key " + ds.getKey());
                     Beeline beeline = ds.getValue(Beeline.class);
+
                     // filter beelines by discriminator
-                    if (discrim == null || discrim.acceptable(beeline))
+                    if (discrim == null || discrim.acceptable(beeline)) {
                         result.add(beeline);
+                        beeline.load();
+                    }
                 }
                 consumer.handle(result);
             }
@@ -267,11 +279,12 @@ public class DatabaseUtils {
     }
 
     public static void queryMyBeelines(final ResponseHandler<List<Beeline>> consumer) {
-        if (me.saveData.myBeelines == null)
+        if (me == null || me.saveData == null || me.saveData.myBeelines == null)
             return;
 
         // concurrency needed for multiple queries
         final Map<Beeline, Boolean> set = new ConcurrentHashMap<>();
+        final int count = me.saveData.myBeelines.size();
 
         for (final Map.Entry<String, List<Long>> entry : me.saveData.myBeelines.entrySet()) {
             final Set<Long> targets = new HashSet<>(entry.getValue()); // for faster lookups
@@ -279,8 +292,13 @@ public class DatabaseUtils {
             queryBeelinesNear(Integer.parseInt(entry.getKey()), new ResponseHandler<List<Beeline>>() {
                 @Override
                 public void handle(List<Beeline> beelines) {
-                    for (Beeline b : beelines)
+                    for (Beeline b : beelines) {
                         set.put(b, true);
+                        if (set.size() >= count) {
+                            consumer.handle(new ArrayList<>(set.keySet()));
+                            break;
+                        }
+                    }
                 }
             }, new Discriminator<Beeline>() {
                 @Override
@@ -289,8 +307,6 @@ public class DatabaseUtils {
                 }
             });
         }
-
-        consumer.handle(new ArrayList<>(set.keySet()));
     }
 
     /**

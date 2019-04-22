@@ -2,6 +2,7 @@ package com.wenwanggarzagao.beeline;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -19,9 +20,11 @@ import android.widget.ToggleButton;
 import com.wenwanggarzagao.beeline.data.Beeline;
 import com.wenwanggarzagao.beeline.data.DatabaseUtils;
 import com.wenwanggarzagao.beeline.data.User;
+import com.wenwanggarzagao.beeline.io.ResponseHandler;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class BeelineDetails extends AppCompatActivity {
 
@@ -30,7 +33,8 @@ public class BeelineDetails extends AppCompatActivity {
     private TextView dateTime;
     private ToggleButton join_leave_btn;
     private ArrayAdapter<Beeline> ParticipantsAdapter;
-
+    private boolean hasJoined;
+    final Beeline selectedBeeline = DatabaseUtils.bl;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +47,7 @@ public class BeelineDetails extends AppCompatActivity {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
 
-        final Beeline selectedBeeline = DatabaseUtils.bl;
+
         locName = findViewById(R.id.origin_dest_txt);
 
         String locationsTxt = selectedBeeline.from + " > " + selectedBeeline.to;
@@ -56,14 +60,35 @@ public class BeelineDetails extends AppCompatActivity {
         dateTime.setText(meetTxt);
 
         join_leave_btn = findViewById(R.id.join_leave_toggle);
+
+        // DatabaseUtils.queryMyBeelines(new ResponseHandler<List<Beeline>>() {
+
+           // @Override
+           //public void handle(boolean joinedBeeline) {
+
+
+        // });
+
+
+        hasJoined = searchBeelines();
+        join_leave_btn.setChecked(hasJoined);
         join_leave_btn.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
-                if (join_leave_btn.isChecked()) {
-                    selectedBeeline.join(DatabaseUtils.me);
-                } else {
+                if (!join_leave_btn.isChecked()) {
+                    //join_leave_btn.setText("LEAVE");
+                    System.out.println("currently joined, trying to leave");
                     selectedBeeline.leave(DatabaseUtils.me);
+                    hasJoined = false;
+
+                } else {
+                    //join_leave_btn.setText("JOIN");
+                    System.out.println("currently not joined, trying to join");
+                    selectedBeeline.join(DatabaseUtils.me);
+                    hasJoined = true;
                 }
+                join_leave_btn.setChecked(hasJoined);
             }
         });
 
@@ -96,6 +121,45 @@ public class BeelineDetails extends AppCompatActivity {
     }
 
 
+    /*@Override
+    protected void onResume() {
+        super.onResume();
+        updateViews();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+    }
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+    }*/
+
+    public boolean searchBeelines() {
+
+        // System.out.println(DatabaseUtils.me.saveData.myBeelines.size());
+        System.out.println("Selected beeline id: " + selectedBeeline.id);
+        try {
+            for (Map.Entry<String, List<Long>> entry : DatabaseUtils.me.saveData.myBeelines.entrySet()) {
+
+                System.out.println(entry.getValue());
+                if (entry.getValue().contains(selectedBeeline.id)) {
+                    System.out.println("FOUND; LEAVE");
+                    return true;
+                }
+            }
+        } catch (NullPointerException e) {
+            System.err.println("No entry set");
+        }
+
+        System.out.println("DIDN'T FIND; JOIN");
+        return false;
+
+    }
+
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -110,4 +174,6 @@ public class BeelineDetails extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
 }

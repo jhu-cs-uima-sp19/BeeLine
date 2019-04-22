@@ -2,6 +2,7 @@ package com.wenwanggarzagao.beeline.data;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -18,23 +19,32 @@ public class SavedUserData {
         if (myBeelines == null)
             myBeelines = new HashMap<>();
 
-        List<Long> list = myBeelines.get("" + b.to.zip);
+        List<Long> list = myBeelines.get("" + b.from.zip);
         if (list == null)
-            myBeelines.put("" + b.to.zip, list = new ArrayList<>());
-        list.add(b.id);
-        DatabaseUtils.saveUser();
+            myBeelines.put("" + b.from.zip, list = new ArrayList<>());
+
+        if (!list.contains(b.id)) {
+            list.add(b.id);
+            DatabaseUtils.saveUser();
+        }
     }
 
     public void removeBeeline(Beeline b) {
         if (myBeelines == null)
             return;
 
-        List<Long> list = myBeelines.get("" + b.to.zip);
+        List<Long> list = myBeelines.get("" + b.from.zip);
         if (list == null)
             return;
-        list.remove(b.id);
+
+        for (Iterator<Long> it = list.iterator(); it.hasNext();) {
+            if (it.next() == b.id) {
+                it.remove();
+            }
+        }
+
         if (list.isEmpty())
-            myBeelines.remove("" + b.to.zip);
+            myBeelines.remove("" + b.from.zip);
         DatabaseUtils.saveUser();
     }
 

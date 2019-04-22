@@ -14,6 +14,7 @@ import com.wenwanggarzagao.beeline.data.Beeline;
 import com.wenwanggarzagao.beeline.data.DatabaseUtils;
 import com.wenwanggarzagao.beeline.data.Date;
 import com.wenwanggarzagao.beeline.data.Location;
+import com.wenwanggarzagao.beeline.data.SavedUserData;
 import com.wenwanggarzagao.beeline.data.Time;
 import com.wenwanggarzagao.beeline.data.User;
 
@@ -41,7 +42,7 @@ public class ParticipantsAdaptor extends ArrayAdapter<User> {
         Beeline b = DatabaseUtils.bl;
 
 
-        List<User> participants = new ArrayList<User>();
+        List<SavedUserData> participants = new ArrayList<>();
 
         if (b.participants != null) {
             participants = b.participants;
@@ -59,8 +60,8 @@ public class ParticipantsAdaptor extends ArrayAdapter<User> {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        User people = (User) participants.get(position);
-        holder.participaters.setText(people.getUsername());
+        SavedUserData people = (SavedUserData) participants.get(position);
+        holder.participaters.setText(people.username);
 
 
         return participantView;

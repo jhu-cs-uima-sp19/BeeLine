@@ -95,7 +95,6 @@ public class FindBeelines extends AppCompatActivity
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 DatabaseUtils.bl = (Beeline) beeList.getItemAtPosition(position);
-
                 Intent intent = new Intent(FindBeelines.this, BeelineDetails.class);
                 //based on item add info to intent
 
