@@ -2,6 +2,7 @@ package com.wenwanggarzagao.beeline;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +20,7 @@ import android.widget.ToggleButton;
 import com.wenwanggarzagao.beeline.data.Beeline;
 import com.wenwanggarzagao.beeline.data.DatabaseUtils;
 import com.wenwanggarzagao.beeline.data.User;
+import com.wenwanggarzagao.beeline.io.ResponseHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +58,21 @@ public class BeelineDetails extends AppCompatActivity {
         dateTime.setText(meetTxt);
 
         join_leave_btn = findViewById(R.id.join_leave_toggle);
+
+        // DatabaseUtils.queryMyBeelines(new ResponseHandler<List<Beeline>>() {
+
+           // @Override
+           //public void handle(boolean joinedBeeline) {
+        for (int i = 0; i < DatabaseUtils.me.saveData.myBeelines.size(); i++) {
+            System.out.println(selectedBeeline.id);
+            if (DatabaseUtils.me.saveData.myBeelines.containsValue(selectedBeeline.id)) {
+                System.out.println("beeline found");
+                join_leave_btn.setChecked(true);
+            }
+        }
+
+        // });
+
         join_leave_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
