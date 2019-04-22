@@ -34,7 +34,7 @@ public class SavedUserData {
         if (list == null)
             return;
 
-        for (Iterator<Long> it = list.iterator(); it.hasNext()) {
+        for (Iterator<Long> it = list.iterator(); it.hasNext();) {
             if (it.next() == b.id) {
                 it.remove();
             }
