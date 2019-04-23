@@ -20,6 +20,7 @@ public class SavedUserData {
         for (List<Long> list : myBeelines.values()) {
             c += list.size();
         }
+        System.out.println("saveddata count " + c);
         return c;
     }
 

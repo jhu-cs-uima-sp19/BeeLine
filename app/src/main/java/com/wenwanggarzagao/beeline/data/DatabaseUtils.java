@@ -278,9 +278,6 @@ public class DatabaseUtils {
     }
 
     public static void queryMyBeelines(final ResponseHandler<List<Beeline>> consumer) {
-        if (me == null || me.saveData == null || me.saveData.myBeelines == null)
-            return;
-
         // concurrency needed for multiple queries
         final Map<Beeline, Boolean> set = new ConcurrentHashMap<>();
         final int count = me.saveData.getBeelineCount();
@@ -291,8 +288,10 @@ public class DatabaseUtils {
             queryBeelinesNear(Integer.parseInt(entry.getKey()), new ResponseHandler<List<Beeline>>() {
                 @Override
                 public void handle(List<Beeline> beelines) {
+                    System.out.println("Handling zip " + entry.getKey());
                     for (Beeline b : beelines) {
                         set.put(b, true);
+                        System.out.println("map size is " + set.size() + " | expecting " + count);
                         if (set.size() >= count) {
                             consumer.handle(new ArrayList<>(set.keySet()));
                             break;

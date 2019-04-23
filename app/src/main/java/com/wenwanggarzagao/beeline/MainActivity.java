@@ -125,9 +125,7 @@ public class MainActivity extends AppCompatActivity
         mDrawerList.setOnItemClickListener(this);
         */
 
-        if (DatabaseUtils.isLoggedin()) {
-            updateArray();
-        }
+        updateArray();
 
     }
 
@@ -208,20 +206,22 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void handle(List<Beeline> bls) {
-
-                beelines = new ArrayList<Beeline>();
-                System.out.println("got returned list of size " + bls.size());
+                if (beelines == null) beelines = new ArrayList<Beeline>();
+                else beelines.clear();
+                System.out.println("querymybeelines got returned list of size " + bls.size());
 
                 for (Beeline bl: bls) {
-                    System.out.println(bl.toString());
+                    System.out.println("querymybeelines " + bl.toString());
                     beelines.add(bl);
                 }
 
                 // make array adapter to bind arraylist to listview with new custom item layout
-                beelineArrayAdapter = new BeelineAdaptor(MainActivity.this, R.layout.beeline_layout, beelines);
-                beeList.setAdapter(beelineArrayAdapter);
+                if (beelineArrayAdapter == null) {
+                    beelineArrayAdapter = new BeelineAdaptor(MainActivity.this, R.layout.beeline_layout, beelines);
+                    beeList.setAdapter(beelineArrayAdapter);
+                    registerForContextMenu(beeList);
+                }
 
-                registerForContextMenu(beeList);
             }
         });
         //beelines.add(bee);

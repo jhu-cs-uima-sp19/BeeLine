@@ -129,6 +129,20 @@ public class Beeline {
         return this.participants.size() > 0 ? this.participants.get(0) : null;
     }
 
+    @Override
+    public int hashCode() {
+        return (int) (this.id % 2147483647);
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof Beeline) {
+            Beeline bl = (Beeline) other;
+            return bl.id == this.id;
+        }
+        return false;
+    }
+
     /**
      * Builder for a Beeline, in case we have more complex options later.
      */
