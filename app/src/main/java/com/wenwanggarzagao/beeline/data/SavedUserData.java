@@ -15,6 +15,14 @@ public class SavedUserData {
     // zip -> list of beelines
     public Map<String, List<Long>> myBeelines;
 
+    public int getBeelineCount() {
+        int c = 0;
+        for (List<Long> list : myBeelines.values()) {
+            c += list.size();
+        }
+        return c;
+    }
+
     public void addBeeline(Beeline b) {
         if (myBeelines == null)
             myBeelines = new HashMap<>();

@@ -283,7 +283,7 @@ public class DatabaseUtils {
 
         // concurrency needed for multiple queries
         final Map<Beeline, Boolean> set = new ConcurrentHashMap<>();
-        final int count = me.saveData.myBeelines.size();
+        final int count = me.saveData.getBeelineCount();
 
         for (final Map.Entry<String, List<Long>> entry : me.saveData.myBeelines.entrySet()) {
             final Set<Long> targets = new HashSet<>(entry.getValue()); // for faster lookups
