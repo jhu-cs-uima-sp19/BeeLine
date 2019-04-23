@@ -62,6 +62,10 @@ public class Beeline {
         return participants.size() > 0 && participants.get(0).equals(user);
     }
 
+    public int timeValue() {
+        return meet_date.value(meet_time);
+    }
+
     public void load() {
         if (participants == null) {
             participants = new ArrayList<>();
