@@ -26,6 +26,14 @@ public class Date {
     public int day;
     public int year;
 
+    private static final int hour = 24 * 60;
+
+    public int value(Time time) {
+        return year * 365 * hour
+                + month * 12 * hour
+                + day * hour
+                + time.value();
+    }
 
     @Override
     public String toString() {

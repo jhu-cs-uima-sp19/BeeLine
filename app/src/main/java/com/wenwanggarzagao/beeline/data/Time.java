@@ -33,6 +33,9 @@ public class Time {
     public int hour;
     public int min;
 
+    public int value() {
+        return hour * 60 + min;
+    }
 
     @Override
     public String toString() {
