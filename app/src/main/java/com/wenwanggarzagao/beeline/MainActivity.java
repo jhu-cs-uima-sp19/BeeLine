@@ -37,8 +37,6 @@ public class MainActivity extends AppCompatActivity
     private static final String HARDCODED_USER = "person@place.com";
     private static final String HARDCODED_PWD = "password123";
 
-    // TODO: no more hard coded stuff :(
-    int zip = 21218;
     /*Location origin = new Location("9E33", "Baltimore", "MD", (short) 21218);
     Location destination = new Location("Fells Point","Baltimore", "MD", (short) 21231);
 
@@ -59,9 +57,22 @@ public class MainActivity extends AppCompatActivity
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
 
+    public static boolean needsRefresh = false;
+
+    @Override
+    public void onRestart() {
+        super.onRestart();
+        System.out.println("======================ON RESTART");
+        if (needsRefresh) {
+            this.updateArray();
+            needsRefresh = false;
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        System.out.println("======================ON CREATE");
         setContentView(R.layout.activity_main);
         setTitle("My Beelines");
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -86,13 +97,10 @@ public class MainActivity extends AppCompatActivity
 
         // create ArrayList of courses from database
         beelines = new ArrayList<Beeline>();
-        updateArray();
 
 
         beelineArrayAdapter = new BeelineAdaptor(this, R.layout.beeline_layout, beelines);
         beeList.setAdapter(beelineArrayAdapter);
-
-
         registerForContextMenu(beeList);
 
         beeList.setClickable(true);
@@ -108,31 +116,9 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-
-
-
-
-
-        /*
-        navItems = getResources().getStringArray(R.array.nav_pane_array);
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
-
-        // Set the adapter for the list view
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, navItems));
-        // Set the list's click listener
-        mDrawerList.setOnItemClickListener(this);
-        */
-
         updateArray();
 
     }
-
-    /*@Override
-    protected void onResume() {
-        super.onResume();
-    }*/
 
     @Override
     public void onBackPressed() {
@@ -162,12 +148,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        //if (id == R.id.action_settings) {
-        //    return true;
-        //}
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -206,8 +186,7 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void handle(List<Beeline> bls) {
-                if (beelines == null) beelines = new ArrayList<Beeline>();
-                else beelines.clear();
+                beelines = new ArrayList<Beeline>();
                 System.out.println("querymybeelines got returned list of size " + bls.size());
 
                 for (Beeline bl: bls) {
@@ -216,12 +195,10 @@ public class MainActivity extends AppCompatActivity
                 }
 
                 // make array adapter to bind arraylist to listview with new custom item layout
-                if (beelineArrayAdapter == null) {
-                    beelineArrayAdapter = new BeelineAdaptor(MainActivity.this, R.layout.beeline_layout, beelines);
-                    beeList.setAdapter(beelineArrayAdapter);
-                    registerForContextMenu(beeList);
-                }
-
+                System.out.println("setting up beelinearrayadapter");
+                beelineArrayAdapter = new BeelineAdaptor(MainActivity.this, R.layout.beeline_layout, beelines);
+                beeList.setAdapter(beelineArrayAdapter);
+                registerForContextMenu(beeList);
             }
         });
         //beelines.add(bee);

@@ -120,6 +120,11 @@ public class DatabaseUtils {
      */
     public static void signIn(final Activity activity, final String email, final String password, final boolean wasCreated, final ResponseHandler<Boolean> after) {
         System.out.println("Attempting sign-in to " + email);
+        if (email == null || password == null || email.isEmpty() || password.isEmpty()) {
+            after.handle(false);
+            return;
+        }
+
         mAuth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
@@ -161,18 +166,15 @@ public class DatabaseUtils {
                 }
             }
         });
-
     }
 
     public static void pushUserData(SavedUserData data) {
-        System.out.println("Trying to push data");
         database.getReference("users").child(data.userId).setValue(data).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 queryUserData(me.fbuser.getUid(), new ResponseHandler<SavedUserData>() {
                     @Override
                     public void handle(SavedUserData savedUserData) {
-                        System.out.println("Pushed data successfully!");
                         System.out.println(savedUserData.username + " " + savedUserData.email + " " + savedUserData.userId);
                     }
                 });
@@ -186,20 +188,15 @@ public class DatabaseUtils {
      * @param consumer What to do after the SavedUserData is fetched.
      */
     public static void queryUserData(String uid, final ResponseHandler<SavedUserData> consumer) {
-        System.out.println("querying user data");
         database.getReference("users").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot ds) {
-                System.out.println("ondatachange called!");
                 if (!ds.exists()) {
-                    System.out.println("but data was null......");
                     return;
                 }
 
-                System.out.println("pinging data snapshot: [" + ds.getValue().toString() + "]");
                 SavedUserData result = ds.getValue(SavedUserData.class);
                 consumer.handle(result);
-                System.out.println("pinged data snapshot");
             }
 
             @Override
@@ -251,16 +248,16 @@ public class DatabaseUtils {
             database = FirebaseDatabase.getInstance();
 
         DatabaseReference table = database.getReference("beelines").child("zip_" + zip);
-        System.out.print("querying zip " + zip);
+        System.out.println("getBeelinesNear " + zip);
 
         table.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                System.out.print("data changed - getting children of " + dataSnapshot.getKey());
+                System.out.println("\tqueryBeelinesNear " + dataSnapshot.getKey() + ":");
                 List<Beeline> result = new ArrayList<>();
                 // get all beelines in zip
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    System.out.println("got a beeline of key " + ds.getKey());
+                    System.out.println("\t\tfound: " + ds.getKey());
                     Beeline beeline = ds.getValue(Beeline.class);
 
                     // filter beelines by discriminator
@@ -284,18 +281,21 @@ public class DatabaseUtils {
 
         for (final Map.Entry<String, List<Long>> entry : me.saveData.myBeelines.entrySet()) {
             final Set<Long> targets = new HashSet<>(entry.getValue()); // for faster lookups
+            System.out.println("QueryMyBeelines for zip: " + entry.getKey());
 
             queryBeelinesNear(Integer.parseInt(entry.getKey()), new ResponseHandler<List<Beeline>>() {
                 @Override
                 public void handle(List<Beeline> beelines) {
-                    System.out.println("Handling zip " + entry.getKey());
                     for (Beeline b : beelines) {
                         set.put(b, true);
-                        System.out.println("map size is " + set.size() + " | expecting " + count);
+                        System.out.println("- For beeline " + b.toString() + ": map size is " + set.size() + " | expecting " + count);
                         if (set.size() >= count) {
                             consumer.handle(new ArrayList<>(set.keySet()));
                             break;
                         }
+                    }
+                    if (set.size() >= count) {
+                        consumer.handle(new ArrayList<>(set.keySet()));
                     }
                 }
             }, new Discriminator<Beeline>() {

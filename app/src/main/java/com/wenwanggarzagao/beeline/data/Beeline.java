@@ -130,6 +130,11 @@ public class Beeline {
     }
 
     @Override
+    public String toString() {
+        return this.id + " " + this.to.zip;
+    }
+
+    @Override
     public int hashCode() {
         return (int) (this.id % 2147483647);
     }
