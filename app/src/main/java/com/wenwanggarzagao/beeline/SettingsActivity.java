@@ -94,8 +94,8 @@ public class SettingsActivity extends AppCompatActivity
 
         if (id == R.id.nav_home) {
             Intent intent = new Intent(SettingsActivity.this, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-            startActivityIfNeeded(intent, 0);
+            startActivity(intent);
+            finish();
         } else if (id == R.id.nav_find) {
             Intent intent = new Intent(SettingsActivity.this, FindBeelines.class);
             startActivity(intent);
@@ -104,8 +104,8 @@ public class SettingsActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_settings) {
             Intent intent = new Intent(SettingsActivity.this, SettingsActivity.class);
-            startActivity(intent);
-            finish();
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivityIfNeeded(intent, 0);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
