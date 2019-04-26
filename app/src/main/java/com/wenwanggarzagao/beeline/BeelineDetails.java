@@ -37,6 +37,7 @@ public class BeelineDetails extends AppCompatActivity {
     private ToggleButton join_leave_btn;
 
     private boolean hasJoined;
+    private boolean originallyJoined;
     final Beeline selectedBeeline = DatabaseUtils.bl;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +74,7 @@ public class BeelineDetails extends AppCompatActivity {
         // });
 
 
-        hasJoined = searchBeelines();
+        originallyJoined = hasJoined = searchBeelines();
         join_leave_btn.setChecked(hasJoined);
         join_leave_btn.setOnClickListener(new View.OnClickListener() {
 
@@ -84,13 +85,18 @@ public class BeelineDetails extends AppCompatActivity {
                     System.out.println("currently joined, trying to leave");
                     selectedBeeline.leave(DatabaseUtils.me);
                     hasJoined = false;
+                    System.out.println("left beeline");
 
                 } else {
                     //join_leave_btn.setText("JOIN");
                     System.out.println("currently not joined, trying to join");
                     selectedBeeline.join(DatabaseUtils.me);
                     hasJoined = true;
+                    System.out.println("joined beeline");
                 }
+
+                MainActivity.needsRefresh = originallyJoined != hasJoined;
+                System.out.println("needs refresh? " + MainActivity.needsRefresh);
                 join_leave_btn.setChecked(hasJoined);
             }
         });
@@ -175,8 +181,6 @@ public class BeelineDetails extends AppCompatActivity {
         return false;
 
     }
-
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

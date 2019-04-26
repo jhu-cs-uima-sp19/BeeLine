@@ -39,7 +39,13 @@ public class NotificationPreferenceFragment extends PreferenceFragmentCompat {
             }
         });
 
-        return inflater.inflate(R.layout.activity_settings, container, false);
+        final View view = inflater.inflate(R.layout.content_settings, container, false);
+        final ViewGroup innerContainer = (ViewGroup) view.findViewById(R.id.layout_settings);
+        final View innerView = super.onCreateView(inflater, innerContainer, savedInstanceState);
+        if (innerView != null) {
+            innerContainer.addView(innerView);
+        }
+        return view;
     }
 
     @Override

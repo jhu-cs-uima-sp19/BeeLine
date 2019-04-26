@@ -5,6 +5,9 @@ import android.content.SharedPreferences;
 import android.support.design.widget.NavigationView;
 import android.support.v14.preference.MultiSelectListPreference;
 import android.support.v14.preference.SwitchPreference;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -12,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,12 +42,30 @@ public class SettingsActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.layout_settings, new NotificationPreferenceFragment())
+                .commit();
+
+        /*
+        try {
+            Log.i("S", "Fragment settings start");
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            NotificationPreferenceFragment fragment = new NotificationPreferenceFragment();
+            fragmentTransaction.add(R.id.layout_settings, fragment);
+            fragmentTransaction.commit();
+            Log.i("S", "Fragment settings end");
+        } catch (Exception e) {
+            Log.i("S", "what the actual fuckkkkkkkk");
+        }*/
+
         //Prefs
-        PreferenceManager.setDefaultValues(this, R.xml.pref_settings, false);
+        /*(PreferenceManager.setDefaultValues(this, R.xml.pref_settings, false);
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
-
+        */
 
     }
 

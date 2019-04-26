@@ -8,6 +8,10 @@ import java.util.Map;
 
 public class SavedUserData {
 
+    public SavedUserData() {
+        myBeelines = new HashMap<>();
+    }
+
     public String email;
     public String username;
     public String userId;

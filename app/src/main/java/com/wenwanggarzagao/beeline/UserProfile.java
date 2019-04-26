@@ -32,6 +32,10 @@ public class UserProfile extends AppCompatActivity {
             }
         });
 
+        final TextView nameTextView = (TextView) findViewById(R.id.uprof_name);
+        ImageView userImageView = (ImageView) findViewById(R.id.uprof_image);
+        final TextView descripTextView = (TextView) findViewById(R.id.uprof_descrip);
+
         if (savedInstanceState != null) {
             String userUID = savedInstanceState.getString("userUID", null);
             if (userUID != null) {
@@ -39,20 +43,20 @@ public class UserProfile extends AppCompatActivity {
                     @Override
                     public void handle(SavedUserData savedUserData) {
                         //TODO: FINISH THIS
+                        nameTextView.setText(savedUserData.username);
+                        descripTextView.setText(savedUserData.bio);
                     }
                 });
             }
         } else {
             User me = DatabaseUtils.me;
 
-            TextView nameTextView = (TextView) findViewById(R.id.uprof_name);
             if (DatabaseUtils.isLoggedin() && me != null && me.getUsername() != null) {
                 nameTextView.setText(me.getUsername());
             } else {
                 System.out.println("name null");
             }
 
-            ImageView userImageView = (ImageView) findViewById(R.id.uprof_image);
             if (DatabaseUtils.isLoggedin() && me != null) {
                 Uri photoURI = me.fbuser.getPhotoUrl();
                 if (photoURI != null) {
@@ -60,7 +64,6 @@ public class UserProfile extends AppCompatActivity {
                 }
             }
 
-            TextView descripTextView = (TextView) findViewById(R.id.uprof_descrip);
             if (DatabaseUtils.isLoggedin() && me != null && me.saveData != null) {
                 descripTextView.setText(me.saveData.bio);
             } else {
