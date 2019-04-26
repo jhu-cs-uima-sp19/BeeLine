@@ -24,6 +24,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.wenwanggarzagao.beeline.data.Beeline;
 import com.wenwanggarzagao.beeline.data.DatabaseUtils;
 import com.wenwanggarzagao.beeline.data.Date;
@@ -46,6 +47,8 @@ public class FindBeelines extends AppCompatActivity
     private ListView beeList;
     private Context context; // For adaptor
     private Cursor curse; // Database Cursor
+
+    MaterialSearchView searchView;
 
 
     static final int REQUEST_CODE = 1;
@@ -102,6 +105,11 @@ public class FindBeelines extends AppCompatActivity
                 startActivity(intent);
             }
         });
+
+        searchView = findViewById(R.id.search_view);
+
+
+
 
         //TODO: change interest image
 //        final ImageView interestImg = findViewById(R.id.interest_icon);
@@ -173,6 +181,7 @@ public class FindBeelines extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+
         ImageView navProfImgView = (ImageView) findViewById(R.id.nav_profImg);
         navProfImgView.setOnClickListener(new View.OnClickListener() {
 
@@ -182,6 +191,10 @@ public class FindBeelines extends AppCompatActivity
                 startActivity(intent);
             }
         });
+
+        MenuItem item = menu.findItem(R.id.action_search);
+        searchView.setMenuItem(item);
+
 
         return true;
     }
