@@ -115,7 +115,7 @@ public class Beeline {
             return;
 
         participantIds.remove(user.getId());
-        participants.remove(user);
+        System.out.println("partipant removed " + participants.remove(user));
         user.saveData.removeBeeline(this);
 
         if (participants.isEmpty()) {

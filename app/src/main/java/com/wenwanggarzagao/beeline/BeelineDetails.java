@@ -94,6 +94,7 @@ public class BeelineDetails extends AppCompatActivity {
                     hasJoined = true;
                     System.out.println("joined beeline");
                 }
+                DatabaseUtils.pushBeeline(selectedBeeline);
 
                 MainActivity.needsRefresh = originallyJoined != hasJoined;
                 System.out.println("needs refresh? " + MainActivity.needsRefresh);
