@@ -175,9 +175,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 @Override
                 public void handle(Boolean success) {
                     if (success) {
-                        Intent intent = new Intent(getBaseContext(), MainActivity.class);
-                        startActivity(intent);
-                        finish();
+                        if (!flag) {
+                            flag = true;
+                            Intent intent = new Intent(getBaseContext(), MainActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
                     } else {
                         mPasswordView.setError(getString(R.string.error_incorrect_password));
                         mPasswordView.requestFocus();
@@ -187,6 +190,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             });
         }
     }
+
+    private boolean flag;
 
     private boolean isEmailValid(String email) {
         //TODO: Replace this with your own logic
