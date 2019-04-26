@@ -47,25 +47,11 @@ public class SettingsActivity extends AppCompatActivity
                 .replace(R.id.layout_settings, new NotificationPreferenceFragment())
                 .commit();
 
-        /*
-        try {
-            Log.i("S", "Fragment settings start");
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            NotificationPreferenceFragment fragment = new NotificationPreferenceFragment();
-            fragmentTransaction.add(R.id.layout_settings, fragment);
-            fragmentTransaction.commit();
-            Log.i("S", "Fragment settings end");
-        } catch (Exception e) {
-            Log.i("S", "what the actual fuckkkkkkkk");
-        }*/
-
         //Prefs
-        /*(PreferenceManager.setDefaultValues(this, R.xml.pref_settings, false);
+        PreferenceManager.setDefaultValues(this, R.xml.pref_settings, false);
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
-        */
 
     }
 
@@ -123,7 +109,9 @@ public class SettingsActivity extends AppCompatActivity
             startActivity(intent);
             finish();
         } else if (id == R.id.nav_buzz) {
-
+            Intent intent = new Intent(SettingsActivity.this, Buzz.class);
+            startActivity(intent);
+            finish();
         } else if (id == R.id.nav_settings) {
             Intent intent = new Intent(SettingsActivity.this, SettingsActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);

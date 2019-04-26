@@ -173,6 +173,9 @@ public class Buzz extends AppCompatActivity
         } else if (id == R.id.nav_buzz) {
             // we're already here, dont do anything
         } else if (id == R.id.nav_settings) {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+            finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
