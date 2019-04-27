@@ -20,6 +20,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.wenwanggarzagao.beeline.data.DatabaseUtils;
 
 public class SettingsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, SharedPreferences.OnSharedPreferenceChangeListener {
@@ -77,11 +80,16 @@ public class SettingsActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+
+        TextView navUserName = (TextView) findViewById(R.id.nav_profName);
+        navUserName.setText(DatabaseUtils.me.saveData.username);
+
         ImageView navProfImgView = (ImageView) findViewById(R.id.nav_profImg);
         navProfImgView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(SettingsActivity.this, UserProfile.class);
+                intent.putExtra("userUID", DatabaseUtils.me.saveData.userId);
                 startActivity(intent);
             }
         });
