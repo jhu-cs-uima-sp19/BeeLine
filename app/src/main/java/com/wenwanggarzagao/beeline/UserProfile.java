@@ -36,18 +36,15 @@ public class UserProfile extends AppCompatActivity {
         ImageView userImageView = (ImageView) findViewById(R.id.uprof_image);
         final TextView descripTextView = (TextView) findViewById(R.id.uprof_descrip);
 
-        if (savedInstanceState != null) {
-            String userUID = savedInstanceState.getString("userUID", null);
-            if (userUID != null) {
-                DatabaseUtils.queryUserData(userUID, new ResponseHandler<SavedUserData>() {
-                    @Override
-                    public void handle(SavedUserData savedUserData) {
-                        //TODO: FINISH THIS
-                        nameTextView.setText(savedUserData.username);
-                        descripTextView.setText(savedUserData.bio);
-                    }
-                });
-            }
+        String userUID = getIntent().getExtras().getString("userUID", null);
+        if (userUID != null) {
+            DatabaseUtils.queryUserData(userUID, new ResponseHandler<SavedUserData>() {
+                @Override
+                public void handle(SavedUserData savedUserData) {
+                    nameTextView.setText(savedUserData.username);
+                    descripTextView.setText(savedUserData.bio);
+                }
+            });
         } else {
             User me = DatabaseUtils.me;
 

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,9 +54,9 @@ public class ParticipantsAdaptor extends RecyclerView.Adapter<ParticipantsAdapto
         return usersList.size();
     }
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
+    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
-        //private ImageView userPropic;
+        private ImageView userPropic;
         private TextView userName;
         private WeakReference<ClickListener> listenerRef;
 
@@ -63,28 +64,26 @@ public class ParticipantsAdaptor extends RecyclerView.Adapter<ParticipantsAdapto
 
             super(itemView);
 
-
             listenerRef = new WeakReference<>(listener);
-            //userPropic = (ImageView) itemView.findViewById(R.id.profile_icon);
+
+            userPropic = (ImageView) itemView.findViewById(R.id.profile_icon);
             userName = (TextView) itemView.findViewById(R.id.participant_name);
 
             itemView.setOnClickListener(this);
             userName.setOnClickListener(this);
-            //userPropic.setOnClickListener(this);
-
+            userPropic.setOnClickListener(this);
         }
 
         // onClick Listener for view
         @Override
         public void onClick(View v) {
-
-            /*if (v.getId() == userPropic.getId()) {
-                Toast.makeText(v.getContext(), "ITEM PRESSED = " + String.valueOf(getAdapterPosition()), Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(v.getContext(), "ROW PRESSED = " + String.valueOf(getAdapterPosition()), Toast.LENGTH_SHORT).show();
-            }*/
-
             listenerRef.get().onPositionClicked(getAdapterPosition());
+
+            SavedUserData savedUserData = usersList.get(getAdapterPosition());
+            Context context = itemView.getContext();
+            Intent intent = new Intent(context, UserProfile.class);
+            intent.putExtra("userUID", savedUserData.userId);
+            context.startActivity(intent);
         }
 
 
