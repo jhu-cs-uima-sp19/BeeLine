@@ -8,6 +8,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 
@@ -41,9 +43,8 @@ public class FindBeelines extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private ArrayList<Beeline> beelines;
-    private ArrayAdapter<Beeline> beelineArrayAdapter;
 
-    private ListView beeList;
+    private RecyclerView beeListView;
     private Context context; // For adaptor
     private Cursor curse; // Database Cursor
 
@@ -79,10 +80,12 @@ public class FindBeelines extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        beeList = (ListView) findViewById(R.id.beeline_list);
+        beeListView = findViewById(R.id.beeline_list);
+        beeListView.setLayoutManager(new LinearLayoutManager(this));
 
-        beeList.setClickable(true);
-        beeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {Bundle bundle = new Bundle();
+
+        //beeList.setClickable(true);
+        /*beeList.OnItemClickListener(new AdapterView.OnItemClickListener() {Bundle bundle = new Bundle();
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 DatabaseUtils.bl = (Beeline) beeList.getItemAtPosition(position);
@@ -91,7 +94,7 @@ public class FindBeelines extends AppCompatActivity
 
                 startActivity(intent);
             }
-        });
+        });*/
 
         //TODO: change interest image
 //        final ImageView interestImg = findViewById(R.id.interest_icon);
@@ -141,10 +144,23 @@ public class FindBeelines extends AppCompatActivity
                     }
                 });
                 // make array adapter to bind arraylist to listview with new custom item layout
-                beelineArrayAdapter = new BeelineAdaptor(FindBeelines.this, R.layout.beeline_layout, beelines);
+                /*beelineArrayAdapter = new BeelineAdaptor(beelines, listener);
                 beeList.setAdapter(beelineArrayAdapter);
 
-                registerForContextMenu(beeList);
+                registerForContextMenu(beeList);*/
+                BeelineAdaptor adapter = new BeelineAdaptor(beelines, new ClickListener() {
+                    @Override
+                    public void onPositionClicked(int position) {
+                        DatabaseUtils.bl = (Beeline) beelines.get(position);
+                        // callback performed on click
+                    }
+
+                    @Override public void onLongClicked(int position) {
+                        // callback performed on click
+                    }
+                });
+                beeListView.setAdapter(adapter);
+
             }
         });
     }

@@ -9,6 +9,8 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -47,9 +49,8 @@ public class MainActivity extends AppCompatActivity
     //Beeline bee;
 
     private ArrayList<Beeline> beelines;
-    private ArrayAdapter<Beeline> beelineArrayAdapter;
+    private RecyclerView beeListView;
 
-    private ListView beeList;
     private Context context; // For adaptor
     private Cursor curse; // Database Cursor
 
@@ -90,7 +91,8 @@ public class MainActivity extends AppCompatActivity
         ////////////////////////////////////////
         /* Our Additions (Beeline) etc. */
 
-        beeList = (ListView) findViewById(R.id.beeline_list);
+        beeListView = (RecyclerView) findViewById(R.id.beeline_list);
+        beeListView.setLayoutManager(new LinearLayoutManager(this));
 
         //TODO: change interest image
         //updateInterest();
@@ -99,7 +101,7 @@ public class MainActivity extends AppCompatActivity
         beelines = new ArrayList<Beeline>();
 
 
-        beelineArrayAdapter = new BeelineAdaptor(this, R.layout.beeline_layout, beelines);
+        /*beelineArrayAdapter = new BeelineAdaptor(this, R.layout.beeline_layout, beelines);
         beeList.setAdapter(beelineArrayAdapter);
         registerForContextMenu(beeList);
 
@@ -114,7 +116,7 @@ public class MainActivity extends AppCompatActivity
 
                 startActivity(intent);
             }
-        });
+        });*/
 
         updateArray();
 
@@ -196,16 +198,26 @@ public class MainActivity extends AppCompatActivity
 
                 // make array adapter to bind arraylist to listview with new custom item layout
                 System.out.println("setting up beelinearrayadapter");
-                beelineArrayAdapter = new BeelineAdaptor(MainActivity.this, R.layout.beeline_layout, beelines);
+                /*beelineArrayAdapter = new BeelineAdaptor(MainActivity.this, R.layout.beeline_layout, beelines);
                 beeList.setAdapter(beelineArrayAdapter);
-                registerForContextMenu(beeList);
+                registerForContextMenu(beeList);*/
+                BeelineAdaptor adapter = new BeelineAdaptor(beelines, new ClickListener() {
+                    @Override public void onPositionClicked(int position) {
+                        // callback performed on click
+                    }
+
+                    @Override public void onLongClicked(int position) {
+                        // callback performed on click
+                    }
+                });
+                beeListView.setAdapter(adapter);
             }
         });
         //beelines.add(bee);
     }
 
     /** Update interest flower */
-    public void updateInterest() {
+    /*public void updateInterest() {
         final ImageView interestImg = findViewById(R.id.interest_icon);
 
         interestImg.setOnClickListener(new View.OnClickListener() {
@@ -214,6 +226,6 @@ public class MainActivity extends AppCompatActivity
                 interestImg.setImageResource(R.drawable.target_flowers);
             }
         });
-    }
+    }*/
 
 }
