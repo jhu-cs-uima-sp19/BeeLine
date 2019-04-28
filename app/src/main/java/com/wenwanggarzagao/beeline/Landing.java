@@ -29,7 +29,6 @@ public class Landing extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getBaseContext(), LoginActivity.class);
                 startActivity(intent);
-                finish();
             }
         });
         signup = findViewById(R.id.text_signup);
@@ -39,7 +38,6 @@ public class Landing extends AppCompatActivity {
                 signup.setTextColor(getResources().getColor(R.color.colorAccent));
                 Intent intent = new Intent(getBaseContext(), SignUpActivity.class);
                 startActivity(intent);
-                finish();
             }
         });
     }

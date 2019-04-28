@@ -25,6 +25,7 @@ import com.wenwanggarzagao.beeline.data.Beeline;
 import com.wenwanggarzagao.beeline.SettingsActivity;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import com.wenwanggarzagao.beeline.data.DatabaseUtils;
@@ -203,6 +204,12 @@ public class MainActivity extends AppCompatActivity
                     beelines.add(bl);
                 }
 
+                beelines.sort(new Comparator<Beeline>() {
+                    @Override
+                    public int compare(Beeline o1, Beeline o2) {
+                        return o1.timeValue() - o2.timeValue();
+                    }
+                });
                 // make array adapter to bind arraylist to listview with new custom item layout
                 System.out.println("setting up beelinearrayadapter");
                 /*beelineArrayAdapter = new BeelineAdaptor(MainActivity.this, R.layout.beeline_layout, beelines);
