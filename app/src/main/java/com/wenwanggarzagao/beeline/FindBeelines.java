@@ -1,14 +1,25 @@
 package com.wenwanggarzagao.beeline;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.location.Address;
+import android.location.Criteria;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -25,29 +36,39 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.wenwanggarzagao.beeline.data.Beeline;
 import com.wenwanggarzagao.beeline.data.DatabaseUtils;
 import com.wenwanggarzagao.beeline.io.ResponseHandler;
 
+import java.io.IOException;
+import java.security.Provider;
+import java.security.Security;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 public class FindBeelines extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, LocationListener {
 
     private ViewDialog dialog;
 
     private ArrayList<Beeline> beelines;
     private static final int VERTICAL_ITEM_SPACE = 48;
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
     private RecyclerView beeListView;
     private Context context; // For adaptor
     private Cursor curse; // Database Cursor
-
-
+    public int currentZip;
+    private int zip;
     static final int REQUEST_CODE = 1;
+    public double latitude;
+    public double longitude;
+    public LocationManager locationManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,9 +102,61 @@ public class FindBeelines extends AppCompatActivity
         beeListView.setLayoutManager(new LinearLayoutManager(this));
 
         beeListView.addItemDecoration(new VerticalSpaceItemDecoration(VERTICAL_ITEM_SPACE));
+        locationManager=(LocationManager) FindBeelines.this.getSystemService(Context.LOCATION_SERVICE);
 
-        updateArray();
+        currentZip = getLocation();
+        updateArray(currentZip);
+        System.out.println(currentZip);
     }
+
+    public static boolean isLocationEnabled(Context context)
+    {
+        //...............
+        return true;
+    }
+
+    protected int getLocation() {
+        //LocationManager locationManager;
+        Criteria criteria;
+        if (MainActivity.locationPermissionGranted) {//criteria = new Criteria();
+            //String bestProvider = String.valueOf(locationManager.getBestProvider(criteria, true));
+
+            try {
+                Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                if (location != null) {
+                    try {
+                        double longitude = ((Location) location).getLongitude();
+                        double latitude = location.getLatitude();
+                        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+                        List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+                        zip = Integer.parseInt(addresses.get(0).getPostalCode());
+                        return zip;
+                    } catch (IOException e) {
+                        Toast toast = Toast.makeText(getApplicationContext(), "Not able to find your location", Toast.LENGTH_SHORT);
+                        toast.show();
+                        zip = 21231;
+                        System.out.println("Not able to find your location");
+                        return zip;
+                    }
+                } else {
+                    //This is what you need:
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, this);
+                    System.out.println("Not able to find location");
+                    //zip = 21231;
+                    //return zip;
+                }
+            }
+                catch (SecurityException e) {
+                    Toast toast = Toast.makeText(getApplicationContext(),"Enable location settings", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+
+
+
+            }
+            return zip;
+        }
+
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
@@ -94,14 +167,51 @@ public class FindBeelines extends AppCompatActivity
             String start = launcher.getStringExtra("start");
             String destination = launcher.getStringExtra("destination");
             */
-            updateArray();
+            updateArray(currentZip);
         }
     }
 
-    public void updateArray() {
+    @Override
+    public void onLocationChanged(Location location) {
+        //Hey, a non null location! Sweet!
+
+        //remove location callback:
+        locationManager.removeUpdates(this);
+
+        //open the map:
+        latitude = location.getLatitude();
+        longitude = location.getLongitude();
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+            currentZip = Integer.parseInt(addresses.get(0).getPostalCode());
+        } catch (IOException e) {
+            Toast toast = Toast.makeText(getApplicationContext(), "no zip code update", Toast.LENGTH_SHORT);
+            toast.show();
+        }
+        //Toast.makeText(MainActivity.this, "latitude:" + latitude + " longitude:" + longitude, Toast.LENGTH_SHORT).show();
+        //searchNearestPlace(voice2text);
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
+
+    public void updateArray(int zip) {
         // TODO replace with user location
         dialog.showDialog();
-        DatabaseUtils.queryBeelinesNear(21218, new ResponseHandler<List<Beeline>>() {
+        DatabaseUtils.queryBeelinesNear(zip, new ResponseHandler<List<Beeline>>() {
 
             @Override
             public void handle(List<Beeline> bls) {

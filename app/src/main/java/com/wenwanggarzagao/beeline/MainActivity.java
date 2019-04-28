@@ -1,10 +1,15 @@
 package com.wenwanggarzagao.beeline;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -40,7 +45,8 @@ public class MainActivity extends AppCompatActivity
 
     private static final String HARDCODED_USER = "person@place.com";
     private static final String HARDCODED_PWD = "password123";
-
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+    public static Boolean locationPermissionGranted = false;
     /*Location origin = new Location("9E33", "Baltimore", "MD", (short) 21218);
     Location destination = new Location("Fells Point","Baltimore", "MD", (short) 21231);
 
@@ -102,7 +108,7 @@ public class MainActivity extends AppCompatActivity
 
         // create ArrayList of courses from database
         beelines = new ArrayList<Beeline>();
-
+        getLocationPermission();
 
         /*beelineArrayAdapter = new BeelineAdaptor(this, R.layout.beeline_layout, beelines);
         beeList.setAdapter(beelineArrayAdapter);
@@ -123,6 +129,39 @@ public class MainActivity extends AppCompatActivity
 
         updateArray();
 
+    }
+    private void getLocationPermission() {
+        String [] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
+        if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                    Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                locationPermissionGranted = true;
+            } else {
+                ActivityCompat.requestPermissions(this, permissions, LOCATION_PERMISSION_REQUEST_CODE);
+            }
+        }else {
+            ActivityCompat.requestPermissions(this, permissions, LOCATION_PERMISSION_REQUEST_CODE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        locationPermissionGranted = false;
+        switch(requestCode) {
+            case LOCATION_PERMISSION_REQUEST_CODE: {
+                if(grantResults.length > 0) {
+                    for (int i = 0; i < grantResults.length; i++) {
+                        if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                            locationPermissionGranted = false;
+                            return;
+                        }
+                    }
+                    locationPermissionGranted = true;
+                    //initialize our map
+                }
+            }
+        }
     }
 
     @Override
