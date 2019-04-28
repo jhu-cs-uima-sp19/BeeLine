@@ -20,6 +20,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.wenwanggarzagao.beeline.data.DatabaseUtils;
 
 public class SettingsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, SharedPreferences.OnSharedPreferenceChangeListener {
@@ -47,25 +50,11 @@ public class SettingsActivity extends AppCompatActivity
                 .replace(R.id.layout_settings, new NotificationPreferenceFragment())
                 .commit();
 
-        /*
-        try {
-            Log.i("S", "Fragment settings start");
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            NotificationPreferenceFragment fragment = new NotificationPreferenceFragment();
-            fragmentTransaction.add(R.id.layout_settings, fragment);
-            fragmentTransaction.commit();
-            Log.i("S", "Fragment settings end");
-        } catch (Exception e) {
-            Log.i("S", "what the actual fuckkkkkkkk");
-        }*/
-
         //Prefs
-        /*(PreferenceManager.setDefaultValues(this, R.xml.pref_settings, false);
+        PreferenceManager.setDefaultValues(this, R.xml.pref_settings, false);
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
-        */
 
     }
 
@@ -91,11 +80,16 @@ public class SettingsActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+
+        TextView navUserName = (TextView) findViewById(R.id.nav_profName);
+        navUserName.setText(DatabaseUtils.me.saveData.username);
+
         ImageView navProfImgView = (ImageView) findViewById(R.id.nav_profImg);
         navProfImgView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(SettingsActivity.this, UserProfile.class);
+                intent.putExtra("userUID", DatabaseUtils.me.saveData.userId);
                 startActivity(intent);
             }
         });
@@ -116,18 +110,20 @@ public class SettingsActivity extends AppCompatActivity
 
         if (id == R.id.nav_home) {
             Intent intent = new Intent(SettingsActivity.this, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-            startActivityIfNeeded(intent, 0);
+            startActivity(intent);
+            finish();
         } else if (id == R.id.nav_find) {
             Intent intent = new Intent(SettingsActivity.this, FindBeelines.class);
             startActivity(intent);
             finish();
         } else if (id == R.id.nav_buzz) {
-
-        } else if (id == R.id.nav_settings) {
-            Intent intent = new Intent(SettingsActivity.this, SettingsActivity.class);
+            Intent intent = new Intent(SettingsActivity.this, Buzz.class);
             startActivity(intent);
             finish();
+        } else if (id == R.id.nav_settings) {
+            Intent intent = new Intent(SettingsActivity.this, SettingsActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivityIfNeeded(intent, 0);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

@@ -1,71 +1,112 @@
 package com.wenwanggarzagao.beeline;
 
 import android.content.Context;
+import android.content.Intent;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.wenwanggarzagao.beeline.data.Beeline;
+import com.wenwanggarzagao.beeline.data.DatabaseUtils;
 import com.wenwanggarzagao.beeline.data.Date;
 import com.wenwanggarzagao.beeline.data.Location;
+import com.wenwanggarzagao.beeline.data.SavedUserData;
 import com.wenwanggarzagao.beeline.data.Time;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.List;
 
-public class BeelineAdaptor extends ArrayAdapter<Beeline> {
 
-    int resource;
+public class BeelineAdaptor extends RecyclerView.Adapter<com.wenwanggarzagao.beeline.BeelineAdaptor.beeViewHolder> {
 
-    public BeelineAdaptor(Context ctx, int res, ArrayList<Beeline> bees) {
-        super(ctx, res, bees);
-        resource = res;
+    private final ClickListener listener;
+    private final List<Beeline> beelineList;
 
+    public BeelineAdaptor(List<Beeline> beelineList, ClickListener listener) {
+        this.listener = listener;
+        this.beelineList = beelineList;
+    }
+
+    @Override
+    public beeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        return new beeViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.beeline_layout, parent, false), listener);
+    }
+
+    @Override
+    public void onBindViewHolder(beeViewHolder holder, int position) {
+        // bind layout and data etc..
+        Beeline b = beelineList.get(position);
+        String locationsTxt = b.from + " > " + b.to;
+        holder.locTxt.setText(locationsTxt);
+        String meetTxt = b.meet_date.toString() + " | " + b.meet_time.toString();
+        holder.meetTxt.setText(meetTxt);
 
     }
 
+    @Override public int getItemCount() {
+        return beelineList.size();
+    }
 
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public static class beeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
-        LinearLayout beeView;
-        Location from;
-        Location to;
-        Date meet_date;
-        Time meet_time;
-        Beeline b = getItem(position);
+        private ImageView interestIcon;
+        private TextView locTxt;
+        private TextView meetTxt;
+        private WeakReference<ClickListener> listenerRef;
 
-        from = b.from;
-        to = b.to;
-        meet_date = b.meet_date;
-        meet_time = b.meet_time;
+        public beeViewHolder(final View itemView, ClickListener listener) {
+            super(itemView);
 
-        if (convertView == null) {
-            beeView = new LinearLayout(getContext());
-            String inflater = Context.LAYOUT_INFLATER_SERVICE;
-            LayoutInflater vi = (LayoutInflater) getContext().getSystemService(inflater);
-            vi.inflate(resource, beeView, true);
-        } else {
-            beeView = (LinearLayout) convertView;
+            listenerRef = new WeakReference<>(listener);
+            interestIcon = (ImageView) itemView.findViewById(R.id.interest_icon);
+            locTxt = (TextView) itemView.findViewById(R.id.origin);
+            meetTxt = (TextView) itemView.findViewById(R.id.date_time_info);
+            itemView.setOnClickListener(this);
+            interestIcon.setOnClickListener(this);
+            //iconImageView.setOnLongClickListener(this);
+        }
+
+        // onClick Listener for view
+        @Override
+        public void onClick(View v) {
+
+            if (v.getId() == interestIcon.getId()) {
+                interestIcon.setImageResource(R.drawable.gray_flowers);
+                //Toast.makeText(v.getContext(), "ITEM PRESSED = " + String.valueOf(getAdapterPosition()), Toast.LENGTH_SHORT).show();
+            } else {
+                Intent intent = new Intent(v.getContext(), BeelineDetails.class);
+                v.getContext().startActivity(intent);
+                //Toast.makeText(v.getContext(), "ROW PRESSED = " + String.valueOf(getAdapterPosition()), Toast.LENGTH_SHORT).show();
+            }
+
+            listenerRef.get().onPositionClicked(getAdapterPosition());
         }
 
 
-        TextView locView = (TextView) beeView.findViewById(R.id.origin);
+        //onLongClickListener for view
+        @Override
+        public boolean onLongClick(View v) {
 
-        String locationsTxt = from + " > " + to;
-        locView.setText(locationsTxt);
+            /*final AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+            builder.setTitle("Hello Dialog")
+                    .setMessage("LONG CLICK DIALOG WINDOW FOR ICON " + String.valueOf(getAdapterPosition()))
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
 
-        String meetTxt = meet_date.toString() + " | " + meet_time.toString();
-        TextView dateView = (TextView) beeView.findViewById(R.id.date_time_info);
-        dateView.setText(meetTxt);
+                        }
+                    });
 
-
-        return beeView;
+            builder.create().show();*/
+            listenerRef.get().onLongClicked(getAdapterPosition());
+            return true;
+        }
     }
-
-
-
-
 }

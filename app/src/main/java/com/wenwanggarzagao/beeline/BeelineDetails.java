@@ -6,6 +6,8 @@ import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,6 +21,7 @@ import android.widget.ToggleButton;
 //import com.firebase.ui.auth.data.model.User;
 import com.wenwanggarzagao.beeline.data.Beeline;
 import com.wenwanggarzagao.beeline.data.DatabaseUtils;
+import com.wenwanggarzagao.beeline.data.SavedUserData;
 import com.wenwanggarzagao.beeline.data.User;
 import com.wenwanggarzagao.beeline.io.ResponseHandler;
 
@@ -28,11 +31,11 @@ import java.util.Map;
 
 public class BeelineDetails extends AppCompatActivity {
 
-    private ListView participantListView;
+    private RecyclerView participantListView;
     private TextView locName;
     private TextView dateTime;
     private ToggleButton join_leave_btn;
-    private ArrayAdapter<Beeline> ParticipantsAdapter;
+
     private boolean hasJoined;
     private boolean originallyJoined;
     final Beeline selectedBeeline = DatabaseUtils.bl;
@@ -91,6 +94,7 @@ public class BeelineDetails extends AppCompatActivity {
                     hasJoined = true;
                     System.out.println("joined beeline");
                 }
+                DatabaseUtils.pushBeeline(selectedBeeline);
 
                 MainActivity.needsRefresh = originallyJoined != hasJoined;
                 System.out.println("needs refresh? " + MainActivity.needsRefresh);
@@ -99,30 +103,45 @@ public class BeelineDetails extends AppCompatActivity {
         });
 
         participantListView = findViewById(R.id.participant_list);
-        participantListView.setClickable(true);
-        participantListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {Bundle bundle = new Bundle();
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        participantListView.setLayoutManager(new LinearLayoutManager(this));
+        //participantListView.setClickable(true);
+
+        //participantListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {Bundle bundle = new Bundle();
+            //@Override
+            //public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // DatabaseUtils.bl = (Beeline) beeList.getItemAtPosition(position);
 
                 // Intent intent = new Intent(BeelineDetails.this, BeelineDetails.class);
                 //based on item add info to intent
 
                 // startActivity(intent);
-            }
-        });
+            //}
+       // });
 
-        /*List<User> participantList= new ArrayList<User>();
+        List<SavedUserData> participantList= new ArrayList<SavedUserData>();
 
         for (int i = 0; i < selectedBeeline.participants.size(); i++) {
-            User u = selectedBeeline.participants.get(i);
+            SavedUserData u = selectedBeeline.participants.get(i);
             participantList.add(u);
         }
 
-        ParticipantsAdaptor participantsAdaptor = new ParticipantsAdaptor(BeelineDetails.this, R.layout.participant_layout, participantList);
-        participantListView.setAdapter(participantsAdaptor);
+        //ParticipantsAdaptor participantsAdaptor = new ParticipantsAdaptor(BeelineDetails.this, R.layout.participant_layout, participantList);
+        //participantListView.setAdapter(participantsAdaptor);
 
-        registerForContextMenu(participantListView);*/
+        //registerForContextMenu(participantListView);
+
+
+        ParticipantsAdaptor adapter = new ParticipantsAdaptor(participantList, new ClickListener() {
+            @Override public void onPositionClicked(int position) {
+                // callback performed on click
+            }
+
+            @Override public void onLongClicked(int position) {
+                // callback performed on click
+            }
+        });
+
+        participantListView.setAdapter(adapter);
 
     }
 

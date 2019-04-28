@@ -9,6 +9,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import android.support.v4.view.GravityCompat;
@@ -22,6 +24,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.wenwanggarzagao.beeline.data.Beeline;
 import com.wenwanggarzagao.beeline.data.DatabaseUtils;
@@ -37,9 +40,9 @@ public class FindBeelines extends AppCompatActivity
     private ViewDialog dialog;
 
     private ArrayList<Beeline> beelines;
-    private ArrayAdapter<Beeline> beelineArrayAdapter;
+    private static final int VERTICAL_ITEM_SPACE = 48;
 
-    private ListView beeList;
+    private RecyclerView beeListView;
     private Context context; // For adaptor
     private Cursor curse; // Database Cursor
 
@@ -74,30 +77,11 @@ public class FindBeelines extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        beeList = (ListView) findViewById(R.id.beeline_list);
+        beeListView = (RecyclerView) findViewById(R.id.beeline_list);
+        beeListView.setLayoutManager(new LinearLayoutManager(this));
 
-        beeList.setClickable(true);
-        beeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {Bundle bundle = new Bundle();
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                DatabaseUtils.bl = (Beeline) beeList.getItemAtPosition(position);
-                Intent intent = new Intent(FindBeelines.this, BeelineDetails.class);
-                //based on item add info to intent
+        beeListView.addItemDecoration(new VerticalSpaceItemDecoration(VERTICAL_ITEM_SPACE));
 
-                startActivity(intent);
-            }
-        });
-
-        //TODO: change interest image
-//        final ImageView interestImg = findViewById(R.id.interest_icon);
-//        interestImg.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                interestImg.setImageResource(R.drawable.gray_flowers);
-//            }
-//        });
-
-        // create ArrayList of courses from database
         updateArray();
     }
 
@@ -137,14 +121,26 @@ public class FindBeelines extends AppCompatActivity
                     }
                 });
                 // make array adapter to bind arraylist to listview with new custom item layout
-                beelineArrayAdapter = new BeelineAdaptor(FindBeelines.this, R.layout.beeline_layout, beelines);
+                /*beelineArrayAdapter = new BeelineAdaptor(beelines, listener);
                 beeList.setAdapter(beelineArrayAdapter);
 
-                registerForContextMenu(beeList);
+                registerForContextMenu(beeList);*/
+                BeelineAdaptor adapter = new BeelineAdaptor(beelines, new ClickListener() {
+                    @Override
+                    public void onPositionClicked(int position) {
+                        DatabaseUtils.bl = (Beeline) beelines.get(position);
+                        // callback performed on click
+                    }
+
+                    @Override public void onLongClicked(int position) {
+                        // callback performed on click
+                    }
+                });
+                beeListView.setAdapter(adapter);
+
             }
         });
     }
-
 
     @Override
     public void onBackPressed() {
@@ -160,12 +156,17 @@ public class FindBeelines extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+
+        TextView navUserName = (TextView) findViewById(R.id.nav_profName);
+        navUserName.setText(DatabaseUtils.me.saveData.username);
+
         ImageView navProfImgView = (ImageView) findViewById(R.id.nav_profImg);
         navProfImgView.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(FindBeelines.this, UserProfile.class);
+                intent.putExtra("userUID", DatabaseUtils.me.saveData.userId);
                 startActivity(intent);
             }
         });
@@ -203,7 +204,9 @@ public class FindBeelines extends AppCompatActivity
             intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivityIfNeeded(intent, 0);
         } else if (id == R.id.nav_buzz) {
-
+            Intent intent = new Intent(FindBeelines.this, Buzz.class);
+            startActivity(intent);
+            finish();
         } else if (id == R.id.nav_settings) {
             Intent intent = new Intent(FindBeelines.this, SettingsActivity.class);
             startActivity(intent);

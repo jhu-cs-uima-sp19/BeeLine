@@ -9,6 +9,8 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.wenwanggarzagao.beeline.data.Beeline;
 import com.wenwanggarzagao.beeline.SettingsActivity;
@@ -48,9 +51,9 @@ public class MainActivity extends AppCompatActivity
     //Beeline bee;
 
     private ArrayList<Beeline> beelines;
-    private ArrayAdapter<Beeline> beelineArrayAdapter;
+    private RecyclerView beeListView;
+    private static final int VERTICAL_ITEM_SPACE = 48;
 
-    private ListView beeList;
     private Context context; // For adaptor
     private Cursor curse; // Database Cursor
 
@@ -91,16 +94,17 @@ public class MainActivity extends AppCompatActivity
         ////////////////////////////////////////
         /* Our Additions (Beeline) etc. */
 
-        beeList = (ListView) findViewById(R.id.beeline_list);
+        beeListView = (RecyclerView) findViewById(R.id.beeline_list);
+        beeListView.setLayoutManager(new LinearLayoutManager(this));
 
-        //TODO: change interest image
-        //updateInterest();
+        beeListView.addItemDecoration(new VerticalSpaceItemDecoration(VERTICAL_ITEM_SPACE));
+
 
         // create ArrayList of courses from database
         beelines = new ArrayList<Beeline>();
 
 
-        beelineArrayAdapter = new BeelineAdaptor(this, R.layout.beeline_layout, beelines);
+        /*beelineArrayAdapter = new BeelineAdaptor(this, R.layout.beeline_layout, beelines);
         beeList.setAdapter(beelineArrayAdapter);
         registerForContextMenu(beeList);
 
@@ -115,7 +119,7 @@ public class MainActivity extends AppCompatActivity
 
                 startActivity(intent);
             }
-        });
+        });*/
 
         updateArray();
 
@@ -135,11 +139,16 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+
+        TextView navUserName = (TextView) findViewById(R.id.nav_profName);
+        navUserName.setText(DatabaseUtils.me.saveData.username);
+
         ImageView navProfImgView = (ImageView) findViewById(R.id.nav_profImg);
         navProfImgView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, UserProfile.class);
+                intent.putExtra("userUID", DatabaseUtils.me.saveData.userId);
                 startActivity(intent);
             }
         });
@@ -203,16 +212,26 @@ public class MainActivity extends AppCompatActivity
                 });
                 // make array adapter to bind arraylist to listview with new custom item layout
                 System.out.println("setting up beelinearrayadapter");
-                beelineArrayAdapter = new BeelineAdaptor(MainActivity.this, R.layout.beeline_layout, beelines);
+                /*beelineArrayAdapter = new BeelineAdaptor(MainActivity.this, R.layout.beeline_layout, beelines);
                 beeList.setAdapter(beelineArrayAdapter);
-                registerForContextMenu(beeList);
+                registerForContextMenu(beeList);*/
+                BeelineAdaptor adapter = new BeelineAdaptor(beelines, new ClickListener() {
+                    @Override public void onPositionClicked(int position) {
+                        DatabaseUtils.bl = (Beeline) beelines.get(position);
+                    }
+
+                    @Override public void onLongClicked(int position) {
+                        // callback performed on click
+                    }
+                });
+                beeListView.setAdapter(adapter);
             }
         });
         //beelines.add(bee);
     }
 
     /** Update interest flower */
-    public void updateInterest() {
+    /*public void updateInterest() {
         final ImageView interestImg = findViewById(R.id.interest_icon);
 
         interestImg.setOnClickListener(new View.OnClickListener() {
@@ -221,6 +240,6 @@ public class MainActivity extends AppCompatActivity
                 interestImg.setImageResource(R.drawable.target_flowers);
             }
         });
-    }
+    }*/
 
 }

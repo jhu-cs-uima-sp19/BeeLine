@@ -239,7 +239,7 @@ public class DatabaseUtils {
      * @param runnables Things to do after completion.
      */
     public static void removeBeeline(Beeline bline, Runnable... runnables) {
-        removeBeeline(bline.to.zip, bline.id, runnables);
+        removeBeeline(bline.from.zip, bline.id, runnables);
     }
 
     public static void queryBeelinesNear(int zip, final ResponseHandler<List<Beeline>> consumer, final Discriminator<Beeline> discrim) {

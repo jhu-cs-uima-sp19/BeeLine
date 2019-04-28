@@ -36,41 +36,20 @@ public class UserProfile extends AppCompatActivity {
         ImageView userImageView = (ImageView) findViewById(R.id.uprof_image);
         final TextView descripTextView = (TextView) findViewById(R.id.uprof_descrip);
 
-        if (savedInstanceState != null) {
-            String userUID = savedInstanceState.getString("userUID", null);
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            String userUID = extras.getString("userUID", null);
             if (userUID != null) {
                 DatabaseUtils.queryUserData(userUID, new ResponseHandler<SavedUserData>() {
                     @Override
                     public void handle(SavedUserData savedUserData) {
-                        //TODO: FINISH THIS
                         nameTextView.setText(savedUserData.username);
                         descripTextView.setText(savedUserData.bio);
                     }
                 });
             }
         } else {
-            User me = DatabaseUtils.me;
-
-            if (DatabaseUtils.isLoggedin() && me != null && me.getUsername() != null) {
-                nameTextView.setText(me.getUsername());
-            } else {
-                System.out.println("name null");
-            }
-
-            if (DatabaseUtils.isLoggedin() && me != null) {
-                Uri photoURI = me.fbuser.getPhotoUrl();
-                if (photoURI != null) {
-                    userImageView.setImageURI(photoURI);
-                }
-            }
-
-            if (DatabaseUtils.isLoggedin() && me != null && me.saveData != null) {
-                descripTextView.setText(me.saveData.bio);
-            } else {
-                //System.out.println(DatabaseUtils.isLoggedin() + " " + (me != null) + " " + (me.saveData != null));
-                descripTextView.setText("Could not load user data");
-            }
-
+            descripTextView.setText("Could not load user data");
         }
     }
 

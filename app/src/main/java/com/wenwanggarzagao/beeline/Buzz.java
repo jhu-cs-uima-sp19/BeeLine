@@ -15,7 +15,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -138,6 +140,18 @@ public class Buzz extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.buzz, menu);
+        TextView navUserName = (TextView) findViewById(R.id.nav_profName);
+        navUserName.setText(DatabaseUtils.me.saveData.username);
+
+        ImageView navProfImgView = (ImageView) findViewById(R.id.nav_profImg);
+        navProfImgView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Buzz.this, UserProfile.class);
+                intent.putExtra("userUID", DatabaseUtils.me.saveData.userId);
+                startActivity(intent);
+            }
+        });
         return true;
     }
 
@@ -173,6 +187,9 @@ public class Buzz extends AppCompatActivity
         } else if (id == R.id.nav_buzz) {
             // we're already here, dont do anything
         } else if (id == R.id.nav_settings) {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
+            finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
