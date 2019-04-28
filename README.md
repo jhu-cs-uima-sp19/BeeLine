@@ -1,5 +1,8 @@
 # BeeLine
-![Log-In Page](https://user-images.githubusercontent.com/28008631/56102168-1002d700-5ef9-11e9-8831-8c88059d85d4.png)
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/28008631/56102168-1002d700-5ef9-11e9-8831-8c88059d85d4.png" width="256" title="Github Logo">
+</p>
 
 Made by: Isaiah, Nick, Nancy, Bronte (Team B)
 
