@@ -44,6 +44,7 @@ public class FindBeelines extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private ArrayList<Beeline> beelines;
+    private static final int VERTICAL_ITEM_SPACE = 48;
 
     private RecyclerView beeListView;
     private Context context; // For adaptor
@@ -81,32 +82,11 @@ public class FindBeelines extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        beeListView = findViewById(R.id.beeline_list);
+        beeListView = (RecyclerView) findViewById(R.id.beeline_list);
         beeListView.setLayoutManager(new LinearLayoutManager(this));
 
+        beeListView.addItemDecoration(new VerticalSpaceItemDecoration(VERTICAL_ITEM_SPACE));
 
-        //beeList.setClickable(true);
-        /*beeList.OnItemClickListener(new AdapterView.OnItemClickListener() {Bundle bundle = new Bundle();
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                DatabaseUtils.bl = (Beeline) beeList.getItemAtPosition(position);
-                Intent intent = new Intent(FindBeelines.this, BeelineDetails.class);
-                //based on item add info to intent
-
-                startActivity(intent);
-            }
-        });*/
-
-        //TODO: change interest image
-//        final ImageView interestImg = findViewById(R.id.interest_icon);
-//        interestImg.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                interestImg.setImageResource(R.drawable.gray_flowers);
-//            }
-//        });
-
-        // create ArrayList of courses from database
         updateArray();
     }
 
@@ -165,7 +145,6 @@ public class FindBeelines extends AppCompatActivity
             }
         });
     }
-
 
     @Override
     public void onBackPressed() {

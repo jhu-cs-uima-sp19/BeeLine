@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity
 
     private ArrayList<Beeline> beelines;
     private RecyclerView beeListView;
+    private static final int VERTICAL_ITEM_SPACE = 48;
 
     private Context context; // For adaptor
     private Cursor curse; // Database Cursor
@@ -95,8 +96,8 @@ public class MainActivity extends AppCompatActivity
         beeListView = (RecyclerView) findViewById(R.id.beeline_list);
         beeListView.setLayoutManager(new LinearLayoutManager(this));
 
-        //TODO: change interest image
-        //updateInterest();
+        beeListView.addItemDecoration(new VerticalSpaceItemDecoration(VERTICAL_ITEM_SPACE));
+
 
         // create ArrayList of courses from database
         beelines = new ArrayList<Beeline>();
