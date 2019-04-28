@@ -12,6 +12,7 @@
         <item name="android:textColor">@color/colorBlack</item>
         <item name="android:actionMenuTextColor">@color/colorBlack</item>
         <item name="android:textViewStyle">@style/RobotoTextViewStyle</item>
+        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_black_24dp</item>
         <item name="buttonStyle">@style/RobotoButtonStyle</item>
     </style>
 
