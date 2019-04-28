@@ -6,6 +6,10 @@ Made by: Isaiah, Nick, Nancy, Bronte (Team B)
 
 Beeline is a service that seeks to create ridesharing groups to lower the cost of going from point A to point B(ee). The most recent iteration of our Android application enables users to view their user profile and planned trips, in addition to finding and creating new trips.
 
+## Log-in Info:
+Username: person@place.com
+Password: password123
+
 ## First Sprint Objectives:
 - [x] Create **Account Activity** (Sprint 1 version) 
   - Accounts should have: Name and Bio
@@ -41,5 +45,15 @@ Beeline is a service that seeks to create ridesharing groups to lower the cost o
  
  4/12 Work day. Group work in Malone UGrad lab.
  
- 4/14 Meeting with Simon. Discussed accomplished goals for Sprint 1 and new objectives for Sprint 2.
+ 4/14 Meeting with Simon. Discussed accomplished objectives and goals prior to Sprint 1 submission.
+ 
+ 4/19 Work day. Group work in Malone UGrad lab.
+ 
+ 4/21 Meeting with Simon. Discussed completed goals for Sprint 1 and new objectives for Sprint 2.
+ 
+ 4/22 Work day. Group work in Malone UGrad lab. Spoke to Anuraag in office hours about a DB error.
+ 
+ 4/26 Group work from 4-7 pm in Brody.
+ 
+ 4/28 Meeting with Simon. Established goals to be completed by final project submission and split tasks.
 
