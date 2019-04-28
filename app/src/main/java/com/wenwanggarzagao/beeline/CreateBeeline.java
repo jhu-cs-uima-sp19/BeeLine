@@ -105,13 +105,18 @@ public class CreateBeeline extends AppCompatActivity {
                     //TODO: fix NumberFormatException
                     if (!start.isEmpty() && !end.isEmpty()) {
                         try {
-                            Location origin = new Location(start, origin_address.getLocality(), origin_address.getAdminArea(), Integer.parseInt(origin_address.getPostalCode()));
-                            Location destination = new Location(end, dest_address.getLocality(), dest_address.getAdminArea(), Integer.parseInt(dest_address.getPostalCode()));
-                            Beeline new_bline = Beeline.builder().setDate(new Date(meet_date)).setFromTo(origin, destination).setTime(new Time(meet_time)).build();
-                            new_bline.join(DatabaseUtils.me);
-                            DatabaseUtils.pushBeeline(new_bline);
-                            setResult(RESULT_OK, intent);
-                            finish();
+                            try {
+                                Location origin = new Location(start, origin_address.getLocality(), origin_address.getAdminArea(), Integer.parseInt(origin_address.getPostalCode()));
+                                Location destination = new Location(end, dest_address.getLocality(), dest_address.getAdminArea(), Integer.parseInt(dest_address.getPostalCode()));
+                                Beeline new_bline = Beeline.builder().setDate(new Date(meet_date)).setFromTo(origin, destination).setTime(new Time(meet_time)).build();
+                                new_bline.join(DatabaseUtils.me);
+                                DatabaseUtils.pushBeeline(new_bline);
+                                setResult(RESULT_OK, intent);
+                                finish();
+                            } catch (NumberFormatException e) {
+                                Toast toast = Toast.makeText(getApplicationContext(), "Input more specific location", Toast.LENGTH_SHORT);
+                                toast.show();
+                            }
                         } catch (NullPointerException e) {
                             Toast toast = Toast.makeText(getApplicationContext(), "Location does not exist", Toast.LENGTH_SHORT);
                             toast.show();
