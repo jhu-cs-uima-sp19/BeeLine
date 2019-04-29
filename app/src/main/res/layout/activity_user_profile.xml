@@ -7,6 +7,17 @@
 
     tools:context=".UserProfile">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_uprof"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/MyTheme.ActionBarStyle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ImageView
         android:id="@+id/uprof_image"
         android:layout_width="141dp"
@@ -48,26 +59,79 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/uprof_name" />
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar_uprof"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="@style/MyTheme.ActionBarStyle"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <ImageButton
-        android:id="@+id/imageButton"
+        android:id="@+id/exitButton"
         android:layout_width="23dp"
         android:layout_height="27dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:background="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_close_black_24dp" />
+
+    <EditText
+        android:id="@+id/editName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="8dp"
+        android:ems="10"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:inputType="textPersonName"
+        android:textAlignment="center"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/uprof_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/uprof_image" />
+
+    <EditText
+        android:id="@+id/editBio"
+        android:layout_width="237dp"
+        android:layout_height="146dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="32dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:ems="10"
+        android:hint="@string/input_bio_hint"
+        android:inputType="textMultiLine"
+        android:visibility="gone"
+        android:lineSpacingExtra="8sp"
+        android:textAlignment="center"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editName" />
+
+    <ImageButton
+        android:id="@+id/editButton"
+        style="@android:style/Widget.DeviceDefault.ImageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:background="@color/fui_transparent"
+        app:layout_constraintBottom_toBottomOf="@+id/uprof_name"
+        app:layout_constraintStart_toEndOf="@+id/uprof_name"
+        app:layout_constraintTop_toTopOf="@+id/uprof_name"
+        app:srcCompat="@drawable/ic_mode_edit_blue_24dp" />
+
+    <ImageButton
+        android:id="@+id/checkButton"
+        style="@android:style/Widget.DeviceDefault.ImageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:background="@color/fui_transparent"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/editName"
+        app:layout_constraintStart_toEndOf="@+id/editName"
+        app:layout_constraintTop_toTopOf="@+id/editName"
+        app:srcCompat="@drawable/ic_check_blue_24dp" />
 
 </android.support.constraint.ConstraintLayout>
