@@ -16,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 //import com.firebase.ui.auth.data.model.User;
@@ -82,10 +83,14 @@ public class BeelineDetails extends AppCompatActivity {
             public void onClick(View v) {
                 if (!join_leave_btn.isChecked()) {
                     //join_leave_btn.setText("LEAVE");
+
                     System.out.println("currently joined, trying to leave");
                     selectedBeeline.leave(DatabaseUtils.me);
                     hasJoined = false;
                     System.out.println("left beeline");
+
+                    //Informative Message
+                    Toast.makeText(getApplicationContext(),"Left Beeline!",Toast.LENGTH_SHORT).show();
 
                 } else {
                     //join_leave_btn.setText("JOIN");
@@ -93,6 +98,9 @@ public class BeelineDetails extends AppCompatActivity {
                     selectedBeeline.join(DatabaseUtils.me);
                     hasJoined = true;
                     System.out.println("joined beeline");
+
+                    //Informative Message
+                    Toast.makeText(getApplicationContext(),"Joined Beeline!",Toast.LENGTH_SHORT).show();
                 }
                 DatabaseUtils.pushBeeline(selectedBeeline);
 
