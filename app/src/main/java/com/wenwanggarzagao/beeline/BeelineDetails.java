@@ -68,7 +68,9 @@ public class BeelineDetails extends AppCompatActivity {
 
         //TODO: hardcoded for now
         detailsView = findViewById(R.id.addl_info_txt);
-        detailsView.setText("Additional details here");
+        if (selectedBeeline.details != null){
+            detailsView.setText(selectedBeeline.details);
+        }
 
         detailsEdit = findViewById(R.id.editDetails);
         detailsEdit.setVisibility(View.GONE);
@@ -94,7 +96,10 @@ public class BeelineDetails extends AppCompatActivity {
             public void onClick(View v) {
                 editBtn.setVisibility(View.VISIBLE);
                 detailsView.setVisibility(View.VISIBLE);
-                detailsView.setText(detailsEdit.getText());
+                String newDeets = detailsEdit.getText().toString();
+                detailsView.setText(newDeets);
+                selectedBeeline.details = newDeets;
+                DatabaseUtils.pushBeeline(selectedBeeline);
 
                 checkBtn.setVisibility(View.GONE);
                 detailsEdit.setVisibility(View.GONE);
