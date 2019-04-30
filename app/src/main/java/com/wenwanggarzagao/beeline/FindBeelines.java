@@ -70,6 +70,7 @@ public class FindBeelines extends AppCompatActivity
     public LocationManager locationManager;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,6 +108,11 @@ public class FindBeelines extends AppCompatActivity
         currentZip = getLocation();
         updateArray(currentZip);
         System.out.println(currentZip);
+
+
+
+
+
     }
 
     public static boolean isLocationEnabled(Context context)

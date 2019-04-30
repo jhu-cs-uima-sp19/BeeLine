@@ -29,6 +29,8 @@ public class BeelineAdaptor extends RecyclerView.Adapter<com.wenwanggarzagao.bee
     private final ClickListener listener;
     private final List<Beeline> beelineList;
 
+
+
     public BeelineAdaptor(List<Beeline> beelineList, ClickListener listener) {
         this.listener = listener;
         this.beelineList = beelineList;
@@ -61,6 +63,8 @@ public class BeelineAdaptor extends RecyclerView.Adapter<com.wenwanggarzagao.bee
         private TextView meetTxt;
         private WeakReference<ClickListener> listenerRef;
 
+        private boolean interested;
+
         public beeViewHolder(final View itemView, ClickListener listener) {
             super(itemView);
 
@@ -78,12 +82,19 @@ public class BeelineAdaptor extends RecyclerView.Adapter<com.wenwanggarzagao.bee
         public void onClick(View v) {
 
             if (v.getId() == interestIcon.getId()) {
-                interestIcon.setImageResource(R.drawable.gray_flowers);
-                //Toast.makeText(v.getContext(), "ITEM PRESSED = " + String.valueOf(getAdapterPosition()), Toast.LENGTH_SHORT).show();
+                if (interested) {
+                    interestIcon.setImageResource(R.drawable.target_flowers);
+                    Toast.makeText(v.getContext(), "Interested!", Toast.LENGTH_SHORT).show();
+                    interested = false;
+                } else if (!interested) {
+                    interestIcon.setImageResource(R.drawable.gray_flowers);
+                    Toast.makeText(v.getContext(), "Not interested", Toast.LENGTH_SHORT).show();
+                    interested = true;
+                }
             } else {
                 Intent intent = new Intent(v.getContext(), BeelineDetails.class);
                 v.getContext().startActivity(intent);
-                //Toast.makeText(v.getContext(), "ROW PRESSED = " + String.valueOf(getAdapterPosition()), Toast.LENGTH_SHORT).show();
+                Toast.makeText(v.getContext(), "ROW PRESSED = " + String.valueOf(getAdapterPosition()), Toast.LENGTH_SHORT).show();
             }
 
             listenerRef.get().onPositionClicked(getAdapterPosition());
