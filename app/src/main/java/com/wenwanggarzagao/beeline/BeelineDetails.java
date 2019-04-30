@@ -14,6 +14,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -34,46 +36,71 @@ public class BeelineDetails extends AppCompatActivity {
     private RecyclerView participantListView;
     private TextView locName;
     private TextView dateTime;
+    private TextView detailsView;
+    private EditText detailsEdit;
+    private ImageButton editBtn;
+    private ImageButton checkBtn;
     private ToggleButton join_leave_btn;
 
     private boolean hasJoined;
     private boolean originallyJoined;
     final Beeline selectedBeeline = DatabaseUtils.bl;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_beeline_details);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
 
-
         locName = findViewById(R.id.origin_dest_txt);
-
         String locationsTxt = selectedBeeline.from + " > " + selectedBeeline.to;
         locName.setText(locationsTxt);
 
         dateTime = findViewById(R.id.date_time_txt);
-
         String meetTxt = selectedBeeline.meet_date.toString() + " | " + selectedBeeline.meet_time.toString();
-
         dateTime.setText(meetTxt);
 
+        //TODO: hardcoded for now
+        detailsView = findViewById(R.id.addl_info_txt);
+        detailsView.setText("Additional details here");
+
+        detailsEdit = findViewById(R.id.editDetails);
+        detailsEdit.setVisibility(View.GONE);
+
+        editBtn = findViewById(R.id.editButton);
+        checkBtn = findViewById(R.id.checkButton);
+        checkBtn.setVisibility(View.GONE);
+
+        editBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editBtn.setVisibility(View.GONE);
+                detailsView.setVisibility(View.INVISIBLE);
+
+                checkBtn.setVisibility(View.VISIBLE);
+                detailsEdit.setVisibility(View.VISIBLE);
+                detailsEdit.setText(detailsView.getText());
+            }
+        });
+
+        checkBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editBtn.setVisibility(View.VISIBLE);
+                detailsView.setVisibility(View.VISIBLE);
+                detailsView.setText(detailsEdit.getText());
+
+                checkBtn.setVisibility(View.GONE);
+                detailsEdit.setVisibility(View.GONE);
+            }
+        });
+
         join_leave_btn = findViewById(R.id.join_leave_toggle);
-
-        // DatabaseUtils.queryMyBeelines(new ResponseHandler<List<Beeline>>() {
-
-           // @Override
-           //public void handle(boolean joinedBeeline) {
-
-
-        // });
-
-
         originallyJoined = hasJoined = searchBeelines();
         join_leave_btn.setChecked(hasJoined);
         join_leave_btn.setOnClickListener(new View.OnClickListener() {

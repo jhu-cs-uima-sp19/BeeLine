@@ -21,36 +21,85 @@
 
             <TextView
                 android:id="@+id/origin_dest_txt"
-                android:layout_width="298dp"
-                android:layout_height="63dp"
-                android:layout_marginStart="33dp"
+                android:layout_width="350dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="32dp"
                 android:layout_marginTop="27dp"
+                android:layout_marginEnd="32dp"
+                android:paddingBottom="32dp"
                 android:text="@string/origin_destination_txt"
+                android:textAlignment="viewStart"
                 android:textSize="18sp"
                 android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/date_time_txt"
-                android:layout_width="wrap_content"
+                android:layout_width="350dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="33dp"
+                android:layout_marginStart="32dp"
                 android:layout_marginTop="14dp"
+                android:layout_marginEnd="32dp"
                 android:text="@string/date_time_format"
+                android:textAlignment="viewStart"
                 android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/origin_dest_txt" />
 
             <TextView
                 android:id="@+id/addl_info_txt"
-                android:layout_width="141dp"
-                android:layout_height="20dp"
-                android:layout_marginStart="33dp"
-                android:layout_marginTop="15dp"
-                android:text="Additional details here."
+                android:layout_width="327dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="16dp"
+                android:paddingBottom="64dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/date_time_txt" />
+
+            <ImageButton
+                android:id="@+id/editButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="16dp"
+                android:background="@color/fui_transparent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/addl_info_txt"
+                app:layout_constraintTop_toTopOf="@+id/addl_info_txt"
+                app:srcCompat="@drawable/ic_mode_edit_blue_24dp" />
+
+            <EditText
+                android:id="@+id/editDetails"
+                android:layout_width="327dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="16dp"
+                android:ems="10"
+                android:gravity="top"
+                android:hint="@string/input_beeline_details_hint"
+                android:inputType="textMultiLine"
+                android:singleLine="false"
+                android:textAlignment="gravity"
+                android:textSize="14sp"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/date_time_txt" />
+
+            <ImageButton
+                android:id="@+id/checkButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="16dp"
+                android:background="@color/fui_transparent"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/editDetails"
+                app:layout_constraintTop_toTopOf="@+id/editDetails"
+                app:srcCompat="@drawable/ic_check_blue_24dp" />
 
             <ToggleButton
                 android:id="@+id/join_leave_toggle"
@@ -70,9 +119,9 @@
                 android:id="@+id/participant_list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="200dp"
-                android:layout_marginEnd="24dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="64dp"
+                android:layout_marginEnd="32dp"
                 android:divider="@android:color/transparent"
                 android:dividerHeight="10dp"
                 android:scrollbars="vertical"
@@ -80,6 +129,7 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/addl_info_txt" />
+
         </android.support.constraint.ConstraintLayout>
     </ScrollView>
 

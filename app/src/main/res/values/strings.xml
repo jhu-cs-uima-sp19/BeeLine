@@ -91,4 +91,7 @@
     <string name="input_bio_hint">Edit your bio here.</string>
     <string name="input_name_hint">Edit your name here.</string>
 
+    <!-- Beeline Details -->
+    <string name="input_beeline_details_hint">Edit the additional beeline details.</string>
+
 </resources>
