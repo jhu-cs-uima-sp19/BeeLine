@@ -14,8 +14,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+<<<<<<< HEAD
 import android.widget.EditText;
 import android.widget.ImageButton;
+=======
+import android.widget.ImageView;
+>>>>>>> 94212438a5fe788b0819f96ecb7bbe621a94e2f9
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,6 +50,10 @@ public class BeelineDetails extends AppCompatActivity {
     private boolean hasJoined;
     private boolean originallyJoined;
     final Beeline selectedBeeline = DatabaseUtils.bl;
+
+
+    private ImageView interestIcon;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,7 +127,16 @@ public class BeelineDetails extends AppCompatActivity {
                     System.out.println("currently joined, trying to leave");
                     selectedBeeline.leave(DatabaseUtils.me);
                     hasJoined = false;
-                    System.out.println("left beeline");
+                    System.out.println("Left Beeline");
+
+
+                    // Remove from participants list, already done in Beeline
+                    //SavedUserData u = selectedBeeline.participants.get(());
+                    //selectedBeeline.participants.remove(u);
+
+                    // Set flowers to gray when you leave
+                    //interestIcon = findViewById(R.id.interest_icon);
+                    //interestIcon.setImageResource(R.drawable.gray_flowers);
 
                     //Informative Message
                     Toast.makeText(getApplicationContext(),"Left Beeline!",Toast.LENGTH_SHORT).show();
@@ -129,7 +146,18 @@ public class BeelineDetails extends AppCompatActivity {
                     System.out.println("currently not joined, trying to join");
                     selectedBeeline.join(DatabaseUtils.me);
                     hasJoined = true;
-                    System.out.println("joined beeline");
+                    System.out.println("Joined Beeline");
+
+
+
+
+                    // Add to participants list, already done in Beeline
+                    //SavedUserData u = selectedBeeline.participants.get(getAdapterPosition());
+                    //selectedBeeline.participants.add(u);
+
+                    // Set flowers to colorful when you join
+                    //interestIcon = findViewById(R.id.interest_icon);
+                    //interestIcon.setImageResource(R.drawable.target_flowers);
 
                     //Informative Message
                     Toast.makeText(getApplicationContext(),"Joined Beeline!",Toast.LENGTH_SHORT).show();

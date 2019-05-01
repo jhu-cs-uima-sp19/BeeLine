@@ -2,6 +2,7 @@ package com.wenwanggarzagao.beeline;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.wenwanggarzagao.beeline.data.Beeline;
 import com.wenwanggarzagao.beeline.data.DatabaseUtils;
@@ -28,6 +30,9 @@ public class BeelineAdaptor extends RecyclerView.Adapter<com.wenwanggarzagao.bee
 
     private final ClickListener listener;
     private final List<Beeline> beelineList;
+
+    //private RecyclerView participantListView;
+
 
 
 
@@ -56,20 +61,28 @@ public class BeelineAdaptor extends RecyclerView.Adapter<com.wenwanggarzagao.bee
         return beelineList.size();
     }
 
-    public static class beeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
+    public class beeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
         private ImageView interestIcon;
         private TextView locTxt;
         private TextView meetTxt;
         private WeakReference<ClickListener> listenerRef;
 
-        private boolean interested;
+        //Interest shortcut button
+        private boolean interested = true;
+
+        //participantListView = findViewById(R.id.participant_list);
+
+
+
 
         public beeViewHolder(final View itemView, ClickListener listener) {
             super(itemView);
 
             listenerRef = new WeakReference<>(listener);
             interestIcon = (ImageView) itemView.findViewById(R.id.interest_icon);
+
+
             locTxt = (TextView) itemView.findViewById(R.id.origin);
             meetTxt = (TextView) itemView.findViewById(R.id.date_time_info);
             itemView.setOnClickListener(this);
@@ -81,20 +94,46 @@ public class BeelineAdaptor extends RecyclerView.Adapter<com.wenwanggarzagao.bee
         @Override
         public void onClick(View v) {
 
+
+            //participantListView.setLayoutManager(new LinearLayoutManager(v.getContext()));
+            //List<SavedUserData> participantList= new ArrayList<SavedUserData>();
             if (v.getId() == interestIcon.getId()) {
                 if (interested) {
                     interestIcon.setImageResource(R.drawable.target_flowers);
-                    Toast.makeText(v.getContext(), "Joining beeline", Toast.LENGTH_SHORT).show();
+
+                    DatabaseUtils.bl = (Beeline) beelineList.get(getAdapterPosition());
+                    DatabaseUtils.bl.join(DatabaseUtils.me);
+
+                    // Add to participants list
+                    SavedUserData u = DatabaseUtils.bl.participants.get(getAdapterPosition());
+                    DatabaseUtils.bl.participants.add(u);
+
+
+                    Toast.makeText(v.getContext(), "Joined Beeline", Toast.LENGTH_SHORT).show();
+
                     interested = false;
+
                 } else if (!interested) {
                     interestIcon.setImageResource(R.drawable.gray_flowers);
-                    Toast.makeText(v.getContext(), "Leaving beeline", Toast.LENGTH_SHORT).show();
+
+                    DatabaseUtils.bl = (Beeline) beelineList.get(getAdapterPosition());
+                    DatabaseUtils.bl.leave(DatabaseUtils.me);
+
+
+                    // Remove from participants list
+                    SavedUserData u = DatabaseUtils.bl.participants.get(getAdapterPosition());
+                    DatabaseUtils.bl.participants.remove(u);
+
+
+
+                    Toast.makeText(v.getContext(), "Left Beeline", Toast.LENGTH_SHORT).show();
+
                     interested = true;
                 }
             } else {
                 Intent intent = new Intent(v.getContext(), BeelineDetails.class);
                 v.getContext().startActivity(intent);
-                Toast.makeText(v.getContext(), "ROW PRESSED = " + String.valueOf(getAdapterPosition()), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(v.getContext(), "ROW PRESSED = " + String.valueOf(getAdapterPosition()), Toast.LENGTH_SHORT).show();
             }
 
             listenerRef.get().onPositionClicked(getAdapterPosition());
