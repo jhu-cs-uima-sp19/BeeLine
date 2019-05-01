@@ -78,7 +78,7 @@ public class ParticipantsAdaptor extends RecyclerView.Adapter<ParticipantsAdapto
         @Override
         public void onClick(View v) {
             listenerRef.get().onPositionClicked(getAdapterPosition());
-
+            System.out.println("Clicked on user");
             SavedUserData savedUserData = usersList.get(getAdapterPosition());
             Context context = itemView.getContext();
             Intent intent = new Intent(context, UserProfile.class);
