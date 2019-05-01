@@ -68,8 +68,11 @@ public class BeelineDetails extends AppCompatActivity {
 
         //TODO: hardcoded for now
         detailsView = findViewById(R.id.addl_info_txt);
-        if (selectedBeeline.details != null){
+        if (selectedBeeline.details != null && !selectedBeeline.details.isEmpty()){
             detailsView.setText(selectedBeeline.details);
+        }
+        else {
+            detailsView.setText("No additional info provided");
         }
 
         detailsEdit = findViewById(R.id.editDetails);
