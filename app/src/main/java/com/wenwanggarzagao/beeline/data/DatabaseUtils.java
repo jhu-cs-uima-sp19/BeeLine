@@ -59,7 +59,7 @@ public class DatabaseUtils {
     private static boolean loggedin = false;
     public static User me;
     public static Beeline bl;
-    private static int notifCount = new Random().nextInt(2147483647);
+    public static int notifCount = new Random().nextInt(2147483647);
 
     public static boolean isLoggedin() {
         return loggedin;

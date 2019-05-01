@@ -42,6 +42,9 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="time_format">HH:MM (24hr)</string>
 
+    <!-- do not change -->
+    <string name="default_notification_channel_name">NOTIF_CHNL</string>
+    <string name="default_notification_channel_id">NFSGHIORHIGL</string>
 
     <!-- Settings -->
     <string name="pref_header_notifications">Notifications</string>
