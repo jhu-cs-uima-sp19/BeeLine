@@ -1,8 +1,19 @@
 package com.wenwanggarzagao.beeline.data;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
+import android.media.RingtoneManager;
+import android.os.Build;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -21,26 +32,34 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.wenwanggarzagao.beeline.BeelineDetails;
 import com.wenwanggarzagao.beeline.Landing;
+import com.wenwanggarzagao.beeline.MainActivity;
+import com.wenwanggarzagao.beeline.MyNotificationPublisher;
 import com.wenwanggarzagao.beeline.io.Discriminator;
 import com.wenwanggarzagao.beeline.io.ResponseHandler;
+import com.wenwanggarzagao.beeline.R;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 
 public class DatabaseUtils {
 
+    public static final String NOTIFICATION_CHANNEL = "beelines";
     private static FirebaseAuth mAuth;
     public static FirebaseDatabase database;
     private static boolean loggedin = false;
     public static User me;
     public static Beeline bl;
+    public static int notifCount = new Random().nextInt(2147483647);
 
     public static boolean isLoggedin() {
         return loggedin;
@@ -59,6 +78,81 @@ public class DatabaseUtils {
         }
 
         return mAuth.getCurrentUser();
+    }
+
+    public static void sendNotification(Context ctx, String title, String body, int icon) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx, NOTIFICATION_CHANNEL)
+                .setSmallIcon(icon)
+                .setContentTitle(title)
+                .setContentText(body)
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText(body))
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(ctx);
+
+        // notificationId is a unique int for each notification that you must define
+        notificationManager.notify(notifCount++, builder.build());
+    }
+
+    public static void attachNotificationListeners(final Context ctx, final int icon) {
+        DatabaseUtils.queryMyBeelines(new ResponseHandler<List<Beeline>>() {
+            @TargetApi(Build.VERSION_CODES.N)
+            @Override
+            public void handle(List<Beeline> beelines) {
+                beelines.forEach(new Consumer<Beeline>() {
+                    @Override
+                    public void accept(Beeline beeline) {
+                        attachNotificationForUserJoinListener(ctx, beeline, icon);
+                    }
+                });
+            }
+        });
+    }
+
+    public static void attachNotificationForUserJoinListener(final Context ctx, final Beeline beeline, final int icon) {
+        System.out.println("Attached notification listener for " + beeline.id);
+        DatabaseReference ref = database.getReference("beelines").child("zip_" + beeline.to.zip).child("beeline_" + beeline.id);//.child("participantIds");
+        ref.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                System.out.println("Attached notification listener: onChildAdd");
+                if (beeline.isLeader(DatabaseUtils.me)) {
+                    DatabaseUtils.queryUserData(dataSnapshot.getValue(String.class), new ResponseHandler<SavedUserData>() {
+                        @Override
+                        public void handle(SavedUserData savedUserData) {
+                            sendNotification(ctx, "Beeline", savedUserData.username + " joined your Beeline!", icon);
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                // someone left
+                System.out.println("Attached notification listener: onChildRemoved");
+                DatabaseUtils.queryUserData(dataSnapshot.getValue(String.class), new ResponseHandler<SavedUserData>() {
+                    @Override
+                    public void handle(SavedUserData savedUserData) {
+                        sendNotification(ctx, "Beeline", savedUserData.username + " left your Beeline!", icon);
+                    }
+                });
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     public static void saveUser() {
@@ -218,6 +312,31 @@ public class DatabaseUtils {
         DatabaseReference table = database.getReference("notifications");
         DatabaseReference value = table.child("user_" + me.getId()).child(notif.id + "");
         value.setValue(notif);
+    }
+
+    public void scheduleNotification(Context context, String title, String body, long delay, int notificationId, int icon) {//delay is after how much time(in millis) from current time you want to schedule the notification
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
+                .setContentTitle(title)
+                .setContentText(body)
+                .setAutoCancel(true)
+                .setSmallIcon(icon)
+                .setLargeIcon(((BitmapDrawable) context.getResources().getDrawable(icon)).getBitmap())
+                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+
+        Intent intent = new Intent(context, MainActivity.class);
+        PendingIntent activity = PendingIntent.getActivity(context, notificationId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        builder.setContentIntent(activity);
+
+        android.app.Notification notification = builder.build();
+
+        Intent notificationIntent = new Intent(context, MyNotificationPublisher.class);
+        notificationIntent.putExtra(MyNotificationPublisher.NOTIFICATION_ID, notificationId);
+        notificationIntent.putExtra(MyNotificationPublisher.NOTIFICATION, notification);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, notificationId, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+        long futureInMillis = SystemClock.elapsedRealtime() + delay;
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
     }
 
     /**
