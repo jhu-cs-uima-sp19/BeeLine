@@ -84,11 +84,11 @@ public class BeelineAdaptor extends RecyclerView.Adapter<com.wenwanggarzagao.bee
             if (v.getId() == interestIcon.getId()) {
                 if (interested) {
                     interestIcon.setImageResource(R.drawable.target_flowers);
-                    Toast.makeText(v.getContext(), "Interested!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(v.getContext(), "Joining beeline", Toast.LENGTH_SHORT).show();
                     interested = false;
                 } else if (!interested) {
                     interestIcon.setImageResource(R.drawable.gray_flowers);
-                    Toast.makeText(v.getContext(), "Not interested", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(v.getContext(), "Leaving beeline", Toast.LENGTH_SHORT).show();
                     interested = true;
                 }
             } else {
