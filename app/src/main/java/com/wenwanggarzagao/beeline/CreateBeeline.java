@@ -1,6 +1,8 @@
 package com.wenwanggarzagao.beeline;
 
 import android.app.ActionBar;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -119,6 +121,14 @@ public class CreateBeeline extends AppCompatActivity {
                             DatabaseUtils.pushBeeline(new_bline);
                             DatabaseUtils.attachNotificationForUserJoinListener(getApplicationContext(), new_bline, R.drawable.queen_bee);
                             Toast.makeText(getApplicationContext(), "You've created a Beeline! Yeah!!", Toast.LENGTH_SHORT).show();
+
+                            Intent notifyIntent = new Intent(CreateBeeline.this, MyReceiver.class);
+                            PendingIntent pendingIntent = PendingIntent.getBroadcast
+                                    (getApplicationContext(), NOTIFICATION_REMINDER_NIGHT, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                            AlarmManager alarmManager = (AlarmManager) getApplication().getSystemService(Context.ALARM_SERVICE);
+                            alarmManager.set(AlarmManager.RTC_WAKEUP,  System.currentTimeMillis() +
+                                    1000 * 60 * 60 * 24, pendingIntent);
+
                             setResult(RESULT_OK, intent);
                             finish();
                         } catch (NullPointerException e) {
