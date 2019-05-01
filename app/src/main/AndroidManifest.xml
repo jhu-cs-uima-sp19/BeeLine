@@ -68,6 +68,7 @@
             android:name=".Buzz"
             android:label="@string/title_activity_buzz"
             android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
