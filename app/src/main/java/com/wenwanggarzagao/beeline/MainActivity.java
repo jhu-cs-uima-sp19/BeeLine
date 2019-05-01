@@ -121,8 +121,9 @@ public class MainActivity extends AppCompatActivity
             }
         });*/
 
+        System.out.println("got here mainactivity");
         updateArray();
-
+        DatabaseUtils.attachNotificationListeners(getApplicationContext(), R.drawable.queen_bee);
     }
 
     @Override
@@ -180,6 +181,7 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
             finish();
         } else if (id == R.id.nav_settings) {
+            DatabaseUtils.sendNotification(getApplicationContext(), "Title", "body", R.drawable.queen_bee);
             Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
             startActivity(intent);
             finish();
@@ -202,6 +204,7 @@ public class MainActivity extends AppCompatActivity
                 for (Beeline bl: bls) {
                     System.out.println("querymybeelines " + bl.toString());
                     beelines.add(bl);
+                    DatabaseUtils.attachNotificationForUserJoinListener(getApplicationContext(), bl, R.drawable.queen_bee);
                 }
 
                 beelines.sort(new Comparator<Beeline>() {

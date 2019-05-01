@@ -53,6 +53,7 @@ public class CreateBeeline extends AppCompatActivity {
     private ListView beeList;
     Beeline.Builder bee = new Beeline.Builder();
 
+    private boolean clicked = false;
 
 
     @Override
@@ -82,6 +83,10 @@ public class CreateBeeline extends AppCompatActivity {
         add_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (clicked)
+                    return;
+
+                clicked = true;
                 try {
                     String meet_time = meeting_time.getText().toString();
                     String meet_date = meeting_date.getText().toString();
@@ -103,6 +108,7 @@ public class CreateBeeline extends AppCompatActivity {
                     intent.putExtra("start", start);
                     intent.putExtra("destination", destination);*/
                     //TODO: fix NumberFormatException
+
                     if (!start.isEmpty() && !end.isEmpty()) {
                         try {
                             Location origin = new Location(start, origin_address.getLocality(), origin_address.getAdminArea(), Integer.parseInt(origin_address.getPostalCode()));
@@ -110,17 +116,22 @@ public class CreateBeeline extends AppCompatActivity {
                             Beeline new_bline = Beeline.builder().setDate(new Date(meet_date)).setFromTo(origin, destination).setTime(new Time(meet_time)).build();
                             new_bline.join(DatabaseUtils.me);
                             DatabaseUtils.pushBeeline(new_bline);
+                            DatabaseUtils.attachNotificationForUserJoinListener(getApplicationContext(), new_bline, R.drawable.queen_bee);
+                            Toast.makeText(getApplicationContext(), "You've created a Beeline! Yeah!!", Toast.LENGTH_SHORT).show();
                             setResult(RESULT_OK, intent);
                             finish();
                         } catch (NullPointerException e) {
+                            clicked = false;
                             Toast toast = Toast.makeText(getApplicationContext(), "Location does not exist", Toast.LENGTH_SHORT);
                             toast.show();
                         }
                     } else {
+                        clicked = false;
                         Toast toast = Toast.makeText(getApplicationContext(), "Location cannot be empty", Toast.LENGTH_SHORT);
                         toast.show();
                     }
                 } catch (IOException e) {
+                    clicked = false;
                     Context context = getApplicationContext();
                     CharSequence text = e.getMessage();
                     int duration = Toast.LENGTH_LONG;
