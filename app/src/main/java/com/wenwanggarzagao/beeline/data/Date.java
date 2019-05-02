@@ -22,6 +22,13 @@ public class Date {
         this.year = Integer.parseInt(ra[2]);
     }
 
+    public Date(long millis) {
+        java.util.Date date = new java.util.Date(millis);
+        this.year = date.getYear() + 1900;
+        this.day = date.getDate();
+        this.month = date.getMonth() + 1;
+    }
+
     public int month;
     public int day;
     public int year;
@@ -29,10 +36,7 @@ public class Date {
     private static final int hour = 24 * 60;
 
     public int value(Time time) {
-        return year * 365 * hour
-                + month * 12 * hour
-                + day * hour
-                + time.value();
+        return (int) new java.util.Date(year - 1900, month - 1, day).getTime() + time.value();
     }
 
     @Override

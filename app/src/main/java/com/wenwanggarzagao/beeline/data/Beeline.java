@@ -1,11 +1,13 @@
 package com.wenwanggarzagao.beeline.data;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.widget.Toast;
 
 import com.google.firebase.database.Exclude;
+import com.wenwanggarzagao.beeline.MainActivity;
 import com.wenwanggarzagao.beeline.data.Date;
 import com.wenwanggarzagao.beeline.io.ResponseHandler;
 
@@ -124,6 +126,14 @@ public class Beeline {
             DatabaseUtils.removeBeeline(this);
         }
         // check if users is now empty
+    }
+
+    public void attachNotification(Context ctx) {
+        MainActivity.scheduleNotification(ctx, this);
+    }
+
+    public void removeNotification(Context ctx) {
+        MainActivity.removeNotification(ctx, this);
     }
 
     public @Nullable

@@ -16,8 +16,29 @@ public class Time {
 
     public Time(String hhmm) {
         String ra[] = hhmm.split(":");
+        if (ra[1].contains(" ")) {
+            String ampm = ra[1].split(" ")[1];
+            this.hour = Integer.parseInt(ra[0]);
+            this.min = Integer.parseInt(ra[1]);
+            if (ampm.equalsIgnoreCase("pm")) {
+                if (hour != 12) {
+                    hour += 12;
+                }
+            } else {
+                if (hour == 12) {
+                    hour = 0;
+                }
+            }
+            return;
+        }
         this.hour = Integer.parseInt(ra[0]);
         this.min = Integer.parseInt(ra[1]);
+    }
+
+    public Time(long millis) {
+        java.util.Date date = new java.util.Date(millis);
+        this.hour = date.getHours();
+        this.min = date.getMinutes();
     }
 
     public String convertMinToString(int min) {
@@ -34,12 +55,15 @@ public class Time {
     public int min;
 
     public int value() {
-        return hour * 60 + min;
+        return (hour * 60 + min) * 60 * 1000;
     }
 
     @Override
     public String toString() {
-        return hour + ":" + convertMinToString(min);
+        if (hour >= 12) {
+            return (hour == 12 ? "12:" : (hour - 12) + ":") + convertMinToString(min) + " PM";
+        }
+        return (hour == 0 ? "12" : hour) + ":" + convertMinToString(min) + " AM";
     }
 
 }

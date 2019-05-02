@@ -35,7 +35,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.wenwanggarzagao.beeline.BeelineDetails;
 import com.wenwanggarzagao.beeline.Landing;
 import com.wenwanggarzagao.beeline.MainActivity;
-import com.wenwanggarzagao.beeline.MyNotificationPublisher;
 import com.wenwanggarzagao.beeline.io.Discriminator;
 import com.wenwanggarzagao.beeline.io.ResponseHandler;
 import com.wenwanggarzagao.beeline.R;
@@ -281,7 +280,7 @@ public class DatabaseUtils {
      * @param uid The user's string ID as assigned by Firebase.
      * @param consumer What to do after the SavedUserData is fetched.
      */
-    public static void queryUserData(String uid, final ResponseHandler<SavedUserData> consumer) {
+    public static void queryUserData(final String uid, final ResponseHandler<SavedUserData> consumer) {
         database.getReference("users").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot ds) {
@@ -289,6 +288,7 @@ public class DatabaseUtils {
                     return;
                 }
 
+                System.err.println("Retrieved user data for " + uid);
                 SavedUserData result = ds.getValue(SavedUserData.class);
                 consumer.handle(result);
             }
@@ -312,31 +312,6 @@ public class DatabaseUtils {
         DatabaseReference table = database.getReference("notifications");
         DatabaseReference value = table.child("user_" + me.getId()).child(notif.id + "");
         value.setValue(notif);
-    }
-
-    public void scheduleNotification(Context context, String title, String body, long delay, int notificationId, int icon) {//delay is after how much time(in millis) from current time you want to schedule the notification
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
-                .setContentTitle(title)
-                .setContentText(body)
-                .setAutoCancel(true)
-                .setSmallIcon(icon)
-                .setLargeIcon(((BitmapDrawable) context.getResources().getDrawable(icon)).getBitmap())
-                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
-
-        Intent intent = new Intent(context, MainActivity.class);
-        PendingIntent activity = PendingIntent.getActivity(context, notificationId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-        builder.setContentIntent(activity);
-
-        android.app.Notification notification = builder.build();
-
-        Intent notificationIntent = new Intent(context, MyNotificationPublisher.class);
-        notificationIntent.putExtra(MyNotificationPublisher.NOTIFICATION_ID, notificationId);
-        notificationIntent.putExtra(MyNotificationPublisher.NOTIFICATION, notification);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, notificationId, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-
-        long futureInMillis = SystemClock.elapsedRealtime() + delay;
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, futureInMillis, pendingIntent);
     }
 
     /**

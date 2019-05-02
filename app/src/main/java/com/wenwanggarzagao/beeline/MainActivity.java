@@ -1,10 +1,16 @@
 package com.wenwanggarzagao.beeline;
 
 import android.Manifest;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.icu.util.Calendar;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -38,6 +44,7 @@ import com.wenwanggarzagao.beeline.data.Date;
 import com.wenwanggarzagao.beeline.data.Location;
 import com.wenwanggarzagao.beeline.data.Time;
 import com.wenwanggarzagao.beeline.io.ResponseHandler;
+import com.wenwanggarzagao.beeline.settings.Storage;
 
 
 public class MainActivity extends AppCompatActivity
@@ -47,6 +54,8 @@ public class MainActivity extends AppCompatActivity
     private static final String HARDCODED_PWD = "password123";
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     public static Boolean locationPermissionGranted = false;
+
+    public static Storage preferences;
     /*Location origin = new Location("9E33", "Baltimore", "MD", (short) 21218);
     Location destination = new Location("Fells Point","Baltimore", "MD", (short) 21231);
 
@@ -82,6 +91,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (preferences == null)
+            preferences = new Storage(this.getApplicationContext());
+
         System.out.println("======================ON CREATE");
         setContentView(R.layout.activity_main);
         setTitle("My Beelines");
@@ -283,5 +295,49 @@ public class MainActivity extends AppCompatActivity
             }
         });
     }*/
+    public static void scheduleNotification(Context ctx, Beeline beeline) {
+        PackageManager pm = ctx.getPackageManager();
+        ComponentName receiver = new ComponentName(ctx, DeviceBootReceiver.class);
+        Intent alarmIntent = new Intent(ctx, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(ctx, (int) beeline.id, alarmIntent, 0);
+        AlarmManager manager = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
+
+        Date meetdate = beeline.meet_date;
+        Time meettime = beeline.meet_time;
+        java.util.Date meetup = new java.util.Date(meetdate.value(meettime));
+        long meetup_millis = System.currentTimeMillis() + 10000;//meetup.getTime();
+        System.err.println("SCHEDULED NOTIFICATION FOR 10 SECONDS");
+
+        // if user enabled daily notifications
+        if (Storage.SHOW_NOTIFICATIONS.get(preferences)) {
+            if (manager != null) {
+                manager.set(AlarmManager.RTC_WAKEUP, meetup_millis, pendingIntent);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    manager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, meetup_millis, pendingIntent);
+                }
+            }
+            //To enable Boot Receiver class
+            pm.setComponentEnabledSetting(receiver,
+                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                    PackageManager.DONT_KILL_APP);
+            //endregion
+        }
+    }
+
+    public static void removeNotification(Context ctx, Beeline beeline) {
+        PackageManager pm = ctx.getPackageManager();
+        ComponentName receiver = new ComponentName(ctx, DeviceBootReceiver.class);
+        Intent alarmIntent = new Intent(ctx, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(ctx, (int) beeline.id, alarmIntent, 0);
+        AlarmManager manager = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
+
+        if (PendingIntent.getBroadcast(ctx, (int) beeline.id, alarmIntent, 0) != null && manager != null) {
+            manager.cancel(pendingIntent);
+            //Toast.makeText(this,"Notifications were disabled",Toast.LENGTH_SHORT).show();
+        }
+        pm.setComponentEnabledSetting(receiver,
+                PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                PackageManager.DONT_KILL_APP);
+    }
 
 }

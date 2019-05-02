@@ -122,12 +122,8 @@ public class CreateBeeline extends AppCompatActivity {
                             DatabaseUtils.attachNotificationForUserJoinListener(getApplicationContext(), new_bline, R.drawable.queen_bee);
                             Toast.makeText(getApplicationContext(), "You've created a Beeline! Yeah!!", Toast.LENGTH_SHORT).show();
 
-                            Intent notifyIntent = new Intent(CreateBeeline.this, MyReceiver.class);
-                            PendingIntent pendingIntent = PendingIntent.getBroadcast
-                                    (getApplicationContext(), NOTIFICATION_REMINDER_NIGHT, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                            AlarmManager alarmManager = (AlarmManager) getApplication().getSystemService(Context.ALARM_SERVICE);
-                            alarmManager.set(AlarmManager.RTC_WAKEUP,  System.currentTimeMillis() +
-                                    1000 * 60 * 60 * 24, pendingIntent);
+                            // attach listener on beeline create
+                            new_bline.attachNotification(getApplicationContext());
 
                             setResult(RESULT_OK, intent);
                             finish();
