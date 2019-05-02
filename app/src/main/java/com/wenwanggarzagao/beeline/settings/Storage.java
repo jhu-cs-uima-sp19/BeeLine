@@ -19,7 +19,7 @@ public class Storage {
     // settings
     public static final Option<Boolean> SHOW_NOTIFICATIONS = new Option("shownotifs", true);
     public static final Option<String> NOTIFY_TIMES = new Option("notifytimes", "");
-    public static final Option<String> NOTIFY_VALUES = new Option("notifytimes", "");
+    public static final Option<String> NOTIFY_SETTINGS = new Option("notifysettings", "");
 
     public <T> T get(Option<T> option) {
         return get(option.getName(), option.getDefault());

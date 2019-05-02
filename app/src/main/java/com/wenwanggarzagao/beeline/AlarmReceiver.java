@@ -10,15 +10,18 @@ import android.content.SharedPreferences;
 import android.icu.util.Calendar;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 
 import com.wenwanggarzagao.beeline.MainActivity;
 
 import java.util.Objects;
+import java.util.Random;
 
 public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
+        System.err.println("\tRECEIVED CONTEXT");
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(Objects.requireNonNull(context));
         SharedPreferences.Editor sharedPrefEditor = prefs.edit();
 
@@ -49,5 +52,9 @@ public class AlarmReceiver extends BroadcastReceiver {
                 .setContentText("One of your Beelines is happening soon!")
                 .setContentInfo("INFO")
                 .setContentIntent(pendingI);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+        // notificationId is a unique int for each notification that you must define
+        notificationManager.notify(new Random().nextInt(50000), b.build());
     }
 }
