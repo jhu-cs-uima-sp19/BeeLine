@@ -32,9 +32,7 @@ public class BeelineAdaptor extends RecyclerView.Adapter<com.wenwanggarzagao.bee
 
     private final ClickListener listener;
     private final List<Beeline> beelineList;
-
     private Activity activity;
-    //private RecyclerView participantListView;
 
 
 
