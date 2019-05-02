@@ -40,6 +40,7 @@ import android.widget.Toast;
 
 import com.wenwanggarzagao.beeline.data.Beeline;
 import com.wenwanggarzagao.beeline.data.DatabaseUtils;
+import com.wenwanggarzagao.beeline.data.Updatable;
 import com.wenwanggarzagao.beeline.io.ResponseHandler;
 import com.wenwanggarzagao.beeline.CreateBeeline;
 import java.io.IOException;
@@ -51,7 +52,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class FindBeelines extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, LocationListener {
+        implements NavigationView.OnNavigationItemSelectedListener, LocationListener, Updatable {
 
     private ViewDialog dialog;
 
@@ -70,7 +71,17 @@ public class FindBeelines extends AppCompatActivity
     public LocationManager locationManager;
     public ImageView interestFlower;
 
+    public static boolean needsRefresh;
 
+    @Override
+    public void onRestart() {
+        super.onRestart();
+        System.out.println("======================ON RESTART FINDBEELINES");
+        if (needsRefresh) {
+            this.updateArray(currentZip);
+            needsRefresh = false;
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +124,11 @@ public class FindBeelines extends AppCompatActivity
 
 
 
+    }
+
+    @Override
+    public void update() {
+        updateArray(currentZip);
     }
 
     public static boolean isLocationEnabled(Context context)

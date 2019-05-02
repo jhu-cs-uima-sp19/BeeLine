@@ -22,8 +22,10 @@ import com.wenwanggarzagao.beeline.data.Date;
 import com.wenwanggarzagao.beeline.data.Location;
 import com.wenwanggarzagao.beeline.data.SavedUserData;
 import com.wenwanggarzagao.beeline.data.Time;
+import com.wenwanggarzagao.beeline.data.Updatable;
 
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,8 +39,8 @@ public class BeelineAdaptor extends RecyclerView.Adapter<com.wenwanggarzagao.bee
 
 
 
-    public BeelineAdaptor(Activity acti, List<Beeline> beelineList, ClickListener listener) {
-        this.activity = acti;
+    public BeelineAdaptor(Activity activity, List<Beeline> beelineList, ClickListener listener) {
+        this.activity = activity;
         this.listener = listener;
         this.beelineList = beelineList;
     }
@@ -105,8 +107,9 @@ public class BeelineAdaptor extends RecyclerView.Adapter<com.wenwanggarzagao.bee
             //List<SavedUserData> participantList= new ArrayList<SavedUserData>();
             if (v.getId() == interestIcon.getId()) {
                 if (!interested) {
-                    interestIcon.setImageResource(R.drawable.target_flowers);
                     DatabaseUtils.bl = (Beeline) beelineList.get(getAdapterPosition());
+
+                    interestIcon.setImageResource(R.drawable.target_flowers);
                     DatabaseUtils.bl.join(DatabaseUtils.me);
 
                     //notifyDataSetChanged();
@@ -114,9 +117,22 @@ public class BeelineAdaptor extends RecyclerView.Adapter<com.wenwanggarzagao.bee
                     interested = true;
 
                 } else if (interested) {
-                    interestIcon.setImageResource(R.drawable.gray_flowers);
                     DatabaseUtils.bl = (Beeline) beelineList.get(getAdapterPosition());
-                    DatabaseUtils.bl.leave(DatabaseUtils.me);
+                    if (!DatabaseUtils.bl.valid)
+                        return;
+
+                    interestIcon.setImageResource(R.drawable.gray_flowers);
+                    if (DatabaseUtils.bl.participantIds.size() == 1)
+                        DatabaseUtils.bl.valid = false;
+                    DatabaseUtils.bl.leave(DatabaseUtils.me, new Runnable() {
+                        @Override
+                        public void run() {
+                            if (activity instanceof MainActivity) {
+                                System.out.println("is an updatable! updating...");
+                                ((Updatable) activity).update();
+                            }
+                        }
+                    });
 
                     Toast.makeText(v.getContext(), "Left Beeline", Toast.LENGTH_SHORT).show();
                     interested = false;

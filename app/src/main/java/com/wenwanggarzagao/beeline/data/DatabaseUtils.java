@@ -29,6 +29,7 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Exclude;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
@@ -94,7 +95,7 @@ public class DatabaseUtils {
     }
 
     public static void attachNotificationListeners(final Context ctx, final int icon) {
-        DatabaseUtils.queryMyBeelines(new ResponseHandler<List<Beeline>>() {
+        /*DatabaseUtils.queryMyBeelines(new ResponseHandler<List<Beeline>>() {
             @TargetApi(Build.VERSION_CODES.N)
             @Override
             public void handle(List<Beeline> beelines) {
@@ -105,12 +106,12 @@ public class DatabaseUtils {
                     }
                 });
             }
-        });
+        });*/
     }
 
     public static void attachNotificationForUserJoinListener(final Context ctx, final Beeline beeline, final int icon) {
-        System.out.println("Attached notification listener for " + beeline.id);
-        DatabaseReference ref = database.getReference("beelines").child("zip_" + beeline.to.zip).child("beeline_" + beeline.id);//.child("participantIds");
+        /*System.out.println("Attached notification listener for " + beeline.id);
+        DatabaseReference ref = database.getReference("beelines").child("zip_" + beeline.to.zip).child("beeline_" + beeline.id).child("participantIds");
         ref.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
@@ -151,7 +152,7 @@ public class DatabaseUtils {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });
+        });*/
     }
 
     public static void saveUser() {

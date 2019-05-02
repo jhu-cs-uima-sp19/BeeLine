@@ -33,8 +33,10 @@ import com.wenwanggarzagao.beeline.data.User;
 import com.wenwanggarzagao.beeline.io.ResponseHandler;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class BeelineDetails extends AppCompatActivity {
 
@@ -125,8 +127,13 @@ public class BeelineDetails extends AppCompatActivity {
                 if (!join_leave_btn.isChecked()) {
                     //join_leave_btn.setText("LEAVE");
 
-                    System.out.println("currently joined, trying to leave");
-                    selectedBeeline.leave(DatabaseUtils.me);
+                    System.out.println("currently joined, trying to leave " + selectedBeeline.id);
+                    selectedBeeline.leave(DatabaseUtils.me, new Runnable() {
+                        @Override
+                        public void run() {
+                            a();
+                        }
+                    });
                     hasJoined = false;
 
                     System.out.println("left beeline");
@@ -134,7 +141,7 @@ public class BeelineDetails extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),"Left Beeline!",Toast.LENGTH_SHORT).show();
 
 
-                    if (selectedBeeline.participantIds.isEmpty()) {
+                    if (selectedBeeline.participantIds.isEmpty() && 1 == 3) {
                         Intent intent = new Intent(v.getContext(), MainActivity.class);
                         v.getContext().startActivity(intent);
                     } else {
@@ -147,13 +154,13 @@ public class BeelineDetails extends AppCompatActivity {
                     hasJoined = true;
 
                     System.out.println("joined beeline");
-                    DatabaseUtils.pushBeeline(selectedBeeline);
                     //Informative Message
                     Toast.makeText(getApplicationContext(),"Joined Beeline!",Toast.LENGTH_SHORT).show();
                     a();
                 }
 
                 MainActivity.needsRefresh = originallyJoined != hasJoined;
+                FindBeelines.needsRefresh = originallyJoined != hasJoined;
                 System.out.println("needs refresh? " + MainActivity.needsRefresh);
                 join_leave_btn.setChecked(hasJoined);
             }
@@ -163,18 +170,24 @@ public class BeelineDetails extends AppCompatActivity {
     }
 
     private void a() {
+        System.out.println("called method a");
         participantListView = findViewById(R.id.participant_list);
         participantListView.setLayoutManager(new LinearLayoutManager(this));
 
-        List<SavedUserData> participantList= new ArrayList<SavedUserData>();
+        Set<SavedUserData> participantList= new HashSet<SavedUserData>();
 
+        participantList.clear();
         for (int i = 0; i < selectedBeeline.participants.size(); i++) {
             SavedUserData u = selectedBeeline.participants.get(i);
             participantList.add(u);
         }
 
+        if (!hasJoined) {
+            participantList.remove(DatabaseUtils.me.saveData);
+        }
 
-        ParticipantsAdaptor adapter = new ParticipantsAdaptor(participantList, new ClickListener() {
+
+        ParticipantsAdaptor adapter = new ParticipantsAdaptor(selectedBeeline, new ArrayList<>(participantList), new ClickListener() {
             @Override public void onPositionClicked(int position) {
                 // callback performed on click
             }
@@ -184,6 +197,7 @@ public class BeelineDetails extends AppCompatActivity {
             }
         });
 
+        System.out.println("------------------- setting participant list of size " + participantList.size());
         participantListView.setAdapter(adapter);
     }
 
