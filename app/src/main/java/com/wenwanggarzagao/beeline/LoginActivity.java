@@ -58,9 +58,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mProgressView;
     private View mLoginFormView;
 
+    private boolean loggingIn;
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        loggingIn = false;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        loggingIn = false;
         this.createNotificationChannel();
         setContentView(R.layout.activity_login);
         // Set up the login form.
@@ -102,6 +111,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         switch (item.getItemId()) {
             case android.R.id.home:
                 // app icon in action bar clicked; goto parent activity.
+                loggingIn = false;
                 this.finish();
                 return true;
             default:
@@ -115,6 +125,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * errors are presented and no actual login attempt is made.
      */
     private void attemptLogin() {
+        if (loggingIn)
+            return;
         // Reset errors.
         mEmailView.setError(null);
         mPasswordView.setError(null);
@@ -151,6 +163,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
+            loggingIn = true;
             showProgress(true);
             DatabaseUtils.signIn(LoginActivity.this, email, password, false, new ResponseHandler<Boolean>() {
                 @Override

@@ -1,11 +1,13 @@
 package com.wenwanggarzagao.beeline.data;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.widget.Toast;
 
 import com.google.firebase.database.Exclude;
+import com.wenwanggarzagao.beeline.MainActivity;
 import com.wenwanggarzagao.beeline.data.Date;
 import com.wenwanggarzagao.beeline.io.ResponseHandler;
 
@@ -117,13 +119,26 @@ public class Beeline {
             return;
 
         participantIds.remove(user.getId());
-        System.out.println("partipant removed " + participants.remove(user));
+        participants.remove(user.saveData);
         user.saveData.removeBeeline(this);
 
         if (participants.isEmpty()) {
+            System.out.println("removing");
             DatabaseUtils.removeBeeline(this);
         }
         // check if users is now empty
+    }
+
+    public void attachNotification(Context ctx) {
+        try {
+            MainActivity.scheduleNotification(ctx, this);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void removeNotification(Context ctx) {
+        MainActivity.removeNotification(ctx, this);
     }
 
     public @Nullable

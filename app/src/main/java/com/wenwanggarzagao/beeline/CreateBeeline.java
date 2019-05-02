@@ -1,6 +1,8 @@
 package com.wenwanggarzagao.beeline;
 
 import android.app.ActionBar;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -119,6 +121,10 @@ public class CreateBeeline extends AppCompatActivity {
                             DatabaseUtils.pushBeeline(new_bline);
                             DatabaseUtils.attachNotificationForUserJoinListener(getApplicationContext(), new_bline, R.drawable.queen_bee);
                             Toast.makeText(getApplicationContext(), "You've created a Beeline! Yeah!!", Toast.LENGTH_SHORT).show();
+
+                            // attach listener on beeline create
+                            new_bline.attachNotification(getApplicationContext());
+
                             setResult(RESULT_OK, intent);
                             finish();
                         } catch (NullPointerException e) {
@@ -220,7 +226,7 @@ public class CreateBeeline extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private Address checkLocation(EditText ed_loc) {
+    private Address checkLocation(EditText ed_loc) throws IOException {
         String loc = ed_loc.getText().toString();
         if (loc.isEmpty()) {
             Toast toast = Toast.makeText(getApplicationContext(), "Location cannot be empty", Toast.LENGTH_SHORT);
@@ -235,6 +241,7 @@ public class CreateBeeline extends AppCompatActivity {
 
             } catch (IOException e) {
                 Log.w("OCR", "unable to geoLocate. IOException:" + e.getMessage());
+                throw new IOException("Unable to find location.");
             } try {
                 if (list.size() > 0) {
                     Address address = list.get(0);

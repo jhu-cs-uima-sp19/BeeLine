@@ -6,6 +6,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:allowBackup="true"
@@ -75,13 +77,12 @@
                 android:value="com.wenwanggarzagao.beeline.MainActivity" />
         </activity>
 
-        <service
-            android:name=".MyFirebaseMessagingService"
-            android:exported="false">
+        <receiver android:name=".DeviceBootReceiver">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
-        </service>
+        </receiver>
+        <receiver android:name=".AlarmReceiver" />
 
         <!--
          Set custom default icon. This is used when no icon is set for incoming notification messages.
@@ -98,6 +99,9 @@
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />
 
+        <service
+            android:name=".MyIntentService"
+            android:exported="false"></service>
     </application>
 
 </manifest>
