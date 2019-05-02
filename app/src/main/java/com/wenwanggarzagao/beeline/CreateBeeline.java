@@ -56,8 +56,6 @@ public class CreateBeeline extends AppCompatActivity {
     private static EditText meeting_date;
     private ListView beeList;
     Beeline.Builder bee = new Beeline.Builder();
-    public static boolean joinedAndCreated;
-
     private boolean clicked = false;
 
 
@@ -65,7 +63,6 @@ public class CreateBeeline extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_beeline);
-        joinedAndCreated = false;
         meeting_time = (EditText) findViewById(R.id.meeting_time);
         meeting_date = (EditText) findViewById(R.id.meeting_date);
         start_loc = (EditText) findViewById(R.id.start_loc);
