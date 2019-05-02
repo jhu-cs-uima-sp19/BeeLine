@@ -41,7 +41,7 @@ import android.widget.Toast;
 import com.wenwanggarzagao.beeline.data.Beeline;
 import com.wenwanggarzagao.beeline.data.DatabaseUtils;
 import com.wenwanggarzagao.beeline.io.ResponseHandler;
-
+import com.wenwanggarzagao.beeline.CreateBeeline;
 import java.io.IOException;
 import java.security.Provider;
 import java.security.Security;
@@ -68,6 +68,7 @@ public class FindBeelines extends AppCompatActivity
     public double latitude;
     public double longitude;
     public LocationManager locationManager;
+    public ImageView interestFlower;
 
 
 
@@ -108,7 +109,6 @@ public class FindBeelines extends AppCompatActivity
         currentZip = getLocation();
         updateArray(currentZip);
         System.out.println(currentZip);
-
 
 
 
