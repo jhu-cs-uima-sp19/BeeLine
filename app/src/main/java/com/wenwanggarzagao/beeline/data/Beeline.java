@@ -58,14 +58,19 @@ public class Beeline {
     public List<String> participantIds;
     public String details;
 
+    @Exclude
+    public boolean valid = true;
+
     // list of participants. index 0, is the group leader.
     @Exclude
     public List<SavedUserData> participants;
 
+    @Exclude
     public boolean isLeader(User user) {
         return participants.size() > 0 && participants.get(0).equals(user);
     }
 
+    @Exclude
     public int timeValue() {
         return meet_date.value(meet_time);
     }
@@ -101,12 +106,18 @@ public class Beeline {
         if (participants == null) {
             participants = new ArrayList<>();
         }
+
+        if (participantIds.contains(user.saveData.userId)) {
+            return;
+        }
+
         if (user == null) {
             return;
         }
-            participantIds.add(user.getId());
-            participants.add(user.saveData);
-            user.saveData.addBeeline(this);
+        participantIds.add(user.saveData.userId);
+        participants.add(user.saveData);
+        user.saveData.addBeeline(this);
+        DatabaseUtils.pushBeeline(this);
     }
 
 
@@ -114,17 +125,19 @@ public class Beeline {
      * Leaves Beeline. Removes from Beeline data structures AND user data structures.
      * @param user The user.
      */
-    public void leave(User user) {
+    public void leave(User user, Runnable... funs) {
         if (user == null)
             return;
 
-        participantIds.remove(user.getId());
-        participants.remove(user.saveData);
+        while (participantIds.remove(user.saveData.userId));
+        while (participants.remove(user.saveData));
         user.saveData.removeBeeline(this);
 
-        if (participants.isEmpty()) {
+        if (participantIds.isEmpty() && 1 == 3) {
             System.out.println("removing");
-            DatabaseUtils.removeBeeline(this);
+            DatabaseUtils.removeBeeline(this, funs);
+        } else {
+            DatabaseUtils.pushBeeline(this);
         }
         // check if users is now empty
     }
@@ -146,11 +159,13 @@ public class Beeline {
         return this.participants.size() > 0 ? this.participants.get(0) : null;
     }
 
+    @Exclude
     @Override
     public String toString() {
         return this.id + " " + this.to.zip;
     }
 
+    @Exclude
     @Override
     public int hashCode() {
         return (int) (this.id % 2147483647);

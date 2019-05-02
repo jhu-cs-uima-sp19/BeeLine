@@ -1,7 +1,9 @@
 package com.wenwanggarzagao.beeline;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,8 +11,10 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.wenwanggarzagao.beeline.data.Beeline;
 import com.wenwanggarzagao.beeline.data.DatabaseUtils;
@@ -18,8 +22,10 @@ import com.wenwanggarzagao.beeline.data.Date;
 import com.wenwanggarzagao.beeline.data.Location;
 import com.wenwanggarzagao.beeline.data.SavedUserData;
 import com.wenwanggarzagao.beeline.data.Time;
+import com.wenwanggarzagao.beeline.data.Updatable;
 
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,10 +34,13 @@ public class BeelineAdaptor extends RecyclerView.Adapter<com.wenwanggarzagao.bee
 
     private final ClickListener listener;
     private final List<Beeline> beelineList;
+    private Activity activity;
 
 
 
-    public BeelineAdaptor(List<Beeline> beelineList, ClickListener listener) {
+
+    public BeelineAdaptor(Activity activity, List<Beeline> beelineList, ClickListener listener) {
+        this.activity = activity;
         this.listener = listener;
         this.beelineList = beelineList;
     }
@@ -50,20 +59,32 @@ public class BeelineAdaptor extends RecyclerView.Adapter<com.wenwanggarzagao.bee
         String meetTxt = b.meet_date.toString() + " | " + b.meet_time.toString();
         holder.meetTxt.setText(meetTxt);
 
+        if (b.participantIds.contains(DatabaseUtils.me.saveData.userId)) {
+            holder.interestIcon.setImageResource(R.drawable.target_flowers);
+            holder.interested = true;
+        }
+
+
     }
 
     @Override public int getItemCount() {
         return beelineList.size();
     }
 
-    public static class beeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
+    public class beeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
         private ImageView interestIcon;
         private TextView locTxt;
         private TextView meetTxt;
         private WeakReference<ClickListener> listenerRef;
 
-        private boolean interested;
+        //Interest shortcut button
+        private boolean interested = false;
+
+        //participantListView = findViewById(R.id.participant_list);
+
+
+
 
         public beeViewHolder(final View itemView, ClickListener listener) {
             super(itemView);
@@ -74,22 +95,47 @@ public class BeelineAdaptor extends RecyclerView.Adapter<com.wenwanggarzagao.bee
             meetTxt = (TextView) itemView.findViewById(R.id.date_time_info);
             itemView.setOnClickListener(this);
             interestIcon.setOnClickListener(this);
-            //iconImageView.setOnLongClickListener(this);
+
         }
 
         // onClick Listener for view
         @Override
         public void onClick(View v) {
 
+
+            //participantListView.setLayoutManager(new LinearLayoutManager(v.getContext()));
+            //List<SavedUserData> participantList= new ArrayList<SavedUserData>();
             if (v.getId() == interestIcon.getId()) {
-                if (interested) {
+                if (!interested) {
+                    DatabaseUtils.bl = (Beeline) beelineList.get(getAdapterPosition());
+
                     interestIcon.setImageResource(R.drawable.target_flowers);
-                    Toast.makeText(v.getContext(), "Joining beeline", Toast.LENGTH_SHORT).show();
-                    interested = false;
-                } else if (!interested) {
-                    interestIcon.setImageResource(R.drawable.gray_flowers);
-                    Toast.makeText(v.getContext(), "Leaving beeline", Toast.LENGTH_SHORT).show();
+                    DatabaseUtils.bl.join(DatabaseUtils.me);
+
+                    //notifyDataSetChanged();
+                    Toast.makeText(v.getContext(), "Joined Beeline", Toast.LENGTH_SHORT).show();
                     interested = true;
+
+                } else if (interested) {
+                    DatabaseUtils.bl = (Beeline) beelineList.get(getAdapterPosition());
+                    if (!DatabaseUtils.bl.valid)
+                        return;
+
+                    interestIcon.setImageResource(R.drawable.gray_flowers);
+                    if (DatabaseUtils.bl.participantIds.size() == 1)
+                        DatabaseUtils.bl.valid = false;
+                    DatabaseUtils.bl.leave(DatabaseUtils.me, new Runnable() {
+                        @Override
+                        public void run() {
+                            if (activity instanceof MainActivity) {
+                                System.out.println("is an updatable! updating...");
+                                ((Updatable) activity).update();
+                            }
+                        }
+                    });
+
+                    Toast.makeText(v.getContext(), "Left Beeline", Toast.LENGTH_SHORT).show();
+                    interested = false;
                 }
             } else {
                 Intent intent = new Intent(v.getContext(), BeelineDetails.class);

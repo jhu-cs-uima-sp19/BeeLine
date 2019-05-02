@@ -25,17 +25,27 @@ import com.wenwanggarzagao.beeline.data.Time;
 import com.wenwanggarzagao.beeline.data.User;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class ParticipantsAdaptor extends RecyclerView.Adapter<ParticipantsAdaptor.MyViewHolder> {
 
     private final ClickListener listener;
     private final List<SavedUserData> usersList;
+    private final Beeline beeline;
 
 
-    public ParticipantsAdaptor(List<SavedUserData> usersList, ClickListener listener) {
+    public ParticipantsAdaptor(Beeline beeline, List<SavedUserData> usersList, ClickListener listener) {
         this.listener = listener;
         this.usersList = usersList;
+        this.beeline = beeline;
+        for (Iterator<SavedUserData> it = this.usersList.iterator(); it.hasNext();) {
+            String id = it.next().userId;
+            if (!this.beeline.participantIds.contains(id)) {
+                it.remove();
+                this.beeline.participantIds.remove(id);
+            }
+        }
     }
 
     @Override
@@ -78,7 +88,7 @@ public class ParticipantsAdaptor extends RecyclerView.Adapter<ParticipantsAdapto
         @Override
         public void onClick(View v) {
             listenerRef.get().onPositionClicked(getAdapterPosition());
-
+            System.out.println("Clicked on user");
             SavedUserData savedUserData = usersList.get(getAdapterPosition());
             Context context = itemView.getContext();
             Intent intent = new Intent(context, UserProfile.class);

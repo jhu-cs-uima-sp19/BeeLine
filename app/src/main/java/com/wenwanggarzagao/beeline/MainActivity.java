@@ -43,12 +43,13 @@ import com.wenwanggarzagao.beeline.data.DatabaseUtils;
 import com.wenwanggarzagao.beeline.data.Date;
 import com.wenwanggarzagao.beeline.data.Location;
 import com.wenwanggarzagao.beeline.data.Time;
+import com.wenwanggarzagao.beeline.data.Updatable;
 import com.wenwanggarzagao.beeline.io.ResponseHandler;
 import com.wenwanggarzagao.beeline.settings.Storage;
 
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, Updatable {
 
     private static final String HARDCODED_USER = "person@place.com";
     private static final String HARDCODED_PWD = "password123";
@@ -141,7 +142,7 @@ public class MainActivity extends AppCompatActivity
 
         System.out.println("got here mainactivity");
         updateArray();
-        DatabaseUtils.attachNotificationListeners(getApplicationContext(), R.drawable.queen_bee);
+        //DatabaseUtils.attachNotificationListeners(getApplicationContext(), R.drawable.queen_bee);
     }
     private void getLocationPermission() {
         String [] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
@@ -156,6 +157,12 @@ public class MainActivity extends AppCompatActivity
         }else {
             ActivityCompat.requestPermissions(this, permissions, LOCATION_PERMISSION_REQUEST_CODE);
         }
+    }
+
+    @Override
+    public void update() {
+        System.out.println("         UPDATING ARRAY ");
+        updateArray();
     }
 
     @Override
@@ -255,7 +262,7 @@ public class MainActivity extends AppCompatActivity
                 for (Beeline bl: bls) {
                     System.out.println("querymybeelines " + bl.toString());
                     beelines.add(bl);
-                    DatabaseUtils.attachNotificationForUserJoinListener(getApplicationContext(), bl, R.drawable.queen_bee);
+                    //DatabaseUtils.attachNotificationForUserJoinListener(getApplicationContext(), bl, R.drawable.queen_bee);
                 }
 
                 beelines.sort(new Comparator<Beeline>() {
@@ -269,10 +276,10 @@ public class MainActivity extends AppCompatActivity
                 /*beelineArrayAdapter = new BeelineAdaptor(MainActivity.this, R.layout.beeline_layout, beelines);
                 beeList.setAdapter(beelineArrayAdapter);
                 registerForContextMenu(beeList);*/
-                BeelineAdaptor adapter = new BeelineAdaptor(beelines, new ClickListener() {
+                BeelineAdaptor adapter = new BeelineAdaptor(MainActivity.this, beelines, new ClickListener() {
                     @Override public void onPositionClicked(int position) {
                         DatabaseUtils.bl = (Beeline) beelines.get(position);
-                        MainActivity.scheduleNotification(getApplicationContext(), DatabaseUtils.bl);
+                        //MainActivity.scheduleNotification(getApplicationContext(), DatabaseUtils.bl);
                     }
 
                     @Override public void onLongClicked(int position) {
@@ -297,32 +304,47 @@ public class MainActivity extends AppCompatActivity
         });
     }*/
     public static void scheduleNotification(Context ctx, Beeline beeline) {
-        PackageManager pm = ctx.getPackageManager();
-        ComponentName receiver = new ComponentName(ctx, DeviceBootReceiver.class);
-        Intent alarmIntent = new Intent(ctx, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(ctx, (int) beeline.id, alarmIntent, 0);
-        AlarmManager manager = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
-
-        Date meetdate = beeline.meet_date;
-        Time meettime = beeline.meet_time;
-        java.util.Date meetup = new java.util.Date(meetdate.value(meettime));
-        long meetup_millis = System.currentTimeMillis() + 10000;//meetup.getTime();
-        System.err.println("SCHEDULED NOTIFICATION FOR 10 SECONDS");
-
         // if user enabled daily notifications
         if (Storage.SHOW_NOTIFICATIONS.get(preferences)) {
-            if (manager != null) {
-                System.err.println("\tSET ALARM for " + meetup_millis + " when current time difference is " + (meetup_millis - System.currentTimeMillis()));
-                manager.set(AlarmManager.RTC_WAKEUP, meetup_millis, pendingIntent);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    manager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, meetup_millis, pendingIntent);
+            int[] arrtimes = {
+                15, 30, 45, 60, 24 * 60
+            };
+
+            for (int t : arrtimes) {
+                long before = t * 60l * 1000l; // minutes to millis
+                Date meetdate = beeline.meet_date;
+                Time meettime = beeline.meet_time;
+                java.util.Date meetup = new java.util.Date(meetdate.value(meettime));
+                long meetup_millis = meetup.getTime() - before;
+                if (meetup_millis < System.currentTimeMillis())
+                    continue; // dont schedule something in the past
+
+                System.err.println("SCHEDULED NOTIFICATION FOR 10 SECONDS");
+
+                PackageManager pm = ctx.getPackageManager();
+                ComponentName receiver = new ComponentName(ctx, DeviceBootReceiver.class);
+                Intent alarmIntent = new Intent(ctx, AlarmReceiver.class);
+                alarmIntent.putExtra("id", (int) beeline.id);
+                alarmIntent.putExtra("time_before", "" + t);
+                alarmIntent.putExtra("start", beeline.from.address);
+                alarmIntent.putExtra("destination", beeline.to.address);
+
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(ctx, (int) beeline.id, alarmIntent, 0);
+                AlarmManager manager = (AlarmManager) ctx.getSystemService(Context.ALARM_SERVICE);
+
+                if (manager != null) {
+                    System.err.println("\tSET ALARM for " + meetup_millis + " when current time difference is " + (meetup_millis - System.currentTimeMillis()));
+                    manager.set(AlarmManager.RTC_WAKEUP, meetup_millis, pendingIntent);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        manager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, meetup_millis, pendingIntent);
+                    }
                 }
+                //To enable Boot Receiver class
+                pm.setComponentEnabledSetting(receiver,
+                        PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                        PackageManager.DONT_KILL_APP);
+                //endregion
             }
-            //To enable Boot Receiver class
-            pm.setComponentEnabledSetting(receiver,
-                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-                    PackageManager.DONT_KILL_APP);
-            //endregion
         }
     }
 

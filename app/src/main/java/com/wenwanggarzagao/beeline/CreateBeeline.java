@@ -24,6 +24,8 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -54,7 +56,6 @@ public class CreateBeeline extends AppCompatActivity {
     private static EditText meeting_date;
     private ListView beeList;
     Beeline.Builder bee = new Beeline.Builder();
-
     private boolean clicked = false;
 
 
@@ -62,8 +63,6 @@ public class CreateBeeline extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_beeline);
-
-
         meeting_time = (EditText) findViewById(R.id.meeting_time);
         meeting_date = (EditText) findViewById(R.id.meeting_date);
         start_loc = (EditText) findViewById(R.id.start_loc);
@@ -124,7 +123,7 @@ public class CreateBeeline extends AppCompatActivity {
 
                             // attach listener on beeline create
                             new_bline.attachNotification(getApplicationContext());
-
+                            //joinedAndCreated = true;
                             setResult(RESULT_OK, intent);
                             finish();
                         } catch (NullPointerException e) {

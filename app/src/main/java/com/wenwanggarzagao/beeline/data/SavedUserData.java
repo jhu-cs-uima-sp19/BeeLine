@@ -61,4 +61,23 @@ public class SavedUserData {
         DatabaseUtils.saveUser();
     }
 
+    @Override
+    public int hashCode() {
+        return this.userId.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof SavedUserData) {
+            SavedUserData sud = (SavedUserData) other;
+            return sud.userId.equals(this.userId);
+        }
+
+        if (other instanceof String) {
+            return ((String) other).equals(this.userId);
+        }
+
+        return false;
+    }
+
 }
