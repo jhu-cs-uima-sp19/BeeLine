@@ -14,12 +14,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-<<<<<<< HEAD
+
 import android.widget.EditText;
 import android.widget.ImageButton;
-=======
+
 import android.widget.ImageView;
->>>>>>> Ok now it will push stuff
+
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
