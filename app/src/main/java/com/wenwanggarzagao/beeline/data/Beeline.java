@@ -118,13 +118,15 @@ public class Beeline {
         if (user == null)
             return;
 
-        participantIds.remove(user.getId());
-        participants.remove(user.saveData);
+        while (participantIds.remove(user.getId()));
+        while (participants.remove(user.saveData));
         user.saveData.removeBeeline(this);
 
         if (participants.isEmpty()) {
             System.out.println("removing");
             DatabaseUtils.removeBeeline(this);
+        } else {
+            DatabaseUtils.pushBeeline(this);
         }
         // check if users is now empty
     }

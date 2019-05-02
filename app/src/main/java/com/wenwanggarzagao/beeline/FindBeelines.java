@@ -244,7 +244,7 @@ public class FindBeelines extends AppCompatActivity
                 beeList.setAdapter(beelineArrayAdapter);
 
                 registerForContextMenu(beeList);*/
-                BeelineAdaptor adapter = new BeelineAdaptor(beelines, new ClickListener() {
+                BeelineAdaptor adapter = new BeelineAdaptor(FindBeelines.this, beelines, new ClickListener() {
                     @Override
                     public void onPositionClicked(int position) {
                         DatabaseUtils.bl = (Beeline) beelines.get(position);

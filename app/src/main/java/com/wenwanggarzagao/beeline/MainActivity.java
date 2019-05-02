@@ -269,7 +269,7 @@ public class MainActivity extends AppCompatActivity
                 /*beelineArrayAdapter = new BeelineAdaptor(MainActivity.this, R.layout.beeline_layout, beelines);
                 beeList.setAdapter(beelineArrayAdapter);
                 registerForContextMenu(beeList);*/
-                BeelineAdaptor adapter = new BeelineAdaptor(beelines, new ClickListener() {
+                BeelineAdaptor adapter = new BeelineAdaptor(MainActivity.this, beelines, new ClickListener() {
                     @Override public void onPositionClicked(int position) {
                         DatabaseUtils.bl = (Beeline) beelines.get(position);
                         MainActivity.scheduleNotification(getApplicationContext(), DatabaseUtils.bl);

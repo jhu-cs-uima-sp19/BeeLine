@@ -1,5 +1,6 @@
 package com.wenwanggarzagao.beeline;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -31,12 +33,14 @@ public class BeelineAdaptor extends RecyclerView.Adapter<com.wenwanggarzagao.bee
     private final ClickListener listener;
     private final List<Beeline> beelineList;
 
+    private Activity activity;
     //private RecyclerView participantListView;
 
 
 
 
-    public BeelineAdaptor(List<Beeline> beelineList, ClickListener listener) {
+    public BeelineAdaptor(Activity acti, List<Beeline> beelineList, ClickListener listener) {
+        this.activity = acti;
         this.listener = listener;
         this.beelineList = beelineList;
     }
@@ -103,10 +107,6 @@ public class BeelineAdaptor extends RecyclerView.Adapter<com.wenwanggarzagao.bee
                     DatabaseUtils.bl = (Beeline) beelineList.get(getAdapterPosition());
                     DatabaseUtils.bl.join(DatabaseUtils.me);
 
-                    // Add to participants list
-                    //SavedUserData u = DatabaseUtils.bl.participants.get()
-                    //DatabaseUtils.bl.participants.add(u);
-
                     //notifyDataSetChanged();
                     Toast.makeText(v.getContext(), "Joined Beeline", Toast.LENGTH_SHORT).show();
                     interested = false;
@@ -115,13 +115,6 @@ public class BeelineAdaptor extends RecyclerView.Adapter<com.wenwanggarzagao.bee
                     interestIcon.setImageResource(R.drawable.gray_flowers);
                     DatabaseUtils.bl = (Beeline) beelineList.get(getAdapterPosition());
                     DatabaseUtils.bl.leave(DatabaseUtils.me);
-
-                    //notifyDataSetChanged();
-                    // Remove from participants list
-                    //SavedUserData u = DatabaseUtils.bl.participants.get(getAdapterPosition());
-                    //DatabaseUtils.bl.participants.remove(u);
-
-
 
                     Toast.makeText(v.getContext(), "Left Beeline", Toast.LENGTH_SHORT).show();
                     interested = true;

@@ -58,6 +58,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mProgressView;
     private View mLoginFormView;
 
+    private ViewDialog dialog;
+
     private boolean loggingIn;
 
     @Override
@@ -69,6 +71,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        dialog = new ViewDialog(this);
         loggingIn = false;
         this.createNotificationChannel();
         setContentView(R.layout.activity_login);
@@ -164,10 +168,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             loggingIn = true;
-            showProgress(true);
+            dialog.showDialog();
             DatabaseUtils.signIn(LoginActivity.this, email, password, false, new ResponseHandler<Boolean>() {
                 @Override
                 public void handle(Boolean success) {
+                    dialog.hideDialog();
                     if (success) {
                         if (!flag) {
                             flag = true;
@@ -179,7 +184,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         mPasswordView.setError(getString(R.string.error_incorrect_password));
                         mPasswordView.requestFocus();
                     }
-                    showProgress(false);
                 }
             });
         }
