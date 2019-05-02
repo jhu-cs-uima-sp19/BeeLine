@@ -130,7 +130,11 @@ public class Beeline {
     }
 
     public void attachNotification(Context ctx) {
-        MainActivity.scheduleNotification(ctx, this);
+        try {
+            MainActivity.scheduleNotification(ctx, this);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public void removeNotification(Context ctx) {

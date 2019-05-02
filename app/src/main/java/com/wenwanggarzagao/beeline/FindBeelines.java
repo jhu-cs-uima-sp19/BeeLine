@@ -140,7 +140,7 @@ public class FindBeelines extends AppCompatActivity
                     } catch (IOException e) {
                         Toast toast = Toast.makeText(getApplicationContext(), "Not able to find your location", Toast.LENGTH_SHORT);
                         toast.show();
-                        zip = 21231;
+                        zip = 21218;
                         System.out.println("Not able to find your location");
                         return zip;
                     }
@@ -160,7 +160,7 @@ public class FindBeelines extends AppCompatActivity
 
 
             }
-            return zip;
+            return zip == 0 ? 21218 : zip;
         }
 
 
@@ -191,9 +191,12 @@ public class FindBeelines extends AppCompatActivity
         try {
             List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
             currentZip = Integer.parseInt(addresses.get(0).getPostalCode());
+            if (currentZip == 0)
+                currentZip = 21218;
         } catch (IOException e) {
             Toast toast = Toast.makeText(getApplicationContext(), "no zip code update", Toast.LENGTH_SHORT);
             toast.show();
+            currentZip = 21218;
         }
         //Toast.makeText(MainActivity.this, "latitude:" + latitude + " longitude:" + longitude, Toast.LENGTH_SHORT).show();
         //searchNearestPlace(voice2text);

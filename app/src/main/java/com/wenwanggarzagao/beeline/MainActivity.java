@@ -272,6 +272,7 @@ public class MainActivity extends AppCompatActivity
                 BeelineAdaptor adapter = new BeelineAdaptor(beelines, new ClickListener() {
                     @Override public void onPositionClicked(int position) {
                         DatabaseUtils.bl = (Beeline) beelines.get(position);
+                        MainActivity.scheduleNotification(getApplicationContext(), DatabaseUtils.bl);
                     }
 
                     @Override public void onLongClicked(int position) {
@@ -311,6 +312,7 @@ public class MainActivity extends AppCompatActivity
         // if user enabled daily notifications
         if (Storage.SHOW_NOTIFICATIONS.get(preferences)) {
             if (manager != null) {
+                System.err.println("\tSET ALARM for " + meetup_millis + " when current time difference is " + (meetup_millis - System.currentTimeMillis()));
                 manager.set(AlarmManager.RTC_WAKEUP, meetup_millis, pendingIntent);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     manager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, meetup_millis, pendingIntent);
