@@ -13,16 +13,36 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 
 import com.wenwanggarzagao.beeline.MainActivity;
+import com.wenwanggarzagao.beeline.settings.Storage;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Random;
+import java.util.Set;
 
 public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-
         System.err.println("\tRECEIVED CONTEXT");
+        Storage storage = new Storage(context);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(Objects.requireNonNull(context));
+        if (!Storage.SHOW_NOTIFICATIONS.get(storage)) {
+            System.out.println("returned because we dont want notifications");
+            return;
+        }
+
+        String b4 = intent.getStringExtra("time_before");
+        String timesallowed = Storage.NOTIFY_SETTINGS.get(storage);
+        Set<String> set = new HashSet<String>();
+        for (String s : timesallowed.split(",")) {
+            set.add(s);
+        }
+        if (!set.contains(b4)) {
+            System.out.println("returned because not the right time");
+            return;
+        }
+
         SharedPreferences.Editor sharedPrefEditor = prefs.edit();
 
         NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -42,19 +62,23 @@ public class AlarmReceiver extends BroadcastReceiver {
                 nm.createNotificationChannel(channel);
             }
         }
+
+        String timebefore = b4 + " minutes";
+        String from = intent.getStringExtra("start");
+        String to = intent.getStringExtra("destination");
         NotificationCompat.Builder b = new NotificationCompat.Builder(context, "default");
         b.setAutoCancel(true)
                 .setDefaults(NotificationCompat.DEFAULT_ALL)
                 .setWhen(System.currentTimeMillis())
                 .setSmallIcon(R.drawable.queen_bee)
-                .setTicker("One of your Beelines is happening soon!")
+                .setTicker("Your Beeline to " + to + " is happening in " + timebefore + "!")
                 .setContentTitle("Beeline")
-                .setContentText("One of your Beelines is happening soon!")
+                .setContentText("Your Beeline to " + to + " is happening in " + timebefore + "!")
                 .setContentInfo("INFO")
                 .setContentIntent(pendingI);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         // notificationId is a unique int for each notification that you must define
-        notificationManager.notify(new Random().nextInt(50000), b.build());
+        notificationManager.notify(new Random().nextInt(intent.getIntExtra("id", new Random().nextInt(50000))), b.build());
     }
 }
