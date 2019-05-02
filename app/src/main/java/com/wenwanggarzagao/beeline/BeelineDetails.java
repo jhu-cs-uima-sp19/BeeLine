@@ -123,7 +123,9 @@ public class BeelineDetails extends AppCompatActivity {
                     selectedBeeline.leave(DatabaseUtils.me);
                     hasJoined = false;
                     System.out.println("left beeline");
-
+                    if (!selectedBeeline.participantIds.isEmpty()) {
+                        DatabaseUtils.pushBeeline(selectedBeeline);
+                    }
                     //Informative Message
                     Toast.makeText(getApplicationContext(),"Left Beeline!",Toast.LENGTH_SHORT).show();
 
@@ -133,11 +135,10 @@ public class BeelineDetails extends AppCompatActivity {
                     selectedBeeline.join(DatabaseUtils.me);
                     hasJoined = true;
                     System.out.println("joined beeline");
-
+                    DatabaseUtils.pushBeeline(selectedBeeline);
                     //Informative Message
                     Toast.makeText(getApplicationContext(),"Joined Beeline!",Toast.LENGTH_SHORT).show();
                 }
-                DatabaseUtils.pushBeeline(selectedBeeline);
 
                 MainActivity.needsRefresh = originallyJoined != hasJoined;
                 System.out.println("needs refresh? " + MainActivity.needsRefresh);

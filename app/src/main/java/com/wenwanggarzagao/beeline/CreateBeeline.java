@@ -220,7 +220,7 @@ public class CreateBeeline extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private Address checkLocation(EditText ed_loc) {
+    private Address checkLocation(EditText ed_loc) throws IOException {
         String loc = ed_loc.getText().toString();
         if (loc.isEmpty()) {
             Toast toast = Toast.makeText(getApplicationContext(), "Location cannot be empty", Toast.LENGTH_SHORT);
@@ -235,6 +235,7 @@ public class CreateBeeline extends AppCompatActivity {
 
             } catch (IOException e) {
                 Log.w("OCR", "unable to geoLocate. IOException:" + e.getMessage());
+                throw new IOException("Unable to find location.");
             } try {
                 if (list.size() > 0) {
                     Address address = list.get(0);
