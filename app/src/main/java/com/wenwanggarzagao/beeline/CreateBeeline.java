@@ -1,6 +1,8 @@
 package com.wenwanggarzagao.beeline;
 
 import android.app.ActionBar;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -119,6 +121,10 @@ public class CreateBeeline extends AppCompatActivity {
                             DatabaseUtils.pushBeeline(new_bline);
                             DatabaseUtils.attachNotificationForUserJoinListener(getApplicationContext(), new_bline, R.drawable.queen_bee);
                             Toast.makeText(getApplicationContext(), "You've created a Beeline! Yeah!!", Toast.LENGTH_SHORT).show();
+
+                            // attach listener on beeline create
+                            new_bline.attachNotification(getApplicationContext());
+
                             setResult(RESULT_OK, intent);
                             finish();
                         } catch (NullPointerException e) {

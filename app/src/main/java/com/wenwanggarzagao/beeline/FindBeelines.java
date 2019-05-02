@@ -62,7 +62,7 @@ public class FindBeelines extends AppCompatActivity
     private RecyclerView beeListView;
     private Context context; // For adaptor
     private Cursor curse; // Database Cursor
-    public int currentZip;
+    public static int currentZip;
     private int zip;
     static final int REQUEST_CODE = 1;
     public double latitude;
