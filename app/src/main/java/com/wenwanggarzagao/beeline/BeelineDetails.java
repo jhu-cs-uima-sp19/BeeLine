@@ -128,17 +128,8 @@ public class BeelineDetails extends AppCompatActivity {
                     System.out.println("currently joined, trying to leave");
                     selectedBeeline.leave(DatabaseUtils.me);
                     hasJoined = false;
-                    System.out.println("Left Beeline");
 
-
-                    // Remove from participants list, already done in Beeline
-                    //SavedUserData u = selectedBeeline.participants.get(());
-                    //selectedBeeline.participants.remove(u);
-
-                    // Set flowers to gray when you leave
-                    //interestIcon = findViewById(R.id.interest_icon);
-                    //interestIcon.setImageResource(R.drawable.gray_flowers);
-
+                    System.out.println("left beeline");
                     //Informative Message
                     Toast.makeText(getApplicationContext(),"Left Beeline!",Toast.LENGTH_SHORT).show();
 
@@ -147,23 +138,12 @@ public class BeelineDetails extends AppCompatActivity {
                     System.out.println("currently not joined, trying to join");
                     selectedBeeline.join(DatabaseUtils.me);
                     hasJoined = true;
-                    System.out.println("Joined Beeline");
 
-
-
-
-                    // Add to participants list, already done in Beeline
-                    //SavedUserData u = selectedBeeline.participants.get(getAdapterPosition());
-                    //selectedBeeline.participants.add(u);
-
-                    // Set flowers to colorful when you join
-                    //interestIcon = findViewById(R.id.interest_icon);
-                    //interestIcon.setImageResource(R.drawable.target_flowers);
-
+                    System.out.println("joined beeline");
+                    DatabaseUtils.pushBeeline(selectedBeeline);
                     //Informative Message
                     Toast.makeText(getApplicationContext(),"Joined Beeline!",Toast.LENGTH_SHORT).show();
                 }
-                DatabaseUtils.pushBeeline(selectedBeeline);
 
                 MainActivity.needsRefresh = originallyJoined != hasJoined;
                 System.out.println("needs refresh? " + MainActivity.needsRefresh);
