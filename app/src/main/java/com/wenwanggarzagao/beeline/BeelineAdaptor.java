@@ -94,7 +94,7 @@ public class BeelineAdaptor extends RecyclerView.Adapter<com.wenwanggarzagao.bee
             } else {
                 Intent intent = new Intent(v.getContext(), BeelineDetails.class);
                 v.getContext().startActivity(intent);
-                Toast.makeText(v.getContext(), "ROW PRESSED = " + String.valueOf(getAdapterPosition()), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(v.getContext(), "ROW PRESSED = " + String.valueOf(getAdapterPosition()), Toast.LENGTH_SHORT).show();
             }
 
             listenerRef.get().onPositionClicked(getAdapterPosition());

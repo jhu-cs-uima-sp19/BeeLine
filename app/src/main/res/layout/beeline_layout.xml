@@ -14,8 +14,8 @@
 
         <TextView
             android:id="@+id/origin"
-            android:layout_width="320dp"
-            android:layout_height="43dp"
+            android:layout_width="316dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="8dp"
             android:paddingLeft="10dp"
@@ -35,7 +35,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.461"
+            app:layout_constraintVertical_bias="0.557"
             app:srcCompat="@drawable/target_flowers" />
 
         <TextView
