@@ -62,7 +62,7 @@ public class SettingsActivity extends AppCompatActivity
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
         if (key.equals("display_text")) {
-            //setTextVisible(sharedPreferences.getBoolean("display_text",true));
+//            setTextVisible(sharedPreferences.getBoolean("display_text",true));
         }
     }
 
