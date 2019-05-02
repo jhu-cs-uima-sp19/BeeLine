@@ -34,9 +34,24 @@ Password: password123
 - [x] Create **Nav Drawer**:
   - My Beelines
   - Find Beelines
+
+## Second Sprint Objectives
+- [x] Zip code usage to update Find Beelines Given this location info
+
+- [x] Dedicated Log In Screen: authenticates password by exact match
+
+- [x] Dedicated Create User Screen: Creates new user with name, email, password
+
+- [x] Account activity v2: User Profile editable
+
+- [x] Changes to anyone can edit/additional details added 
+
+- [x] **Beeline Details v2**: Has list of users that are on a Beeline
+
+- [x] **Flower Button Shortcut**: Can use Recycler item flower button to add to Beeline
  
  ## General State of the App To-Date
- Our current version is able to log in a user and create new Beeline from a Create Beelines option in the Find Beelines. This action adds the event to the Firebase Database and displays on the Find Beelines screen, connecting our Back End with our Front End. For our next Sprint we want to include details about each trip and develop more on the user side to add trips to their account to be displayed in My Beelines. 
+ Our current version is able to log in a user, create a new user, and show a user's personal beelines when they enter our app. If a user is not part of a Beeline, they can navigate to the find beeline page to search through the current offerings. If they don't find one that meets their needs, they can create a brand new beeline from point A to point B(ee). All of these actions are updated via the Firebase Database to keep user actions attached to their profile. Speaking of the user profile, a user can update their profile with information about themselves or the payment method they use for ridesharing, while getting to see other profiles in their ride. Some whimsical features we have included include our custom loading screen featuring a loading bee while a user is taken from activity to activity. Our future plans include adding more on-boarding to our app, with informative messages on how to get your beelines started and where to go to find more.
  
  ## Meeting Notes:
  3/30 Meeting with Simon. Made sure our t3 assignment was sufficient for submission.
@@ -60,3 +75,4 @@ Password: password123
  
  4/28 Meeting with Simon. Established goals to be completed by final project submission and split tasks.
 
+4/30 Finishing Sprint II before presentation
