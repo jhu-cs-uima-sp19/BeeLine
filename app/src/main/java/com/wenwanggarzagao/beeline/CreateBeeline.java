@@ -115,18 +115,19 @@ public class CreateBeeline extends AppCompatActivity {
                         try {
                             Location origin = new Location(start, origin_address.getLocality(), origin_address.getAdminArea(), Integer.parseInt(origin_address.getPostalCode()));
                             Location destination = new Location(end, dest_address.getLocality(), dest_address.getAdminArea(), Integer.parseInt(dest_address.getPostalCode()));
-                            Beeline new_bline = Beeline.builder().setDate(new Date(meet_date)).setFromTo(origin, destination).setTime(new Time(meet_time)).setDetails(deets).build();
+                            Beeline new_bline = Beeline.builder().setOwner(DatabaseUtils.me).setDate(new Date(meet_date)).setFromTo(origin, destination).setTime(new Time(meet_time)).setDetails(deets).build();
                             new_bline.join(DatabaseUtils.me);
-                            DatabaseUtils.pushBeeline(new_bline);
-                            DatabaseUtils.attachNotificationForUserJoinListener(getApplicationContext(), new_bline, R.drawable.queen_bee);
+                            //DatabaseUtils.pushBeeline(new_bline);
+                            //DatabaseUtils.attachNotificationForUserJoinListener(getApplicationContext(), new_bline, R.drawable.queen_bee);
                             Toast.makeText(getApplicationContext(), "You've created a Beeline! Yeah!!", Toast.LENGTH_SHORT).show();
 
                             // attach listener on beeline create
-                            new_bline.attachNotification(getApplicationContext());
+                            //new_bline.attachNotification(getApplicationContext());
                             //joinedAndCreated = true;
                             setResult(RESULT_OK, intent);
                             finish();
                         } catch (NullPointerException e) {
+                            e.printStackTrace();
                             clicked = false;
                             Toast toast = Toast.makeText(getApplicationContext(), "Location does not exist", Toast.LENGTH_SHORT);
                             toast.show();

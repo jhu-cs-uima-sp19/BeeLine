@@ -246,6 +246,7 @@ public class DatabaseUtils {
                             new ResponseHandler<SavedUserData>() {
                                 @Override
                                 public void handle(SavedUserData u) {
+                                    System.out.println("Found user data!");
                                     me.setSaveData(u);
                                     after.handle(true);
                                 }
