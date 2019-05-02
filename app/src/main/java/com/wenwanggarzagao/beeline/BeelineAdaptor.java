@@ -54,6 +54,11 @@ public class BeelineAdaptor extends RecyclerView.Adapter<com.wenwanggarzagao.bee
         holder.locTxt.setText(locationsTxt);
         String meetTxt = b.meet_date.toString() + " | " + b.meet_time.toString();
         holder.meetTxt.setText(meetTxt);
+        System.out.println(CreateBeeline.joinedAndCreated);
+        if (CreateBeeline.joinedAndCreated) {
+
+            holder.interestIcon.setImageResource(R.drawable.target_flowers);
+        }
 
     }
 
@@ -81,13 +86,12 @@ public class BeelineAdaptor extends RecyclerView.Adapter<com.wenwanggarzagao.bee
 
             listenerRef = new WeakReference<>(listener);
             interestIcon = (ImageView) itemView.findViewById(R.id.interest_icon);
-
-
             locTxt = (TextView) itemView.findViewById(R.id.origin);
             meetTxt = (TextView) itemView.findViewById(R.id.date_time_info);
             itemView.setOnClickListener(this);
             interestIcon.setOnClickListener(this);
-            //iconImageView.setOnLongClickListener(this);
+
+
         }
 
         // onClick Listener for view
@@ -104,10 +108,10 @@ public class BeelineAdaptor extends RecyclerView.Adapter<com.wenwanggarzagao.bee
                     DatabaseUtils.bl.join(DatabaseUtils.me);
 
                     // Add to participants list
-                    SavedUserData u = DatabaseUtils.bl.participants.get(getAdapterPosition());
-                    DatabaseUtils.bl.participants.add(u);
+                    //SavedUserData u = DatabaseUtils.bl.participants.get()
+                    //DatabaseUtils.bl.participants.add(u);
 
-
+                    notifyDataSetChanged();
                     Toast.makeText(v.getContext(), "Joined Beeline", Toast.LENGTH_SHORT).show();
                     interested = false;
 
@@ -116,10 +120,10 @@ public class BeelineAdaptor extends RecyclerView.Adapter<com.wenwanggarzagao.bee
                     DatabaseUtils.bl = (Beeline) beelineList.get(getAdapterPosition());
                     DatabaseUtils.bl.leave(DatabaseUtils.me);
 
-
+                    notifyDataSetChanged();
                     // Remove from participants list
-                    SavedUserData u = DatabaseUtils.bl.participants.get(getAdapterPosition());
-                    DatabaseUtils.bl.participants.remove(u);
+                    //SavedUserData u = DatabaseUtils.bl.participants.get(getAdapterPosition());
+                    //DatabaseUtils.bl.participants.remove(u);
 
 
 
