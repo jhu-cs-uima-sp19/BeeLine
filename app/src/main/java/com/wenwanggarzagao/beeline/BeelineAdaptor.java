@@ -57,6 +57,11 @@ public class BeelineAdaptor extends RecyclerView.Adapter<com.wenwanggarzagao.bee
         String meetTxt = b.meet_date.toString() + " | " + b.meet_time.toString();
         holder.meetTxt.setText(meetTxt);
 
+        if (b.participantIds.contains(DatabaseUtils.me.saveData.userId)) {
+            holder.interestIcon.setImageResource(R.drawable.target_flowers);
+            holder.interested = true;
+        }
+
 
     }
 
@@ -72,7 +77,7 @@ public class BeelineAdaptor extends RecyclerView.Adapter<com.wenwanggarzagao.bee
         private WeakReference<ClickListener> listenerRef;
 
         //Interest shortcut button
-        private boolean interested = true;
+        private boolean interested = false;
 
         //participantListView = findViewById(R.id.participant_list);
 
@@ -89,7 +94,6 @@ public class BeelineAdaptor extends RecyclerView.Adapter<com.wenwanggarzagao.bee
             itemView.setOnClickListener(this);
             interestIcon.setOnClickListener(this);
 
-
         }
 
         // onClick Listener for view
@@ -100,22 +104,22 @@ public class BeelineAdaptor extends RecyclerView.Adapter<com.wenwanggarzagao.bee
             //participantListView.setLayoutManager(new LinearLayoutManager(v.getContext()));
             //List<SavedUserData> participantList= new ArrayList<SavedUserData>();
             if (v.getId() == interestIcon.getId()) {
-                if (interested) {
+                if (!interested) {
                     interestIcon.setImageResource(R.drawable.target_flowers);
                     DatabaseUtils.bl = (Beeline) beelineList.get(getAdapterPosition());
                     DatabaseUtils.bl.join(DatabaseUtils.me);
 
                     //notifyDataSetChanged();
                     Toast.makeText(v.getContext(), "Joined Beeline", Toast.LENGTH_SHORT).show();
-                    interested = false;
+                    interested = true;
 
-                } else if (!interested) {
+                } else if (interested) {
                     interestIcon.setImageResource(R.drawable.gray_flowers);
                     DatabaseUtils.bl = (Beeline) beelineList.get(getAdapterPosition());
                     DatabaseUtils.bl.leave(DatabaseUtils.me);
 
                     Toast.makeText(v.getContext(), "Left Beeline", Toast.LENGTH_SHORT).show();
-                    interested = true;
+                    interested = false;
                 }
             } else {
                 Intent intent = new Intent(v.getContext(), BeelineDetails.class);

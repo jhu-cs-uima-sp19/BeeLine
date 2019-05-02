@@ -104,9 +104,10 @@ public class Beeline {
         if (user == null) {
             return;
         }
-            participantIds.add(user.getId());
-            participants.add(user.saveData);
-            user.saveData.addBeeline(this);
+        participantIds.add(user.getId());
+        participants.add(user.saveData);
+        user.saveData.addBeeline(this);
+        DatabaseUtils.pushBeeline(this);
     }
 
 
@@ -122,7 +123,7 @@ public class Beeline {
         while (participants.remove(user.saveData));
         user.saveData.removeBeeline(this);
 
-        if (participants.isEmpty()) {
+        if (participantIds.isEmpty()) {
             System.out.println("removing");
             DatabaseUtils.removeBeeline(this);
         } else {

@@ -133,6 +133,13 @@ public class BeelineDetails extends AppCompatActivity {
                     //Informative Message
                     Toast.makeText(getApplicationContext(),"Left Beeline!",Toast.LENGTH_SHORT).show();
 
+
+                    if (selectedBeeline.participantIds.isEmpty()) {
+                        Intent intent = new Intent(v.getContext(), MainActivity.class);
+                        v.getContext().startActivity(intent);
+                    } else {
+                        a();
+                    }
                 } else {
                     //join_leave_btn.setText("JOIN");
                     System.out.println("currently not joined, trying to join");
@@ -143,6 +150,7 @@ public class BeelineDetails extends AppCompatActivity {
                     DatabaseUtils.pushBeeline(selectedBeeline);
                     //Informative Message
                     Toast.makeText(getApplicationContext(),"Joined Beeline!",Toast.LENGTH_SHORT).show();
+                    a();
                 }
 
                 MainActivity.needsRefresh = originallyJoined != hasJoined;
@@ -151,21 +159,12 @@ public class BeelineDetails extends AppCompatActivity {
             }
         });
 
+        a();
+    }
+
+    private void a() {
         participantListView = findViewById(R.id.participant_list);
         participantListView.setLayoutManager(new LinearLayoutManager(this));
-        //participantListView.setClickable(true);
-
-        //participantListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {Bundle bundle = new Bundle();
-            //@Override
-            //public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // DatabaseUtils.bl = (Beeline) beeList.getItemAtPosition(position);
-
-                // Intent intent = new Intent(BeelineDetails.this, BeelineDetails.class);
-                //based on item add info to intent
-
-                // startActivity(intent);
-            //}
-       // });
 
         List<SavedUserData> participantList= new ArrayList<SavedUserData>();
 
@@ -173,11 +172,6 @@ public class BeelineDetails extends AppCompatActivity {
             SavedUserData u = selectedBeeline.participants.get(i);
             participantList.add(u);
         }
-
-        //ParticipantsAdaptor participantsAdaptor = new ParticipantsAdaptor(BeelineDetails.this, R.layout.participant_layout, participantList);
-        //participantListView.setAdapter(participantsAdaptor);
-
-        //registerForContextMenu(participantListView);
 
 
         ParticipantsAdaptor adapter = new ParticipantsAdaptor(participantList, new ClickListener() {
@@ -191,7 +185,6 @@ public class BeelineDetails extends AppCompatActivity {
         });
 
         participantListView.setAdapter(adapter);
-
     }
 
 
