@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity
 
     private ArrayList<Beeline> beelines;
     private RecyclerView beeListView;
+
     private static final int VERTICAL_ITEM_SPACE = 48;
 
     private Context context; // For adaptor
@@ -121,6 +122,8 @@ public class MainActivity extends AppCompatActivity
 
         // create ArrayList of courses from database
         beelines = new ArrayList<Beeline>();
+
+
         getLocationPermission();
 
         /*beelineArrayAdapter = new BeelineAdaptor(this, R.layout.beeline_layout, beelines);
@@ -142,6 +145,8 @@ public class MainActivity extends AppCompatActivity
 
         System.out.println("got here mainactivity");
         updateArray();
+
+
         //DatabaseUtils.attachNotificationListeners(getApplicationContext(), R.drawable.queen_bee);
     }
     private void getLocationPermission() {
@@ -234,11 +239,11 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(MainActivity.this, FindBeelines.class);
             startActivity(intent);
             finish();
-        } else if (id == R.id.nav_buzz) {
+        } /*else if (id == R.id.nav_buzz) {
             Intent intent = new Intent(MainActivity.this, Buzz.class);
             startActivity(intent);
             finish();
-        } else if (id == R.id.nav_settings) {
+        } */ else if (id == R.id.nav_settings) {
             DatabaseUtils.sendNotification(getApplicationContext(), "Title", "body", R.drawable.queen_bee);
             Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
             startActivity(intent);
@@ -252,6 +257,11 @@ public class MainActivity extends AppCompatActivity
 
     /** Update the beelines listing */
     public void updateArray() {
+        if (beelines.isEmpty()) {
+            System.out.println("got here");
+            TextView emptyText = findViewById(R.id.emptyText);
+            emptyText.setText("No pending beelines. Go to Find Beelines to find or create your own!");
+        }
         DatabaseUtils.queryMyBeelines(new ResponseHandler<List<Beeline>>() {
 
             @Override
@@ -265,6 +275,10 @@ public class MainActivity extends AppCompatActivity
                     //DatabaseUtils.attachNotificationForUserJoinListener(getApplicationContext(), bl, R.drawable.queen_bee);
                 }
 
+                if (bls.size() != 0) {
+                    TextView emptyText = findViewById(R.id.emptyText);
+                    emptyText.setText("");
+                }
                 beelines.sort(new Comparator<Beeline>() {
                     @Override
                     public int compare(Beeline o1, Beeline o2) {
@@ -285,10 +299,13 @@ public class MainActivity extends AppCompatActivity
                     @Override public void onLongClicked(int position) {
                         // callback performed on click
                     }
+
                 });
                 beeListView.setAdapter(adapter);
+
             }
         });
+
         //beelines.add(bee);
     }
 
