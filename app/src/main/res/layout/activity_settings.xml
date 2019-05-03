@@ -7,11 +7,12 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:openDrawer="start"
-    tools:context=".SettingsActivity">
+    tools:context=".SettingsActivity"
+    style="@style/AppThemePreference">
 
     <include
         layout="@layout/app_bar_settings"
-
+        style="@style/AppThemePreference"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
