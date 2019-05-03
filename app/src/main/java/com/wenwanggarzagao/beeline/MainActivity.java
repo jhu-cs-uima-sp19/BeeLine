@@ -22,6 +22,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -67,6 +68,7 @@ public class MainActivity extends AppCompatActivity
     //Beeline bee;
 
     private ArrayList<Beeline> beelines;
+    private BeelineAdaptor adaptor;
     private RecyclerView beeListView;
     private static final int VERTICAL_ITEM_SPACE = 48;
 
@@ -123,22 +125,7 @@ public class MainActivity extends AppCompatActivity
         beelines = new ArrayList<Beeline>();
         getLocationPermission();
 
-        /*beelineArrayAdapter = new BeelineAdaptor(this, R.layout.beeline_layout, beelines);
-        beeList.setAdapter(beelineArrayAdapter);
-        registerForContextMenu(beeList);
 
-        beeList.setClickable(true);
-        beeList.setOnItemClickListener(new AdapterView.OnItemClickListener() {Bundle bundle = new Bundle();
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                DatabaseUtils.bl = (Beeline) beeList.getItemAtPosition(position);
-
-                Intent intent = new Intent(MainActivity.this, BeelineDetails.class);
-                //based on item add info to intent
-
-                startActivity(intent);
-            }
-        });*/
 
         System.out.println("got here mainactivity");
         updateArray();
@@ -211,6 +198,26 @@ public class MainActivity extends AppCompatActivity
                 startActivity(intent);
             }
         });
+
+        //Search Functionality
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+
+                adaptor.getFilter().filter(s);
+                return false;
+            }
+        });
+
+
         return true;
     }
 
@@ -276,7 +283,7 @@ public class MainActivity extends AppCompatActivity
                 /*beelineArrayAdapter = new BeelineAdaptor(MainActivity.this, R.layout.beeline_layout, beelines);
                 beeList.setAdapter(beelineArrayAdapter);
                 registerForContextMenu(beeList);*/
-                BeelineAdaptor adapter = new BeelineAdaptor(MainActivity.this, beelines, new ClickListener() {
+                adaptor = new BeelineAdaptor(MainActivity.this, beelines, new ClickListener() {
                     @Override public void onPositionClicked(int position) {
                         DatabaseUtils.bl = (Beeline) beelines.get(position);
                         //MainActivity.scheduleNotification(getApplicationContext(), DatabaseUtils.bl);
@@ -286,7 +293,7 @@ public class MainActivity extends AppCompatActivity
                         // callback performed on click
                     }
                 });
-                beeListView.setAdapter(adapter);
+                beeListView.setAdapter(adaptor);
             }
         });
         //beelines.add(bee);

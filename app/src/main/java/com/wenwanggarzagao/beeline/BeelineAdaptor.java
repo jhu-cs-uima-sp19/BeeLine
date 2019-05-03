@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -30,11 +32,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class BeelineAdaptor extends RecyclerView.Adapter<com.wenwanggarzagao.beeline.BeelineAdaptor.beeViewHolder> {
+public class BeelineAdaptor extends RecyclerView.Adapter<com.wenwanggarzagao.beeline.BeelineAdaptor.beeViewHolder> implements Filterable {
 
     private final ClickListener listener;
     private final List<Beeline> beelineList;
     private Activity activity;
+
+    private List<Beeline> beelineListFull;
+
+    /*
+    BeelineAdaptor(List<Beeline> beelineList) {
+        this.beelineList = beelineList;
+
+    }
+    */
 
 
 
@@ -43,6 +54,7 @@ public class BeelineAdaptor extends RecyclerView.Adapter<com.wenwanggarzagao.bee
         this.activity = activity;
         this.listener = listener;
         this.beelineList = beelineList;
+        beelineListFull = new ArrayList<>(beelineList);
     }
 
     @Override
@@ -70,6 +82,48 @@ public class BeelineAdaptor extends RecyclerView.Adapter<com.wenwanggarzagao.bee
     @Override public int getItemCount() {
         return beelineList.size();
     }
+
+    @Override
+    public Filter getFilter() {
+        return beelineFilter;
+    }
+
+    private Filter beelineFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<Beeline> filteredList = new ArrayList<>();
+
+            if (constraint == null || constraint.length() == 0) {
+                //Show all results
+                filteredList.addAll(beelineListFull);
+            } else {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+
+                //Iterate through items in full list through filter
+                for (Beeline b : beelineListFull) {
+
+                    String entry = b.from + " > " + b.to;
+                    if (entry.toLowerCase().contains(filterPattern)) {
+                        filteredList.add(b);
+                    }
+                }
+            }
+
+            FilterResults results = new FilterResults();
+            results.values  = filteredList;
+
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            beelineList.clear();
+            beelineList.addAll((List) results.values);
+            notifyDataSetChanged();
+        }
+    };
+
+
 
     public class beeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 

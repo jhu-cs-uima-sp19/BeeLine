@@ -22,6 +22,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.View;
 
 import android.support.v4.view.GravityCompat;
@@ -57,6 +58,7 @@ public class FindBeelines extends AppCompatActivity
     private ViewDialog dialog;
 
     private ArrayList<Beeline> beelines;
+    private BeelineAdaptor adaptor;
     private static final int VERTICAL_ITEM_SPACE = 48;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
@@ -120,7 +122,6 @@ public class FindBeelines extends AppCompatActivity
         currentZip = getLocation();
         updateArray(currentZip);
         System.out.println(currentZip);
-
 
 
 
@@ -260,7 +261,7 @@ public class FindBeelines extends AppCompatActivity
                 beeList.setAdapter(beelineArrayAdapter);
 
                 registerForContextMenu(beeList);*/
-                BeelineAdaptor adapter = new BeelineAdaptor(FindBeelines.this, beelines, new ClickListener() {
+                adaptor = new BeelineAdaptor(FindBeelines.this, beelines, new ClickListener() {
                     @Override
                     public void onPositionClicked(int position) {
                         DatabaseUtils.bl = (Beeline) beelines.get(position);
@@ -271,7 +272,7 @@ public class FindBeelines extends AppCompatActivity
                         // callback performed on click
                     }
                 });
-                beeListView.setAdapter(adapter);
+                beeListView.setAdapter(adaptor);
 
             }
         });
@@ -303,6 +304,25 @@ public class FindBeelines extends AppCompatActivity
                 Intent intent = new Intent(FindBeelines.this, UserProfile.class);
                 intent.putExtra("userUID", DatabaseUtils.me.saveData.userId);
                 startActivity(intent);
+            }
+        });
+
+
+        //Search Functionality
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+
+                adaptor.getFilter().filter(s);
+                return false;
             }
         });
 
