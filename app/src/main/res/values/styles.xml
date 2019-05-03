@@ -14,6 +14,8 @@
         <item name="android:textViewStyle">@style/RobotoTextViewStyle</item>
         <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_black_24dp</item>
         <item name="buttonStyle">@style/RobotoButtonStyle</item>
+        <item name="dialogTheme">@style/AppTheme.DialogPreference</item>
+        <item name="dialogPreferenceStyle">@style/AppTheme.DialogPreference</item>
     </style>
 
     <!-- App Bar -->
@@ -38,9 +40,11 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:actionBarStyle">@style/MyTheme.ActionBarStyle</item>
+        <item name="android:dialogPreferenceStyle">@style/AppTheme.DialogPreference</item>
+        <item name="dialogTheme">@style/AppTheme.DialogPreference</item>
+        <item name="dialogPreferenceStyle">@style/AppTheme.DialogPreference</item>
+        <item name="android:dialogTheme">@style/AppTheme.DialogPreference</item>
     </style>
-
-
 
     <!-- Roboto -->
     <style name="RobotoTextViewStyle" parent="android:Widget.TextView">
@@ -50,5 +54,21 @@
     <style name="RobotoButtonStyle" parent="android:Widget.Holo.Button">
         <item name="fontFamily">sans-serif-light</item>
     </style>
+
+    <!-- Style for a DialogPreference Entry -->
+    <style name="AppTheme.DialogPreference" parent="@style/Preference.DialogPreference.Material">
+        <item name="positiveButtonText">@android:string/ok</item>
+        <item name="negativeButtonText">@android:string/cancel</item>
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="colorPrimary">@color/colorBlack</item>
+        <item name="android:buttonBarStyle">@style/DialogButtonStyle</item>
+        <item name="android:buttonStyle">@style/DialogButtonStyle</item>
+    </style>
+
+    <style name="DialogButtonStyle" parent="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog">
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:background">@color/colorPrimary</item>
+    </style>
+
 
 </resources>

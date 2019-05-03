@@ -3,7 +3,11 @@ package com.wenwanggarzagao.beeline;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v14.preference.MultiSelectListPreference;
+import android.support.v14.preference.MultiSelectListPreferenceDialogFragment;
 import android.support.v14.preference.SwitchPreference;
+import android.support.v4.app.DialogFragment;
+import android.support.v7.preference.DialogPreference;
+import android.support.v7.preference.MultiSelectListPreferenceDialogFragmentCompat;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceManager;
@@ -16,6 +20,7 @@ import android.widget.Toast;
 
 import com.wenwanggarzagao.beeline.settings.Storage;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class NotificationPreferenceFragment extends PreferenceFragmentCompat {
@@ -32,16 +37,33 @@ public class NotificationPreferenceFragment extends PreferenceFragmentCompat {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+    }
+
+    @Override
+    public void onDisplayPreferenceDialog(Preference preference) {
+        DialogFragment dialogFragment = null;
+        if (preference instanceof MultiSelectListPreference) {
+            System.out.println("starting?");
+            dialogFragment = MultiSelectListPreferenceDialogFragmentCompat.newInstance(preference.getKey());
+        }
+        if (dialogFragment != null) {
+            // The dialog was created (it was one of our custom Preferences), show the dialog for it
+            dialogFragment.setTargetFragment(this, 0);
+            dialogFragment.show(this.getFragmentManager(), "android.support.v7.preference" +
+                    ".PreferenceFragment.DIALOG");
+        } else {
+            // Dialog creation could not be handled here. Try with the super method.
+            super.onDisplayPreferenceDialog(preference);
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-
         notifsSwitchPref = (SwitchPreference)  getPreferenceManager().findPreference("prefs_switch_notifs");
         notifsSwitchPref.setChecked(Storage.SHOW_NOTIFICATIONS.get(MainActivity.preferences));
         notifsSwitchPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            Storage storage = new Storage(getContext());
+            Storage storage = new Storage(getContext().getApplicationContext());
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 if (notifsSwitchPref.isChecked()) {
@@ -59,23 +81,23 @@ public class NotificationPreferenceFragment extends PreferenceFragmentCompat {
         });
 
         alertTimesMSLPref = (MultiSelectListPreference) getPreferenceManager().findPreference("prefs_multilist_alertTimes");
-        alertTimesMSLPref.setPositiveButtonText("Confirm");
+        alertTimesMSLPref.setPositiveButtonText("OK");
+        alertTimesMSLPref.setNegativeButtonText("CANCEL");
         alertTimesMSLPref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            Storage storage = new Storage(getContext());
+            Storage storage = new Storage(getContext().getApplicationContext());
             @Override
             public boolean onPreferenceChange(Preference preference, Object o) {
-                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-                CharSequence[] selected = alertTimesMSLPref.getEntries();
-                Set<String> selections = sharedPreferences.getStringSet("prefs_multilist_alertTimes", null);
-                //String[] selected = selections.toArray(new String[] {});
+                Toast.makeText(getContext().getApplicationContext(), o.toString(), Toast.LENGTH_SHORT);
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext().getApplicationContext());
+                Set<String> selections = sharedPreferences.getStringSet("prefs_multilist_alertTimes", new HashSet<String>());
+                String[] selected = selections.toArray(new String[] {});
                 String selectedlist = "";
                 for (int i = 0; i < selected.length ; i++){
                     selectedlist += selected[i];
                     if (i != selected.length - 1) selectedlist += ",";
-                    System.out.println("test" + i +" : " + selected[i]);
                 }
-                alertTimesMSLPref.setEntries(selected);
-                Toast.makeText(getContext(), "changed", Toast.LENGTH_SHORT);
+                Toast.makeText(getContext().getApplicationContext(), "changed", Toast.LENGTH_SHORT);
+                System.out.println(selectedlist);
                 storage.store(Storage.NOTIFY_SETTINGS, selectedlist).commit();
                 return true;
             }
@@ -88,11 +110,5 @@ public class NotificationPreferenceFragment extends PreferenceFragmentCompat {
             innerContainer.addView(innerView);
         }
         return view;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        return super.onOptionsItemSelected(item);
     }
 }

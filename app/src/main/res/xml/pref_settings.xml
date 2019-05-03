@@ -15,13 +15,13 @@
 
         <MultiSelectListPreference
             android:id="@+id/prefs_multilist_alertTimes"
-            android:key="prefs_multilist_alertTimes"
+            style="@style/AppTheme.DialogPreference"
             android:dependency="prefs_switch_notifs"
             android:entries="@array/pref_list_alertTime"
             android:entryValues="@array/pref_list_alertTime"
+            android:key="prefs_multilist_alertTimes"
             android:summary="@string/pref_summary_alertTime"
             android:title="@string/pref_title_alertTime" />
-
     </PreferenceCategory>
 
 </PreferenceScreen>
