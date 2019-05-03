@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.wenwanggarzagao.beeline.SettingsActivity">
+    tools:context="com.wenwanggarzagao.beeline.SettingsActivity"
+    style="@style/AppThemePreference">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -22,6 +23,7 @@
 
     <include
         layout="@layout/content_settings"
+        style = "@style/AppThemePreference"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

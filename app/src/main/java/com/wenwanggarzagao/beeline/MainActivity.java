@@ -324,7 +324,7 @@ public class MainActivity extends AppCompatActivity
         // if user enabled daily notifications
         if (Storage.SHOW_NOTIFICATIONS.get(preferences)) {
             int[] arrtimes = {
-                15, 30, 45, 60, 24 * 60
+                30, 60, 24 * 60
             };
 
             for (int t : arrtimes) {
