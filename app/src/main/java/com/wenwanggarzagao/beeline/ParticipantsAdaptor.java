@@ -77,6 +77,7 @@ public class ParticipantsAdaptor extends RecyclerView.Adapter<ParticipantsAdapto
             listenerRef = new WeakReference<>(listener);
 
             userPropic = (ImageView) itemView.findViewById(R.id.profile_icon);
+            userPropic.setImageResource(R.drawable.bee);
             userName = (TextView) itemView.findViewById(R.id.participant_name);
 
             itemView.setOnClickListener(this);

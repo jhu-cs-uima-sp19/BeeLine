@@ -47,6 +47,8 @@ public class UserProfile extends AppCompatActivity {
         final ImageButton checkBtn = (ImageButton) findViewById(R.id.checkButton);
         final ImageButton editBtn = (ImageButton) findViewById(R.id.editButton);
 
+        userImageView.setImageResource(R.drawable.bee);
+
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             userUID = extras.getString("userUID", null);
