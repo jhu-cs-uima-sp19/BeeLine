@@ -37,6 +37,7 @@ import com.wenwanggarzagao.beeline.data.Date;
 import com.wenwanggarzagao.beeline.data.Time;
 
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -131,6 +132,9 @@ public class CreateBeeline extends AppCompatActivity {
                             clicked = false;
                             Toast toast = Toast.makeText(getApplicationContext(), "Location does not exist", Toast.LENGTH_SHORT);
                             toast.show();
+                        } catch (NumberFormatException e) {
+                            clicked = false;
+                            Toast toast = Toast.makeText(getApplicationContext(), "Invalid location", Toast.LENGTH_SHORT);
                         }
                     } else {
                         clicked = false;

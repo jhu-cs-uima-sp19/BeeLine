@@ -358,11 +358,11 @@ public class FindBeelines extends AppCompatActivity
             Intent intent = new Intent(FindBeelines.this, FindBeelines.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivityIfNeeded(intent, 0);
-        } else if (id == R.id.nav_buzz) {
+        } /*else if (id == R.id.nav_buzz) {
             Intent intent = new Intent(FindBeelines.this, Buzz.class);
             startActivity(intent);
             finish();
-        } else if (id == R.id.nav_settings) {
+        } */ else if (id == R.id.nav_settings) {
             Intent intent = new Intent(FindBeelines.this, SettingsActivity.class);
             startActivity(intent);
             finish();

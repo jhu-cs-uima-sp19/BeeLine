@@ -13,6 +13,9 @@ Beeline is a service that seeks to create ridesharing groups to lower the cost o
 Username: person@place.com
 Password: password123
 
+Username: bwen4@gmail.com
+Password: hellohello
+
 ## First Sprint Objectives:
 - [x] Create **Account Activity** (Sprint 1 version) 
   - Accounts should have: Name and Bio
@@ -36,7 +39,7 @@ Password: password123
   - Find Beelines
 
 ## Second Sprint Objectives
-- [x] Zip code usage to update Find Beelines Given this location info
+- [x] Zip code usage to update Find Beelines given this location info
 
 - [x] Dedicated Log In Screen: authenticates password by exact match
 
@@ -75,4 +78,6 @@ Password: password123
  
  4/28 Meeting with Simon. Established goals to be completed by final project submission and split tasks.
 
-4/30 Finishing Sprint II before presentation
+ 4/30 Finishing Sprint II before presentation
+
+ 5/3 Finishing up Sprint II for submitting code

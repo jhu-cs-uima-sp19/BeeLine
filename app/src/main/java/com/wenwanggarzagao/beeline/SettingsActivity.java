@@ -116,11 +116,11 @@ public class SettingsActivity extends AppCompatActivity
             Intent intent = new Intent(SettingsActivity.this, FindBeelines.class);
             startActivity(intent);
             finish();
-        } else if (id == R.id.nav_buzz) {
+        } /*else if (id == R.id.nav_buzz) {
             Intent intent = new Intent(SettingsActivity.this, Buzz.class);
             startActivity(intent);
             finish();
-        } else if (id == R.id.nav_settings) {
+        } */else if (id == R.id.nav_settings) {
             Intent intent = new Intent(SettingsActivity.this, SettingsActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivityIfNeeded(intent, 0);

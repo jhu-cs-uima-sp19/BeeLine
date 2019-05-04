@@ -13,10 +13,6 @@
             android:icon="@drawable/ic_search_black_24dp"
             android:title="@string/findBL" />
         <item
-            android:id="@+id/nav_buzz"
-            android:icon="@drawable/ic_notifications_black_24dp"
-            android:title="@string/buzz" />
-        <item
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_menu_manage"
             android:title="@string/settings" />
