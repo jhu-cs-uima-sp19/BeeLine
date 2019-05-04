@@ -7,7 +7,7 @@
 Made by: Isaiah, Nick, Nancy, Bronte (Team B)
 
 
-Beeline is a service that seeks to create ridesharing groups to lower the cost of going from point A to point B(ee). The most recent iteration of our Android application enables users to view their user profile and planned trips, in addition to finding and creating new trips.
+Beeline is a service that seeks to create ridesharing groups to lower the cost of going from point A to point B(ee). The most recent iteration of our Android application enables users to join groups to do just this, as well as make their own groups to buzz around.
 
 ## Log-in Info:
 Username: person@place.com
