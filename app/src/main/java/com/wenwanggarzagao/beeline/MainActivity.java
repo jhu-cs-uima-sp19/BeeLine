@@ -259,6 +259,11 @@ public class MainActivity extends AppCompatActivity
 
     /** Update the beelines listing */
     public void updateArray() {
+        if (beelines.isEmpty()) {
+            System.out.println("got here");
+            TextView emptyText = findViewById(R.id.emptyText);
+            emptyText.setText("No pending beelines. Go to Find Beelines to find or create your own!");
+        }
         DatabaseUtils.queryMyBeelines(new ResponseHandler<List<Beeline>>() {
 
             @Override
@@ -270,6 +275,11 @@ public class MainActivity extends AppCompatActivity
                     System.out.println("querymybeelines " + bl.toString());
                     beelines.add(bl);
                     //DatabaseUtils.attachNotificationForUserJoinListener(getApplicationContext(), bl, R.drawable.queen_bee);
+                }
+
+                if (bls.size() != 0) {
+                    TextView emptyText = findViewById(R.id.emptyText);
+                    emptyText.setText("");
                 }
 
                 beelines.sort(new Comparator<Beeline>() {
