@@ -61,7 +61,7 @@ Password: hellohello
 
 - [x] Friendly message for users with empty "My Beelines" page
 
-- [] Tutorial pages for first-time users
+- [ ] Tutorial pages for first-time users
 
  
  ## General State of the App To-Date
