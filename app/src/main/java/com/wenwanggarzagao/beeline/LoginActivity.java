@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
@@ -64,12 +65,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     protected void onRestart() {
         super.onRestart();
         loggingIn = false;
+
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         dialog = new ViewDialog(this);
         loggingIn = false;
         this.createNotificationChannel();
@@ -106,6 +107,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back_black_24dp);
 //        ((ImageView) findViewById(android.R.id.home)).setColorFilter(getResources().getColor(R.color.colorBlack));
+
     }
 
     @Override
@@ -127,6 +129,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * errors are presented and no actual login attempt is made.
      */
     private void attemptLogin() {
+
         if (loggingIn)
             return;
         // Reset errors.
@@ -165,18 +168,30 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
+
             loggingIn = true;
             dialog.showDialog();
             DatabaseUtils.signIn(LoginActivity.this, email, password, false, new ResponseHandler<Boolean>() {
                 @Override
                 public void handle(Boolean success) {
                     dialog.hideDialog();
+                    String tutorialKey = "SOME_KEY";
+
                     if (success) {
-                        if (!flag) {
+                        boolean firstTime = getPreferences(MODE_PRIVATE).getBoolean(tutorialKey, true);
+                        if (!flag && !firstTime) {
                             flag = true;
                             Intent intent = new Intent(getBaseContext(), MainActivity.class);
                             startActivity(intent);
                             finish();
+                        }
+                        if (!flag && firstTime){
+                            getPreferences(MODE_PRIVATE).edit().putBoolean(tutorialKey, false).apply();
+                            flag = true;
+                            Intent intent = new Intent(getBaseContext(), TutorialActivity.class);
+                            startActivity(intent);
+                            finish();
+
                         }
                     } else {
                         mPasswordView.setError(getString(R.string.error_incorrect_password));
@@ -189,6 +204,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     private boolean flag;
+
 
     private boolean isEmailValid(String email) {
         //TODO: Replace this with your own logic

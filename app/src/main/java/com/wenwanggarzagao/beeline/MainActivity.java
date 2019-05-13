@@ -90,6 +90,7 @@ public class MainActivity extends AppCompatActivity
             this.updateArray();
             needsRefresh = false;
         }
+
     }
 
     @Override

@@ -26,7 +26,7 @@
     <string name="nav_header_title">Android Studio</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
-    <string name ="logout">Log Out</string>
+    <string name="logout">Log Out</string>
 
     <!-- Create Beeline -->
     <string name="start_loc_txt">Start location</string>
@@ -46,6 +46,11 @@
     <!-- do not change -->
     <string name="default_notification_channel_name">NOTIF_CHNL</string>
     <string name="default_notification_channel_id">NFSGHIORHIGL</string>
+
+    <!-- tutorial -->
+    <string name="beeline_definition">A <b>beeline</b> is our term for a trip. A trip can be anything from your regular errand run to your next city adventure</string>
+    <string name="flower_btn"> The <b>flower icon</b> enables you to quickly join and leave trips from the tap of a button. </string>
+    <string name="geolocate_txt"> We display beelines <b>near you</b> by using your mobile location. </string>
 
     <!-- Settings -->
     <string name="pref_header_notifications">Notifications</string>
@@ -96,5 +101,6 @@
 
     <!-- Beeline Details -->
     <string name="input_beeline_details_hint">Edit the additional beeline details.</string>
+    <string name="title_activity_tutorial">TutorialActivity</string>
 
 </resources>
