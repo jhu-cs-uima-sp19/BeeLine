@@ -184,8 +184,6 @@ public class Buzz extends AppCompatActivity
             Intent intent = new Intent(this, FindBeelines.class);
             startActivity(intent);
             finish();
-        } else if (id == R.id.nav_buzz) {
-            // we're already here, dont do anything
         } else if (id == R.id.nav_settings) {
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);

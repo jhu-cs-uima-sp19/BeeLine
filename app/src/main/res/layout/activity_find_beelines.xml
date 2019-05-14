@@ -22,6 +22,9 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_find_beelines"
+        app:itemIconTint="@color/colorSecondaryAccent"
+        app:itemTextColor="@color/drawer_item"
+        app:itemBackground="@android:color/transparent"
         app:menu="@menu/activity_find_beelines_drawer" />
 
 

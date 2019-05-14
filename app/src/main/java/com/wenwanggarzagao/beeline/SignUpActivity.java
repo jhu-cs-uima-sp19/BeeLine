@@ -200,7 +200,7 @@ public class SignUpActivity extends AppCompatActivity {
                 public void handle(Boolean success) {
                     showProgress(false);
                     if (success) {
-                        Intent intent = new Intent(getBaseContext(), MainActivity.class);
+                        Intent intent = new Intent(getBaseContext(), TutorialActivity.class);
                         startActivity(intent);
                         finish();
                     } else {
@@ -219,7 +219,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
-        return password.length() > 4;
+        return password.length() > 6;
     }
 
     /**

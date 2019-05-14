@@ -29,6 +29,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -213,8 +214,12 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public boolean onQueryTextChange(String s) {
-
-                adaptor.getFilter().filter(s);
+                if (adaptor != null) {
+                    Filter filter = adaptor.getFilter();
+                    if (filter != null) {
+                        filter.filter(s);
+                    }
+                }
                 return false;
             }
         });
@@ -242,10 +247,6 @@ public class MainActivity extends AppCompatActivity
             startActivityIfNeeded(intent, 0);
         } else if (id == R.id.nav_find) {
             Intent intent = new Intent(MainActivity.this, FindBeelines.class);
-            startActivity(intent);
-            finish();
-        } else if (id == R.id.nav_buzz) {
-            Intent intent = new Intent(MainActivity.this, Buzz.class);
             startActivity(intent);
             finish();
         } else if (id == R.id.nav_settings) {

@@ -19,7 +19,7 @@ public class TutorialActivity extends AppCompatActivity {
         setContentView(R.layout.activity_tutorial);
 
         startButton = findViewById(R.id.start_btn);
-        startButton.setBackgroundResource(R.color.colorPrimary);
+        startButton.setBackgroundResource(R.color.colorSecondaryAccent);
         startButton.setOnClickListener(new View.OnClickListener() {
 
             @Override

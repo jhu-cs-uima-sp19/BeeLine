@@ -92,7 +92,9 @@ public class BeelineAdaptor extends RecyclerView.Adapter<com.wenwanggarzagao.bee
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             List<Beeline> filteredList = new ArrayList<>();
-
+            if (beelineListFull == null || beelineListFull.isEmpty()) {
+                return null;
+            }
             if (constraint == null || constraint.length() == 0) {
                 //Show all results
                 filteredList.addAll(beelineListFull);

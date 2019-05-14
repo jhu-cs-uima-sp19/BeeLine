@@ -137,7 +137,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
+        final String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
 
         boolean cancel = false;
@@ -175,7 +175,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 @Override
                 public void handle(Boolean success) {
                     dialog.hideDialog();
-                    String tutorialKey = "SOME_KEY";
+                    String tutorialKey = email + "FIRST";
 
                     if (success) {
                         boolean firstTime = getPreferences(MODE_PRIVATE).getBoolean(tutorialKey, true);
@@ -191,7 +191,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                             Intent intent = new Intent(getBaseContext(), TutorialActivity.class);
                             startActivity(intent);
                             finish();
-
                         }
                     } else {
                         mPasswordView.setError(getString(R.string.error_incorrect_password));
