@@ -161,7 +161,7 @@ public class SignUpActivity extends AppCompatActivity {
         mNameView.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
+        final String email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
         String username = mNameView.getText().toString();
 
@@ -200,6 +200,9 @@ public class SignUpActivity extends AppCompatActivity {
                 public void handle(Boolean success) {
                     showProgress(false);
                     if (success) {
+                        String tutorialKey = email + "FIRST";
+                        getPreferences(MODE_PRIVATE).edit().putBoolean(tutorialKey, false).apply();
+                        System.out.println(getPreferences(MODE_PRIVATE).getBoolean(tutorialKey, false));
                         Intent intent = new Intent(getBaseContext(), TutorialActivity.class);
                         startActivity(intent);
                         finish();

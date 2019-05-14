@@ -178,20 +178,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     String tutorialKey = email + "FIRST";
 
                     if (success) {
-                        boolean firstTime = getPreferences(MODE_PRIVATE).getBoolean(tutorialKey, true);
-                        if (!flag && !firstTime) {
+                        System.out.println(getPreferences(MODE_PRIVATE).getBoolean(tutorialKey, false));
+                        //boolean firstTime = getPreferences(MODE_PRIVATE).getBoolean(tutorialKey, true);
+                        if (!flag) {
                             flag = true;
                             Intent intent = new Intent(getBaseContext(), MainActivity.class);
                             startActivity(intent);
                             finish();
                         }
-                        if (!flag && firstTime){
-                            getPreferences(MODE_PRIVATE).edit().putBoolean(tutorialKey, false).apply();
-                            flag = true;
-                            Intent intent = new Intent(getBaseContext(), TutorialActivity.class);
-                            startActivity(intent);
-                            finish();
-                        }
+
                     } else {
                         mPasswordView.setError(getString(R.string.error_incorrect_password));
                         mPasswordView.requestFocus();
