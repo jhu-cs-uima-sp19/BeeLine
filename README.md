@@ -6,8 +6,7 @@
 
 Made by: Isaiah, Nick, Nancy, Bronte (Team B)
 
-
-Beeline is a service that seeks to create ridesharing groups to lower the cost of going from point A to point B(ee). The most recent iteration of our Android application enables users to join trips to do just this, as well as make their own trips to buzz around.
+Beeline is a service that seeks to create ridesharing groups to lower the cost of going from point A to point B(ee). The most recent iteration of our Android application enables users to efficiently create their own trips while seamlessly finding and joining trips nearby.
 
 ## Log-in Info:
 Username: person@place.com
@@ -52,6 +51,18 @@ Password: hellohello
 - [x] **Flower Button Shortcut**: User can click Recycler item flower button to quickly add or leave a Beeline
 
 - [x] Notifications: based on user preferences noted in Settings, push notifications implemented for every 30 min, 1 hour, and/or 1 day before a given trip
+
+## Third Sprint Objectives
+- [x] take in current location of user to update beelines shown in Find Beelines [will display only Beelines in same zip code as user]
+
+- [x] More robust error handling in Create Beelines: more detailed location-not-found errors
+
+- [x] Logout button from each activity's nav drawers
+
+- [x] Friendly message for users with empty "My Beelines" page
+
+- [ ] Tutorial pages for first-time users
+
  
  ## General State of the App To-Date
  Our current version is able to log in a user, create a new user, and show a user's personal beelines when they enter our app. Furthermore, if a user is not part of a Beeline, they can navigate to the find beeline page to search through the current offerings. If they don't find one that meets their needs, they can create a brand new beeline from point A to point B(ee). All of these actions are updated via the Firebase Database to keep user actions attached to their profile. In a user's personal profile, a user can update information about themselves and include the payment method they use for ridesharing. Users can also view other users' profiles by clicking on each participant in a trip's Beeline Details page. Some whimsical features we have included include our custom loading screen featuring a loading bee while a user is taken from activity to activity. An extra feature we included was a search feature on My Beelines and Find Beelines that enables users to search for Beelines from and/or to a location. Future improvements to our app could include a more comprehensive onboarding process for first-time users and ability to find beelines from a custom zip code.
@@ -81,3 +92,4 @@ Password: hellohello
  4/30 Finishing Sprint II before presentation
 
  5/3 Finishing up Sprint II for submitting code
+
